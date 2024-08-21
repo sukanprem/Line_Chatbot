@@ -67,3 +67,6 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Ignore a specific file
+line-chatbot-de830-firebase-adminsdk-irdr9-a19bd78a94.json
