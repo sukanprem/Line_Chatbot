@@ -14,65 +14,11 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+app.use(express.json()); // Middleware สำหรับแปลง JSON body
+
 app.get('/', (req, res) => {
   res.send('Hello World with Firebase!');
 });
-
-// Example route to add data to Firestore
-// app.get('/add', async (req, res) => {
-//   try {
-//     const docRef = db.collection('users').doc('user1');
-//     await docRef.set({
-//       first: 'John',
-//       last: 'Doe',
-//       born: 1990
-//     });
-//     res.send('Document added successfully!');
-//   } catch (error) {
-//     console.error("Error adding document: ", error);
-//     res.status(500).send('Error adding document');
-//   }
-// });
-
-// Example route to add data to Firestore
-app.get('/add-notification-setting', async (req, res) => {
-    try {
-      const docRef = db.collection('notificationSettings').doc('setting1');
-      await docRef.set({
-        lineForm: 'LineOA', // รูปแบบ (Line)
-        groupName: 'Test', // ชื่อกลุ่ม
-        token: '+mxXTWUhft/lds9sjCQLThOE7hSpYYa3Qc9Ex8f+/7NNB6075OpjZ0jIC/83ABlncS0BObm5K+8oDnHck6sKcILblYZv9AUU8TllWdaHWHWIE8Cp9Z1ybS0jfzi5iF6hDwggWQurGYX93oAOwwr9CQdB04t89/1O/w1cDnyilFU=', // รหัส (Token)
-        notificationTypes: [ // เลือกการแจ้งเตือน
-          'Check-up', 
-          'Realtime Clinic', 
-          'เพิ่มผลสุขภาพ (MHF)', 
-          'เพิ่มผลสุขภาพ (MHC)', 
-          'เพิ่มผลสุขภาพ (MHL)', 
-          'เพิ่มผลสุขภาพ (LineOA)', 
-          'TeleClinic (Reserve)'
-        ]
-      });
-      res.send('Notification setting added successfully!');
-    } catch (error) {
-      console.error("Error adding notification setting: ", error);
-      res.status(500).send('Error adding notification setting');
-    }
-});
-
-// Example route to retrieve data from Firestore
-// app.get('/users', async (req, res) => {
-//   try {
-//     const snapshot = await db.collection('users').get();
-//     let users = [];
-//     snapshot.forEach((doc) => {
-//       users.push(doc.data());
-//     });
-//     res.json(users);
-//   } catch (error) {
-//     console.error("Error retrieving documents: ", error);
-//     res.status(500).send('Error retrieving documents');
-//   }
-// });
 
 // Example route to retrieve data from Firestore
 app.get('/notification-settings', async (req, res) => {
@@ -87,6 +33,83 @@ app.get('/notification-settings', async (req, res) => {
       console.error("Error retrieving notification settings: ", error);
       res.status(500).send('Error retrieving notification settings');
     }
+});
+
+// Example route to add data to Firestore
+app.post('/add-notification-setting', async (req, res) => {
+  try {
+    const { lineForm, groupName, token, notificationTypes } = req.body;
+
+    // ตรวจสอบว่าได้รับค่าที่จำเป็นครบหรือไม่
+    if (!lineForm || !groupName || !notificationTypes || !Array.isArray(notificationTypes)) {
+      return res.status(400).send('Invalid request: Missing or incorrect fields.');
+    }
+
+    const newDocRef = db.collection('notificationSettings').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
+    await newDocRef.set({
+      lineForm,
+      groupName,
+      token: token || '', // ใช้ค่าว่างหากไม่มี token
+      notificationTypes
+    });
+
+    res.send('Notification setting added successfully!');
+  } catch (error) {
+    console.error("Error adding notification setting: ", error);
+    res.status(500).send('Error adding notification setting');
+  }
+});
+
+// Route สำหรับการอัปเดตข้อมูลใน Firestore (PUT Method)
+app.put('/update-notification-setting/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { lineForm, groupName, token, notificationTypes } = req.body;
+
+    const docRef = db.collection('notificationSettings').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Notification setting not found');
+    }
+
+    // อัปเดตเอกสาร
+    await docRef.update({
+      lineForm, 
+      groupName, 
+      token, 
+      notificationTypes
+    });
+
+    res.send('Notification setting updated successfully!');
+  } catch (error) {
+    console.error("Error updating notification setting: ", error);
+    res.status(500).send('Error updating notification setting');
+  }
+});
+
+// Route สำหรับการลบข้อมูลใน Firestore (DELETE Method)
+app.delete('/delete-notification-setting/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const docRef = db.collection('notificationSettings').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Notification setting not found');
+    }
+
+    // ลบเอกสาร
+    await docRef.delete();
+
+    res.send('Notification setting deleted successfully!');
+  } catch (error) {
+    console.error("Error deleting notification setting: ", error);
+    res.status(500).send('Error deleting notification setting');
+  }
 });
 
 app.listen(port, () => {
