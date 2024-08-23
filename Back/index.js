@@ -255,6 +255,116 @@ app.delete('/delete-health-check-result/:id', async (req, res) => {
   }
 });
 
+// The GET method reads the BookDoctorAppointmentOnline data.
+app.get('/book-doctor-appointment-online', async (req, res) => {
+  try {
+    const snapshot = await db.collection('BookDoctorAppointmentOnline').get();
+    let settings = [];
+    snapshot.forEach((doc) => {
+      settings.push(doc.data());
+    });
+    res.json(settings);
+  } catch (error) {
+    console.error("Error retrieving health check result: ", error);
+    res.status(500).send('Error retrieving health check result: ');
+  }
+});
+
+// The POST method adds BookDoctorAppointmentOnline data.
+app.post('/add-book-doctor-appointment-online', async (req, res) => {
+  try {
+    const {
+      healthPlan,
+      hospital,
+      doctor,
+      department,
+      date,
+      time
+    } = req.body;
+
+    if(!healthPlan || !hospital || !doctor || !department || !date || !time) {
+      return res.status(400).send('Invalid request: Missing or incorrect fields.');
+    }
+
+    const newDocRef = db.collection('BookDoctorAppointmentOnline').doc();
+    await newDocRef.set({
+      healthPlan,
+      hospital,
+      doctor,
+      department,
+      date,
+      time
+    });
+
+    res.send('Book a doctor appointment online added successfully!');
+
+  } catch (error) {
+    console.error("Error adding book a doctor appointment online: ", error);
+    res.status(500).send('Error adding book a doctor appointment online')
+  }
+});
+
+// The PUT method updates BookDoctorAppointmentOnline data.
+app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      healthPlan,
+      hospital,
+      doctor,
+      department,
+      date,
+      time
+    } = req.body;
+
+    const docRef = db.collection('BookDoctorAppointmentOnline').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Book a doctor appointment online not found');
+    }
+
+    // อัปเดตเอกสาร
+    await docRef.update({
+      healthPlan: healthPlan || doc.data().healthPlan,
+      hospital: hospital || doc.data().hospital,
+      doctor: doctor || doc.data().doctor,
+      department: department || doc.data().department,
+      date: date || doc.data().date,
+      time: time || doc.data().time
+    });
+
+    res.send('Book a doctor appointment online updated successfully!');
+  } catch (error) {
+    console.error("Error updating Book a doctor appointment online: ", error);
+    res.status(500).send('Error updating Book a doctor appointment online');
+  }
+});
+
+// The DELETE method removes BookDoctorAppointmentOnline data.
+app.delete('/delete-book-doctor-appointment-online/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const docRef = db.collection('BookDoctorAppointmentOnline').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Book a doctor appointment online not found');
+    }
+
+    // ลบเอกสาร
+    await docRef.delete();
+
+    res.send('Book a doctor appointment online deleted successfully!');
+  } catch (error) {
+    console.error("Error deleting Book a doctor appointment online: ", error);
+    res.status(500).send('Error deleting Book a doctor appointment online');
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
