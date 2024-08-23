@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
   res.send('Hello World with Firebase!');
 });
 
-// Example route to retrieve data from Firestore
+// The GET method reads notificationSettings data.
 app.get('/notification-settings', async (req, res) => {
     try {
       const snapshot = await db.collection('notificationSettings').get();
@@ -35,7 +35,7 @@ app.get('/notification-settings', async (req, res) => {
     }
 });
 
-// Example route to add data to Firestore
+// The POST method adds notificationSettings data.
 app.post('/add-notification-setting', async (req, res) => {
   try {
     const { lineForm, groupName, token, notificationTypes } = req.body;
@@ -60,7 +60,7 @@ app.post('/add-notification-setting', async (req, res) => {
   }
 });
 
-// Route สำหรับการอัปเดตข้อมูลใน Firestore (PUT Method)
+// PUT method updates notificationSettings data.
 app.put('/update-notification-setting/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -89,7 +89,7 @@ app.put('/update-notification-setting/:id', async (req, res) => {
   }
 });
 
-// Route สำหรับการลบข้อมูลใน Firestore (DELETE Method)
+// The DELETE method deletes notificationSettings data.
 app.delete('/delete-notification-setting/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -109,6 +109,149 @@ app.delete('/delete-notification-setting/:id', async (req, res) => {
   } catch (error) {
     console.error("Error deleting notification setting: ", error);
     res.status(500).send('Error deleting notification setting');
+  }
+});
+
+// The GET method reads the healthCheckResults data.
+app.get('/health-check-result', async (req, res) => {
+  try {
+    const snapshot = await db.collection('healthCheckResults').get();
+    let settings = [];
+    snapshot.forEach((doc) => {
+      settings.push(doc.data());
+    });
+    res.json(settings);
+  } catch (error) {
+    console.error("Error retrieving health check result: ", error);
+    res.status(500).send('Error retrieving health check result: ');
+  }
+});
+
+// The POST method adds healthCheckResults data.
+app.post('/add-health-check-result', async (req, res) => {
+  try {
+    const {
+      weight, 
+      height, 
+      pulseRate, 
+      temperature, 
+      oxygenLevel, 
+      respirationRate, 
+      mealTime, 
+      fastingTime, 
+      fastingBloodSugar, 
+      moreDetails, 
+      bloodPressure
+    } = req.body;
+
+    // ตรวจสอบว่าได้รับค่าที่จำเป็นครบหรือไม่
+    if (!weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure) {
+      return res.status(400).send('Invalid request: Missing or incorrect fields.');
+    }
+
+    // คำนวณ BMI
+    const heightInMeters = height / 100; // แปลงจากเซนติเมตรเป็นเมตร
+    const bmi = weight / (heightInMeters * heightInMeters);
+
+    const newDocRef = db.collection('healthCheckResults').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
+    await newDocRef.set({
+      weight,
+      height,
+      pulseRate,
+      temperature,
+      oxygenLevel,
+      respirationRate,
+      mealTime,
+      fastingTime,
+      fastingBloodSugar,
+      moreDetails: moreDetails || '', // ใช้ค่าว่างหากไม่มีข้อความเตือน
+      bmi, // ค่า BMI ที่คำนวณได้
+      bloodPressure
+    });
+
+    res.send('Health check result added successfully!');
+  } catch (error) {
+    console.error("Error adding health check result: ", error);
+    res.status(500).send('Error adding health check result');
+  }
+});
+
+// The PUT method updates healthCheckResults data.
+app.put('/update-health-check-result/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      weight, 
+      height, 
+      pulseRate, 
+      temperature, 
+      oxygenLevel, 
+      respirationRate, 
+      mealTime, 
+      fastingTime, 
+      fastingBloodSugar, 
+      moreDetails, 
+      bloodPressure
+    } = req.body;
+
+    const docRef = db.collection('healthCheckResults').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Health check result not found');
+    }
+
+    // คำนวณ BMI ถ้ามีการส่งน้ำหนักและส่วนสูงใหม่มา
+    let bmi = doc.data().bmi;
+    if (weight && height) {
+      const heightInMeters = height / 100;
+      bmi = weight / (heightInMeters * heightInMeters);
+    }
+
+    // อัปเดตเอกสาร
+    await docRef.update({
+      weight: weight || doc.data().weight,
+      height: height || doc.data().height,
+      pulseRate: pulseRate || doc.data().pulseRate,
+      temperature: temperature || doc.data().temperature,
+      oxygenLevel: oxygenLevel || doc.data().oxygenLevel,
+      respirationRate: respirationRate || doc.data().respirationRate,
+      mealTime: mealTime || doc.data().mealTime,
+      fastingTime: fastingTime || doc.data().fastingTime,
+      fastingBloodSugar: fastingBloodSugar || doc.data().fastingBloodSugar,
+      moreDetails: moreDetails || doc.data().moreDetails,
+      bmi: bmi, // ค่า BMI ที่คำนวณได้หรือค่าเดิมถ้าไม่มีการเปลี่ยนแปลง
+      bloodPressure: bloodPressure || doc.data().bloodPressure
+    });
+
+    res.send('Health check result updated successfully!');
+  } catch (error) {
+    console.error("Error updating health check result: ", error);
+    res.status(500).send('Error updating health check result');
+  }
+});
+
+// The DELETE method removes healthCheckResults data.
+app.delete('/delete-health-check-result/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const docRef = db.collection('healthCheckResults').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Health check result not found');
+    }
+
+    // ลบเอกสาร
+    await docRef.delete();
+
+    res.send('Health check result deleted successfully!');
+  } catch (error) {
+    console.error("Error deleting health check result: ", error);
+    res.status(500).send('Error deleting health check result');
   }
 });
 
