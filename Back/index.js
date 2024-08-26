@@ -1,8 +1,20 @@
 const express = require('express');
 const admin = require('firebase-admin');
+const cors = require('cors'); // นำเข้า cors
 
 const app = express();
 const port = 3000;
+
+// ตั้งค่า CORS
+app.use(cors()); // ใช้งาน CORS สำหรับทุกที่
+
+// const corsOptions = {
+//   origin: 'http://localhost:3001', // อนุญาตให้เข้าถึงจากที่อยู่นี้
+//   methods: 'GET,POST,PUT,DELETE', // ระบุวิธีการที่อนุญาต
+//   allowedHeaders: 'Content-Type,Authorization' // ระบุ header ที่อนุญาต
+// };
+
+// app.use(cors(corsOptions));
 
 // Initialize Firebase Admin SDK
 const serviceAccount = require('./line-chatbot-de830-firebase-adminsdk-irdr9-a19bd78a94.json');
