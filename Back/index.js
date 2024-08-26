@@ -131,6 +131,8 @@ app.get('/health-check-result', async (req, res) => {
 app.post('/add-health-check-result', async (req, res) => {
   try {
     const {
+      fullName,
+      lastName,
       weight, 
       height, 
       pulseRate, 
@@ -145,7 +147,7 @@ app.post('/add-health-check-result', async (req, res) => {
     } = req.body;
 
     // ตรวจสอบว่าได้รับค่าที่จำเป็นครบหรือไม่
-    if (!weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure) {
+    if (!fullName || !lastName || !weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
@@ -155,6 +157,8 @@ app.post('/add-health-check-result', async (req, res) => {
 
     const newDocRef = db.collection('healthCheckResults').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
     await newDocRef.set({
+      fullName,
+      lastName,
       weight,
       height,
       pulseRate,
@@ -181,6 +185,8 @@ app.put('/update-health-check-result/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const {
+      fullName,
+      lastName,
       weight, 
       height, 
       pulseRate, 
@@ -211,6 +217,8 @@ app.put('/update-health-check-result/:id', async (req, res) => {
 
     // อัปเดตเอกสาร
     await docRef.update({
+      fullName: fullName || doc.data().fullName,
+      lastName: lastName || doc.data().lastName,
       weight: weight || doc.data().weight,
       height: height || doc.data().height,
       pulseRate: pulseRate || doc.data().pulseRate,
@@ -274,6 +282,8 @@ app.get('/book-doctor-appointment-online', async (req, res) => {
 app.post('/add-book-doctor-appointment-online', async (req, res) => {
   try {
     const {
+      fullName,
+      lastName,
       healthPlan,
       hospital,
       doctor,
@@ -282,12 +292,14 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       time
     } = req.body;
 
-    if(!healthPlan || !hospital || !doctor || !department || !date || !time) {
+    if(!fullName || !lastName || !healthPlan || !hospital || !doctor || !department || !date || !time) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
     const newDocRef = db.collection('BookDoctorAppointmentOnline').doc();
     await newDocRef.set({
+      fullName,
+      lastName,
       healthPlan,
       hospital,
       doctor,
@@ -309,6 +321,8 @@ app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const {
+      fullName,
+      lastName,
       healthPlan,
       hospital,
       doctor,
@@ -327,6 +341,8 @@ app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
 
     // อัปเดตเอกสาร
     await docRef.update({
+      fullName: fullName || doc.data().fullName,
+      lastName: lastName || doc.data().lastName,
       healthPlan: healthPlan || doc.data().healthPlan,
       hospital: hospital || doc.data().hospital,
       doctor: doctor || doc.data().doctor,
