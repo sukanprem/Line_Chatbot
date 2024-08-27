@@ -27,35 +27,42 @@ async function handleEvent(event) {
     return Promise.resolve(null);
   }
 
-  const userMessage = event.message.text;
+  // แยกข้อความเพื่อดึง Document ID ที่ผู้ใช้ส่งมา
+  const documentId = event.message.text.trim();
 
-  // ตรวจสอบว่า message เป็นคำสั่งสำหรับดึงข้อมูลหรือไม่ เช่น "ผลตรวจสุขภาพ 1234"
-  if (userMessage.startsWith('ผลตรวจสุขภาพ')) {
-    const id = userMessage.split(' ')[1]; // สมมติว่า ID อยู่หลังคำว่า "ผลตรวจสุขภาพ"
-    
-    try {
-      // ดึงข้อมูลจาก API ของคุณ
-      const response = await axios.get(`http://localhost:3000/health-check-result/${id}`);
-      const healthResult = response.data;
+  try {
+    // ทำการดึงข้อมูลจาก Back End โดยใช้ Document ID
+    const response = await axios.get(`http://localhost:3000/health-check-result/${documentId}`);
+    const data = response.data;
 
-      // สร้างข้อความตอบกลับจากข้อมูลที่ได้รับ
-      const replyMessage = {
-        type: 'text',
-        text: `ผลตรวจสุขภาพของคุณคือ: ${healthResult.result}`
-      };
+    // จัดรูปแบบข้อความที่จะส่งไปยังผู้ใช้
+    const message = {
+      type: 'text',
+      text: `myHealthFirst\n
+        ผลการตรวจร่างกายของคุณ ${data.fullName} ${data.lastName}\n
+        น้ำหนัก: ${data.weight} กิโลกรัม\n
+        ส่วนสูง: ${data.height} เซนติเมตร\n
+        ชีพจร: ${data.pulseRate}\n
+        อุณหภูมิ: ${data.temperature}\n
+        ออกซิเจนในเลือด: ${data.oxygenLevel}\n
+        อัตราการหายใจ: ${data.respirationRate}\n
+        น้ำตาลในเลือด: ${data.fastingBloodSugar}\n
+        เวลาที่เจาะ: ${data.mealTime} ${data.fastingTime}\n
+        รายละเอียดเพิ่มเติม: ${data.moreDetails}\n
+        BMI: ${data.bmi}\n
+        ความดันโลหิต: ${data.bloodPressure}`
+    };
 
-      return client.replyMessage(event.replyToken, replyMessage);
-    } catch (error) {
-      console.error('Error fetching health check result:', error);
-      return client.replyMessage(event.replyToken, {
-        type: 'text',
-        text: 'ไม่สามารถดึงข้อมูลผลตรวจสุขภาพได้ โปรดลองใหม่อีกครั้ง'
-      });
-    }
-  } else {
-    // ถ้าไม่ใช่คำสั่งพิเศษ ส่งข้อความเดิมกลับไป
-    const echo = { type: 'text', text: event.message.text };
-    return client.replyMessage(event.replyToken, echo);
+    // ส่งข้อความไปยัง Line Chatbot
+    return client.replyMessage(event.replyToken, message);
+  } catch (error) {
+    console.error("Error fetching health check result: ", error);
+
+    // ส่งข้อความแสดงข้อผิดพลาดหากเกิดข้อผิดพลาดในการดึงข้อมูล
+    return client.replyMessage(event.replyToken, {
+      type: 'text',
+      text: 'ขออภัย ไม่สามารถดึงข้อมูลได้ กรุณาลองใหม่อีกครั้ง'
+    });
   }
 }
 
