@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 
 // ตั้งค่า CORS
-app.use(cors()); // ใช้งาน CORS สำหรับทุกที่
+// app.use(cors()); // ใช้งาน CORS สำหรับทุกที่
 
 // const corsOptions = {
 //   origin: 'http://localhost:3001', // อนุญาตให้เข้าถึงจากที่อยู่นี้
@@ -133,6 +133,23 @@ app.get('/health-check-result', async (req, res) => {
       settings.push(doc.data());
     });
     res.json(settings);
+  } catch (error) {
+    console.error("Error retrieving health check result: ", error);
+    res.status(500).send('Error retrieving health check result: ');
+  }
+});
+
+// The GET method reads the healthCheckResults data by Document ID.
+app.get('/health-check-result/:id', async (req, res) => {
+  try {
+    const docId = req.params.id;
+    const doc = await db.collection('healthCheckResults').doc(docId).get();
+    
+    if (!doc.exists) {
+      res.status(404).send('Document not found');
+    } else {
+      res.json(doc.data());
+    }
   } catch (error) {
     console.error("Error retrieving health check result: ", error);
     res.status(500).send('Error retrieving health check result: ');
@@ -287,6 +304,23 @@ app.get('/book-doctor-appointment-online', async (req, res) => {
   } catch (error) {
     console.error("Error retrieving health check result: ", error);
     res.status(500).send('Error retrieving health check result: ');
+  }
+});
+
+// The GET method reads the BookDoctorAppointmentOnline data by Document ID.
+app.get('/book-doctor-appointment-online/:id', async (req, res) => {
+  try {
+    const docId = req.params.id;
+    const doc = await db.collection('BookDoctorAppointmentOnline').doc(docId).get();
+    
+    if (!doc.exists) {
+      res.status(404).send('Document not found');
+    } else {
+      res.json(doc.data());
+    }
+  } catch (error) {
+    console.error("Error retrieving appointment data: ", error);
+    res.status(500).send('Error retrieving appointment data: ');
   }
 });
 
