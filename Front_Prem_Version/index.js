@@ -256,205 +256,205 @@ async function handleEvent(event) {
     }
    
      //สร้างข้อความ Flex Message
-     const message = {
-      type: 'flex',
-      altText: 'Health Check Result',
-      contents: {
-        type: 'bubble',
-        size: 'giga',
-        body: {
-          type: 'box',
-          layout: 'vertical',
-          spacing: 'md',
-          contents: [
-            {
-              type: 'box',
-              layout: 'vertical',
-              contents: [
-                {
-                  type: 'text',
-                  text: 'myHealthFirst',
-                  weight: 'bold',
-                  color: '#0000FF', // สีฟ้า
-                  size: 'xl',
-                  margin: 'md'
-                }
-              ]
-            },
-            {
-              type: 'box',
-              layout: 'vertical',
-              spacing: 'sm',
-              contents: [
-                {
-                  type: 'text',
-                  text: `ผลการตรวจร่างกายของคุณ ${healthCheckData ? `${healthCheckData.fullName} ${healthCheckData.lastName}` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `น้ำหนัก: ${healthCheckData ? `${healthCheckData.weight} กิโลกรัม` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `ส่วนสูง: ${healthCheckData ? `${healthCheckData.height} เซนติเมตร` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `ชีพจร: ${healthCheckData ? `${healthCheckData.pulseRate}` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `อุณหภูมิ: ${healthCheckData ? `${healthCheckData.temperature}` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `ออกซิเจนในเลือด: ${healthCheckData ? `${healthCheckData.oxygenLevel}` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `อัตราการหายใจ: ${healthCheckData ? `${healthCheckData.respirationRate}` : ''}`,
-                  weight: 'bold',
-                  color: '#FF0000', // สีแดง
-                },
-                {
-                  type: 'text',
-                  text: `น้ำตาลในเลือด: ${healthCheckData ? `${healthCheckData.fastingBloodSugar}` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `เวลา: ${healthCheckData ? `${healthCheckData.mealTime} ${healthCheckData.fastingTime}` : ''}`,
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `รายละเอียดเพิ่มเติม: ${healthCheckData ? `${healthCheckData.moreDetails}` : ''}`,
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `BMI: ${healthCheckData ? `${healthCheckData.bmi}` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                },
-                {
-                  type: 'text',
-                  text: `ความดันโลหิต: ${healthCheckData ? `${healthCheckData.bloodPressure}` : ''}`,
-                  weight: 'bold',
-                  color: '#000000', // สีดำ
-                }
-              ]
-            }
-          ]
-        }
-      }
-    };
-    const message2 = {
-      type: 'flex',
-      altText: 'Health Check Result',
-      contents: {
-        "type": "bubble",
-        "size": "giga",
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "spacing": "md",
-          "contents": [
-            {
-              "type": "text",
-              "text": "myHealthFirst",
-              "weight": "bold",
-              "size": "xl",
-              "color": "#1eb6fb"  // สีฟ้า
-            },
-            {
-              "type": "text",
-              "text": "จองพบแพทย์ออนไลน์:",
-              "weight": "bold",
-              "size": "lg",
-              "color": "#000000",  // สีดำ
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": `${appointmentData.fullName} ${appointmentData.lastName} จอง ${appointmentData.healthPlan}`,
-                  "size": "md",
-                  "color": "#000000"  // สีดำ
-                },
-                {
-                  "type": "text",
-                  "text": `จาก ${appointmentData.hospital}`,
-                  "size": "md",
-                  "color": "#000000"  // สีดำ
-                },
-                {
-                  "type": "text",
-                  "text": `แผนก ${appointmentData.department}`,
-                  "size": "md",
-                  "color": "#000000"  // สีดำ
-                },
-                {
-                  "type": "text",
-                  "text": `วันที่: ${appointmentData.date}`,
-                  "size": "md",
-                  "color": "#000000"  // สีดำ
-                },
-                {
-                  "type": "text",
-                  "text": `เวลา: ${appointmentData.time}`,
-                  "size": "md",
-                  "color": "#000000"  // สีดำ
-                }
-              ]
-            }
-          ]
-        }
+    //  const message = {
+    //   type: 'flex',
+    //   altText: 'Health Check Result',
+    //   contents: {
+    //     type: 'bubble',
+    //     size: 'giga',
+    //     body: {
+    //       type: 'box',
+    //       layout: 'vertical',
+    //       spacing: 'md',
+    //       contents: [
+    //         {
+    //           type: 'box',
+    //           layout: 'vertical',
+    //           contents: [
+    //             {
+    //               type: 'text',
+    //               text: 'myHealthFirst',
+    //               weight: 'bold',
+    //               color: '#0000FF', // สีฟ้า
+    //               size: 'xl',
+    //               margin: 'md'
+    //             }
+    //           ]
+    //         },
+    //         {
+    //           type: 'box',
+    //           layout: 'vertical',
+    //           spacing: 'sm',
+    //           contents: [
+    //             {
+    //               type: 'text',
+    //               text: `ผลการตรวจร่างกายของคุณ ${healthCheckData ? `${healthCheckData.fullName} ${healthCheckData.lastName}` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `น้ำหนัก: ${healthCheckData ? `${healthCheckData.weight} กิโลกรัม` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `ส่วนสูง: ${healthCheckData ? `${healthCheckData.height} เซนติเมตร` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `ชีพจร: ${healthCheckData ? `${healthCheckData.pulseRate}` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `อุณหภูมิ: ${healthCheckData ? `${healthCheckData.temperature}` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `ออกซิเจนในเลือด: ${healthCheckData ? `${healthCheckData.oxygenLevel}` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `อัตราการหายใจ: ${healthCheckData ? `${healthCheckData.respirationRate}` : ''}`,
+    //               weight: 'bold',
+    //               color: '#FF0000', // สีแดง
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `น้ำตาลในเลือด: ${healthCheckData ? `${healthCheckData.fastingBloodSugar}` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `เวลา: ${healthCheckData ? `${healthCheckData.mealTime} ${healthCheckData.fastingTime}` : ''}`,
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `รายละเอียดเพิ่มเติม: ${healthCheckData ? `${healthCheckData.moreDetails}` : ''}`,
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `BMI: ${healthCheckData ? `${healthCheckData.bmi}` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             },
+    //             {
+    //               type: 'text',
+    //               text: `ความดันโลหิต: ${healthCheckData ? `${healthCheckData.bloodPressure}` : ''}`,
+    //               weight: 'bold',
+    //               color: '#000000', // สีดำ
+    //             }
+    //           ]
+    //         }
+    //       ]
+    //     }
+    //   }
+    // };
+    // const message2 = {
+    //   type: 'flex',
+    //   altText: 'Health Check Result',
+    //   contents: {
+    //     "type": "bubble",
+    //     "size": "giga",
+    //     "body": {
+    //       "type": "box",
+    //       "layout": "vertical",
+    //       "spacing": "md",
+    //       "contents": [
+    //         {
+    //           "type": "text",
+    //           "text": "myHealthFirst",
+    //           "weight": "bold",
+    //           "size": "xl",
+    //           "color": "#1eb6fb"  // สีฟ้า
+    //         },
+    //         {
+    //           "type": "text",
+    //           "text": "จองพบแพทย์ออนไลน์:",
+    //           "weight": "bold",
+    //           "size": "lg",
+    //           "color": "#000000",  // สีดำ
+    //           "margin": "md"
+    //         },
+    //         {
+    //           "type": "box",
+    //           "layout": "vertical",
+    //           "spacing": "sm",
+    //           "contents": [
+    //             {
+    //               "type": "text",
+    //               "text": `${appointmentData.fullName} ${appointmentData.lastName} จอง ${appointmentData.healthPlan}`,
+    //               "size": "md",
+    //               "color": "#000000"  // สีดำ
+    //             },
+    //             {
+    //               "type": "text",
+    //               "text": `จาก ${appointmentData.hospital}`,
+    //               "size": "md",
+    //               "color": "#000000"  // สีดำ
+    //             },
+    //             {
+    //               "type": "text",
+    //               "text": `แผนก ${appointmentData.department}`,
+    //               "size": "md",
+    //               "color": "#000000"  // สีดำ
+    //             },
+    //             {
+    //               "type": "text",
+    //               "text": `วันที่: ${appointmentData.date}`,
+    //               "size": "md",
+    //               "color": "#000000"  // สีดำ
+    //             },
+    //             {
+    //               "type": "text",
+    //               "text": `เวลา: ${appointmentData.time}`,
+    //               "size": "md",
+    //               "color": "#000000"  // สีดำ
+    //             }
+    //           ]
+    //         }
+    //       ]
+    //     }
         
-      }
-    }
+    //   }
+    // }
     
-    if (whereID === '1') {
-       // ส่งข้อความ Flex Message ไปยัง LINE Chatbot
-      return client.replyMessage(event.replyToken, message);
-    } 
-    if (whereID === '2') {
-      // ส่งข้อความ Flex Message ไปยัง LINE Chatbot
-      return client.replyMessage(event.replyToken, message2);
-   } 
+    // if (whereID === '1') {
+    //    // ส่งข้อความ Flex Message ไปยัง LINE Chatbot
+    //   return client.replyMessage(event.replyToken, message);
+    // } 
+  //   if (whereID === '2') {
+  //     // ส่งข้อความ Flex Message ไปยัง LINE Chatbot
+  //     return client.replyMessage(event.replyToken, message2);
+  //  } 
 //    if (whereID === '3') {
 //     // ส่งข้อความ Flex Message ไปยัง LINE Chatbot
 //    return client.replyMessage(event.replyToken, message3);
 //  } 
     
-    }
-    catch (error) {
-      console.error("Error fetching data: ", error);
+    // }
+    // catch (error) {
+    //   console.error("Error fetching data: ", error);
     
-  //   // // ส่งข้อความไปยัง LINE Chatbot
-  //   return client.replyMessage(event.replyToken, {
-  //     type: 'text',
-  //     text: replyText
-  //   });
-  // } catch (error) {
-  //   console.error("Error fetching data: ", error);
+    // // ส่งข้อความไปยัง LINE Chatbot
+    return client.replyMessage(event.replyToken, {
+      type: 'text',
+      text: replyText
+    });
+  } catch (error) {
+    console.error("Error fetching data: ", error);
 
     // ส่งข้อความแสดงข้อผิดพลาดหากเกิดข้อผิดพลาดในการดึงข้อมูล
     return client.replyMessage(event.replyToken, {
