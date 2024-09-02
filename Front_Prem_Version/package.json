@@ -12,6 +12,7 @@
   "dependencies": {
     "@line/bot-sdk": "^9.3.0",
     "axios": "^1.7.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4"
   }
 }
