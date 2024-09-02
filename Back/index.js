@@ -1,20 +1,8 @@
 const express = require('express');
 const admin = require('firebase-admin');
-const cors = require('cors'); // นำเข้า cors
 
 const app = express();
 const port = 3000;
-
-// ตั้งค่า CORS
-// app.use(cors()); // ใช้งาน CORS สำหรับทุกที่
-
-// const corsOptions = {
-//   origin: 'http://localhost:3001', // อนุญาตให้เข้าถึงจากที่อยู่นี้
-//   methods: 'GET,POST,PUT,DELETE', // ระบุวิธีการที่อนุญาต
-//   allowedHeaders: 'Content-Type,Authorization' // ระบุ header ที่อนุญาต
-// };
-
-// app.use(cors(corsOptions));
 
 // Initialize Firebase Admin SDK
 const serviceAccount = require('./line-chatbot-de830-firebase-adminsdk-irdr9-a19bd78a94.json');
@@ -279,6 +267,23 @@ app.put('/update-health-check-result/:id', async (req, res) => {
       bloodPressure: bloodPressure || doc.data().bloodPressure
     });
 
+    // ตรวจสอบการสมัครรับข้อมูลและส่งการแจ้งเตือน
+    const subscriptionsSnapshot = await db.collection('subscriptions').where('healthCheckResultId', '==', id).get();
+    subscriptionsSnapshot.forEach(async (subscriptionDoc) => {
+      const subscriptionData = subscriptionDoc.data();
+
+      // ส่งข้อความไปยัง LINE Chatbot
+      await client.pushMessage(subscriptionData.lineUserId, {
+        type: 'text',
+        text: `มีการอัปเดตข้อมูลผลการตรวจสุขภาพสำหรับ ${id}.`
+      });
+
+      // ถ้าเป็นการสมัครรับข้อมูลแบบครั้งเดียว ให้ลบการสมัครรับข้อมูลออก
+      if (subscriptionData.notificationType === 'once') {
+        await db.collection('subscriptions').doc(subscriptionDoc.id).delete();
+      }
+    });
+
     res.send('Health check result updated successfully!');
   } catch (error) {
     console.error("Error updating health check result: ", error);
@@ -319,8 +324,8 @@ app.get('/book-doctor-appointment-online', async (req, res) => {
     });
     res.json(settings);
   } catch (error) {
-    console.error("Error retrieving health check result: ", error);
-    res.status(500).send('Error retrieving health check result: ');
+    console.error("Error retrieving appointment dat: ", error);
+    res.status(500).send('Error retrieving appointment dat: ');
   }
 });
 
@@ -441,6 +446,112 @@ app.delete('/delete-book-doctor-appointment-online/:id', async (req, res) => {
   } catch (error) {
     console.error("Error deleting Book a doctor appointment online: ", error);
     res.status(500).send('Error deleting Book a doctor appointment online');
+  }
+});
+
+// The GET method reads the Subscriptions data.
+app.get('/subscribe', async (req, res) => {
+  try {
+    const snapshot = await db.collection('Subscriptions').get();
+    let settings = [];
+    snapshot.forEach((doc) => {
+      settings.push(doc.data());
+    });
+    res.json(settings);
+  } catch (error) {
+    console.error("Error retrieving subscriptions: ", error);
+    res.status(500).send('Error retrieving subscriptions: ');
+  }
+});
+
+// The GET method reads the Subscriptions data by Document ID.
+app.get('/subscribe/:id', async (req, res) => {
+  try {
+    const docId = req.params.id;
+    const doc = await db.collection('Subscriptions').doc(docId).get();
+    
+    if (!doc.exists) {
+      res.status(404).send('Document not found');
+    } else {
+      res.json(doc.data());
+    }
+  } catch (error) {
+    console.error("Error retrieving subscriptions: ", error);
+    res.status(500).send('Error retrieving subscriptions: ');
+  }
+});
+
+// The POST method adds Subscriptions data.
+app.post('/add-subscribe', async (req, res) => {
+  try {
+    const { lineUserId, healthCheckResultId, notificationType } = req.body;
+
+    if (!lineUserId || !healthCheckResultId || !notificationType) {
+      return res.status(400).send('Invalid request: Missing or incorrect fields.');
+    }
+
+    const newDocRef = db.collection('Subscriptions').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
+    await newDocRef.set({
+      lineUserId,
+      healthCheckResultId,
+      notificationType
+    });
+
+    res.send('Subscription added successfully!');
+  } catch (error) {
+    console.error("Error adding subscription: ", error);
+    res.status(500).send('Error adding subscription');
+  }
+});
+
+// The PUT method updates Subscriptions data.
+app.put('/update-subscribe/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { lineUserId, healthCheckResultId, notificationType } = req.body;
+
+    const docRef = db.collection('Subscriptions').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Subscriptions not found');
+    }
+
+    // อัปเดตเอกสาร
+    await docRef.update({
+      lineUserId: lineUserId || doc.data().lineUserId,
+      healthCheckResultId: healthCheckResultId || doc.data().healthCheckResultId,
+      notificationType: notificationType || doc.data().notificationType
+    });
+
+    res.send('Subscriptions updated successfully!');
+  } catch (error) {
+    console.error("Error updating Subscriptions: ", error);
+    res.status(500).send('Error updating Subscriptions');
+  }
+});
+
+// The DELETE method removes Subscriptions data.
+app.delete('/unsubscribe/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const docRef = db.collection('Subscriptions').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Subscriptions not found');
+    }
+
+    // ลบเอกสาร
+    await docRef.delete();
+
+    res.send('Subscriptions deleted successfully!');
+  } catch (error) {
+    console.error("Error deleting Subscriptions: ", error);
+    res.status(500).send('Error deleting Subscriptions');
   }
 });
 
