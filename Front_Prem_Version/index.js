@@ -20,7 +20,7 @@ app.post('/webhook', middleware(config), (req, res) => {
     });
 });
 
-const client = new Client(config);
+const client = new Client(config);      
 
 // async function handleEvent(event) {
 //   if (event.type !== 'message' || event.message.type !== 'text') {
