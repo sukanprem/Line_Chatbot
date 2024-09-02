@@ -77,14 +77,14 @@ async function handleEvent(event) {
 
   // แยกข้อความเพื่อดึง Document ID ที่ผู้ใช้ส่งมา
   const documentId = event.message.text.trim();
-  let whereID ='';
+  // let whereID ='';
   try {
     // ตรวจสอบในฐานข้อมูล HealthCheckResults
     let healthCheckData = null;
     try {
       const responseHealthCheck = await axios.get(`http://localhost:3000/health-check-result/${documentId}`);
       healthCheckData = responseHealthCheck.data;
-      whereID = '1';
+      // whereID = '1';
     } catch (error) {
       // ถ้าไม่พบข้อมูลใน HealthCheckResults, ไม่ทำอะไร
       healthCheckData = null;
@@ -95,7 +95,7 @@ async function handleEvent(event) {
     try {
       const responseAppointment = await axios.get(`http://localhost:3000/book-doctor-appointment-online/${documentId}`);
       appointmentData = responseAppointment.data;
-      whereID = '2';
+      // whereID = '2';
     } catch (error) {
       // ถ้าไม่พบข้อมูลใน BookDoctorAppointmentOnline, ไม่ทำอะไร
       appointmentData = null;
@@ -106,7 +106,7 @@ async function handleEvent(event) {
     try {
       const responseNotification = await axios.get(`http://localhost:3000/notification-settings/${documentId}`);
       notificationData = responseNotification.data;
-      whereID = '3';
+      // whereID = '3';
     } catch (error) {
       // ถ้าไม่พบข้อมูลใน NotificationSettings, ไม่ทำอะไร
       notificationData = null;
