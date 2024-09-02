@@ -437,7 +437,7 @@ async function handleEvent(event) {
     } 
     if (whereID === '2') {
       // ส่งข้อความ Flex Message ไปยัง LINE Chatbot
-     return client.replyMessage(event.replyToken, message2);
+      return client.replyMessage(event.replyToken, message2);
    } 
 //    if (whereID === '3') {
 //     // ส่งข้อความ Flex Message ไปยัง LINE Chatbot

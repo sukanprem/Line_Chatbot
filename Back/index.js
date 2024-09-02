@@ -47,23 +47,6 @@ app.get('/notification-settings', async (req, res) => {
     }
 });
 
-// The GET method reads the notificationSettings data by Document ID.
-app.get('/notification-settings/:id', async (req, res) => {
-  try {
-    const docId = req.params.id;
-    const doc = await db.collection('notificationSettings').doc(docId).get();
-    
-    if (!doc.exists) {
-      res.status(404).send('Document not found');
-    } else {
-      res.json(doc.data());
-    }
-  } catch (error) {
-    console.error("Error retrieving notification settings : ", error);
-    res.status(500).send('Error retrieving notification settings : ');
-  }
-});
-
 // The POST method adds notificationSettings data.
 app.post('/add-notification-setting', async (req, res) => {
   try {
