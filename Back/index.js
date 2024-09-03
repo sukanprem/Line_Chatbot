@@ -260,6 +260,8 @@ app.put('/update-health-check-result/:id', async (req, res) => {
 
     // ตรวจสอบการสมัครรับข้อมูลและส่งการแจ้งเตือน
     const subscriptionsSnapshot = await db.collection('Subscriptions').where('healthCheckResultId', '==', id).get();
+    let notifications_for_health_check_result = [];
+
     subscriptionsSnapshot.forEach(async (subscriptionDoc) => {
       const subscriptionData = subscriptionDoc.data();
 
@@ -288,11 +290,35 @@ app.put('/update-health-check-result/:id', async (req, res) => {
         text: message_for_health_check_result
       });
 
+      // เตรียมข้อมูลที่จะส่งไปให้ฝั่งหน้าบ้านสร้างข้อความและส่งต่อไปยัง LINE
+      // notifications_for_health_check_result.push({
+      //   lineUserId: subscriptionData.lineUserId,
+      //   data: {
+      //     fullName: fullName || doc.data().fullName,
+      //     lastName: lastName || doc.data().lastName,
+      //     weight: weight || doc.data().weight,
+      //     height: height || doc.data().height,
+      //     pulseRate: pulseRate || doc.data().pulseRate,
+      //     temperature: temperature || doc.data().temperature,
+      //     oxygenLevel: oxygenLevel || doc.data().oxygenLevel,
+      //     respirationRate: respirationRate || doc.data().respirationRate,
+      //     fastingBloodSugar: fastingBloodSugar || doc.data().fastingBloodSugar,
+      //     mealTime: mealTime || doc.data().mealTime,
+      //     moreDetails: moreDetails || doc.data().moreDetails,
+      //     bmi: bmi.toFixed(2),
+      //     bloodPressure: bloodPressure || doc.data().bloodPressure
+      //   },
+      //   notificationType: subscriptionData.notificationType
+      // });
+
       // ถ้าเป็นการสมัครรับข้อมูลแบบครั้งเดียว ให้ลบการสมัครรับข้อมูลออก
       if (subscriptionData.notificationType === 'once') {
         await db.collection('Subscriptions').doc(subscriptionDoc.id).delete();
       }
     });
+
+    // ส่งข้อมูลทั้งหมดไปที่หน้าบ้าน
+    // res.json(notifications_for_health_check_result);
 
     res.send('Health check result updated successfully!');
   } catch (error) {
