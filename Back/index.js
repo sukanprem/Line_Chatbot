@@ -1,6 +1,7 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
+const { createHealthCheckResultFlexMessage } = require('../../Copy_Of_Front_Prem_Version/flexMessageUtils');
 
 const app = express();
 const port = 3000;
@@ -266,9 +267,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
       const subscriptionData = subscriptionDoc.data();
 
       // สร้างข้อความสำหรับส่งไปยัง LINE Chatbot
-      // let replyText = 'myHealthFirst\n';
-
-      const message_for_health_check_result = 
+      const message_for_health_check_result =
         `myHealthFirst\n\n` +
         `ผลการตรวจร่างกายของคุณ ${fullName || doc.data().fullName} ${lastName || doc.data().lastName}\n` +
         `น้ำหนัก: ${weight || doc.data().weight} กิโลกรัม\n` +
@@ -282,13 +281,16 @@ app.put('/update-health-check-result/:id', async (req, res) => {
         `รายละเอียดเพิ่มเติม: ${moreDetails || doc.data().moreDetails}\n` +
         `BMI: ${bmi.toFixed(2)}\n` +
         `ความดันโลหิต: ${bloodPressure || doc.data().bloodPressure}`
-      
+
+      // const message_for_health_check_result = createHealthCheckResultFlexMessage(healthCheckData);
 
       // ส่งข้อความไปยัง LINE Chatbot
       await client.pushMessage(subscriptionData.lineUserId, {
         type: 'text',
         text: message_for_health_check_result
       });
+
+      // await client.pushMessage(lineUserId, message_for_health_check_result);
 
       // เตรียมข้อมูลที่จะส่งไปให้ฝั่งหน้าบ้านสร้างข้อความและส่งต่อไปยัง LINE
       // notifications_for_health_check_result.push({
