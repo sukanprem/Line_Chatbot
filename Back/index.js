@@ -2,6 +2,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
 const { createHealthCheckResultFlexMessage } = require('../../Copy_Of_Front_Prem_Version/flexMessageUtils');
+// console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
 
 const app = express();
 const port = 3000;
@@ -261,34 +262,62 @@ app.put('/update-health-check-result/:id', async (req, res) => {
 
     // ตรวจสอบการสมัครรับข้อมูลและส่งการแจ้งเตือน
     const subscriptionsSnapshot = await db.collection('Subscriptions').where('healthCheckResultId', '==', id).get();
-    let notifications_for_health_check_result = [];
+    // let notifications_for_health_check_result = [];
 
     subscriptionsSnapshot.forEach(async (subscriptionDoc) => {
       const subscriptionData = subscriptionDoc.data();
 
+      const healthCheckData = {
+        fullName: fullName || doc.data().fullName,
+        lastName: lastName || doc.data().lastName,
+        weight: weight || doc.data().weight,
+        height: height || doc.data().height,
+        pulseRate: pulseRate || doc.data().pulseRate,
+        temperature: temperature || doc.data().temperature,
+        oxygenLevel: oxygenLevel || doc.data().oxygenLevel,
+        respirationRate: respirationRate || doc.data().respirationRate,
+        fastingBloodSugar: fastingBloodSugar || doc.data().fastingBloodSugar,
+        fastingTime: fastingTime || doc.data().fastingTime,
+        moreDetails: moreDetails || doc.data().moreDetails,
+        bmi: bmi, // ค่า BMI ที่คำนวณได้
+        bloodPressure: bloodPressure || doc.data().bloodPressure
+      };
+
+      // สร้าง Flex Message โดยใช้ฟังก์ชันที่สร้างขึ้น
+      const flexMessageForHealthCheckResult = createHealthCheckResultFlexMessage(healthCheckData);
+
+      // ส่งข้อความไปยัง LINE Chatbot
+      client.pushMessage(subscriptionData.lineUserId, flexMessageForHealthCheckResult)
+      .then(() => {
+        console.log('Flex message sent successfully');
+      })
+      .catch((error) => {
+        console.error('Error sending flex message:', error);
+      });
+
       // สร้างข้อความสำหรับส่งไปยัง LINE Chatbot
-      const message_for_health_check_result =
-        `myHealthFirst\n\n` +
-        `ผลการตรวจร่างกายของคุณ ${fullName || doc.data().fullName} ${lastName || doc.data().lastName}\n` +
-        `น้ำหนัก: ${weight || doc.data().weight} กิโลกรัม\n` +
-        `ส่วนสูง: ${height || doc.data().height} เซนติเมตร\n` +
-        `ชีพจร: ${pulseRate || doc.data().pulseRate}\n` +
-        `อุณหภูมิ: ${temperature || doc.data().temperature}\n` +
-        `ออกซิเจนในเลือด: ${oxygenLevel || doc.data().oxygenLevel}\n` +
-        `อัตราการหายใจ: ${respirationRate || doc.data().respirationRate}\n` +
-        `น้ำตาลในเลือด: ${fastingBloodSugar || doc.data().fastingBloodSugar}\n` +
-        `เวลา: ${mealTime || doc.data().mealTime}\n` +
-        `รายละเอียดเพิ่มเติม: ${moreDetails || doc.data().moreDetails}\n` +
-        `BMI: ${bmi.toFixed(2)}\n` +
-        `ความดันโลหิต: ${bloodPressure || doc.data().bloodPressure}`
+      // const message_for_health_check_result =
+      //   `myHealthFirst\n\n` +
+      //   `ผลการตรวจร่างกายของคุณ ${fullName || doc.data().fullName} ${lastName || doc.data().lastName}\n` +
+      //   `น้ำหนัก: ${weight || doc.data().weight} กิโลกรัม\n` +
+      //   `ส่วนสูง: ${height || doc.data().height} เซนติเมตร\n` +
+      //   `ชีพจร: ${pulseRate || doc.data().pulseRate}\n` +
+      //   `อุณหภูมิ: ${temperature || doc.data().temperature}\n` +
+      //   `ออกซิเจนในเลือด: ${oxygenLevel || doc.data().oxygenLevel}\n` +
+      //   `อัตราการหายใจ: ${respirationRate || doc.data().respirationRate}\n` +
+      //   `น้ำตาลในเลือด: ${fastingBloodSugar || doc.data().fastingBloodSugar}\n` +
+      //   `เวลา: ${mealTime || doc.data().mealTime}\n` +
+      //   `รายละเอียดเพิ่มเติม: ${moreDetails || doc.data().moreDetails}\n` +
+      //   `BMI: ${bmi.toFixed(2)}\n` +
+      //   `ความดันโลหิต: ${bloodPressure || doc.data().bloodPressure}`
 
       // const message_for_health_check_result = createHealthCheckResultFlexMessage(healthCheckData);
 
       // ส่งข้อความไปยัง LINE Chatbot
-      await client.pushMessage(subscriptionData.lineUserId, {
-        type: 'text',
-        text: message_for_health_check_result
-      });
+      // await client.pushMessage(subscriptionData.lineUserId, {
+      //   type: 'text',
+      //   text: message_for_health_check_result
+      // });
 
       // await client.pushMessage(lineUserId, message_for_health_check_result);
 
