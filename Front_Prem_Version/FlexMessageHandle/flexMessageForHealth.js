@@ -1,5 +1,19 @@
 function createHealthCheckResultFlexMessage(healthCheckData) {
+  let bmiColor = "#000000"; // Default color
 
+  const bmi = parseFloat(healthCheckData.bmi);
+
+  if (bmi < 18.5) {
+    bmiColor = "#0000FF"; // Blue
+  } else if (bmi >= 18.5 && bmi <= 22.9) {
+    bmiColor = "#00FF00"; // Green
+  } else if (bmi >= 23.0 && bmi <= 24.9) {
+    bmiColor = "#FFFF00"; // Yellow
+  } else if (bmi >= 25.0 && bmi <= 29.9) {
+    bmiColor = "#FFA500"; // Orange
+  } else if (bmi >= 30.0) {
+    bmiColor = "#FF0000"; // Red
+  }
   return {
     type: "flex",
     altText: "ผลการตรวจร่างกาย",
@@ -155,7 +169,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `BMI: ${healthCheckData.bmi}`,
                 size: "sm",
-                color: "#484848",
+                color: bmiColor,
                 flex: 0
               }
             ]
