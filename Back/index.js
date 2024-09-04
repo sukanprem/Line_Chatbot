@@ -240,6 +240,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
     if (weight && height) {
       const heightInMeters = height / 100;
       bmi = weight / (heightInMeters * heightInMeters);
+      console.log('BMI calculated:', bmi);  // Log BMI ที่คำนวณได้
     }
 
     // อัปเดตเอกสาร
@@ -285,6 +286,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
 
       // สร้าง Flex Message โดยใช้ฟังก์ชันที่สร้างขึ้น
       const flexMessageForHealthCheckResult = createHealthCheckResultFlexMessage(healthCheckData);
+      console.log('Sending Flex Message:', JSON.stringify(flexMessageForHealthCheckResult, null, 2));  // Log ข้อความที่จะส่ง
 
       // ส่งข้อความไปยัง LINE Chatbot
       client.pushMessage(subscriptionData.lineUserId, flexMessageForHealthCheckResult)

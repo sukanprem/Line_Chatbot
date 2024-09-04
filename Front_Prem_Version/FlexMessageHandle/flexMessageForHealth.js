@@ -2,6 +2,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
   let bmiColor = "#000000"; // Default color
 
   const bmi = parseFloat(healthCheckData.bmi);
+  console.log('BMI in Flex Message:', bmi);  // Log ค่า BMI ที่ถูกส่งมาใน Flex Message
 
   if (bmi < 18.5) {
     bmiColor = "#0000FF"; // Blue
@@ -15,8 +16,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
     bmiColor = "#FF0000"; // Red
   }
 
-  console.log('BMI:', bmi);
-  console.log('BMI Color:', bmiColor);
+  console.log('BMI Color:', bmiColor);  // Log สีที่ถูกเลือกตามค่า BMI
 
   return {
     type: "flex",
@@ -200,7 +200,3 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
 module.exports = {
   createHealthCheckResultFlexMessage
 };
-
-// app.listen(3002, () => {
-//   console.log('Server is running on port 3002');
-// });
