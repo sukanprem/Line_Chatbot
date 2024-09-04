@@ -20,7 +20,7 @@ function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
             type: "text",
             text: "จองพบแพทย์ออนไลน์ : ",
             weight: "bold",
-            size: "xl",
+            size: "sm",
             color: "#484848"
           },
           {

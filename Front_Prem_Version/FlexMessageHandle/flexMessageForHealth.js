@@ -1,23 +1,35 @@
 function createHealthCheckResultFlexMessage(healthCheckData) {
-  let bmiColor = "#000000"; // Default color
+  let bmiColor = "#484848"; // Default color
+  let temperatureColor = "#484848";
+  let oxygenLevelColor = "#484848";
+  let fastingBloodSugarColor = "#484848";
+
 
   const bmi = parseFloat(healthCheckData.bmi);
-  console.log('BMI in Flex Message:', bmi);  // Log ค่า BMI ที่ถูกส่งมาใน Flex Message
-
-  if (bmi < 18.5) {
-    bmiColor = "#0000FF"; // Blue
-  } else if (bmi >= 18.5 && bmi <= 22.9) {
-    bmiColor = "#00FF00"; // Green
-  } else if (bmi >= 23.0 && bmi <= 24.9) {
-    bmiColor = "#FFFF00"; // Yellow
-  } else if (bmi >= 25.0 && bmi <= 29.9) {
-    bmiColor = "#FFA500"; // Orange
-  } else if (bmi >= 30.0) {
-    bmiColor = "#FF0000"; // Red
+  if (bmi < 18.5 || bmi >= 25.0) {
+    bmiColor = "#E4080A"; // Red for underweight and overweight
   }
 
   console.log('BMI Color:', bmiColor);  // Log สีที่ถูกเลือกตามค่า BMI
 
+
+  // กำหนดสีของอุณหภูมิ (ตัวอย่างเกณฑ์: 36.1-37.2 องศาเซลเซียส)
+  const temperature = parseFloat(healthCheckData.temperature);
+  if (temperature > 39) {
+    temperatureColor = "#E4080A"; // Red
+  }
+
+  // กำหนดสีของออกซิเจนในเลือด (ตัวอย่างเกณฑ์: 95-100%)
+  const oxygenLevel = parseFloat(healthCheckData.oxygenLevel);
+  if (oxygenLevel < 95) {
+    oxygenLevelColor = "#E4080A"; // Red
+  }
+
+  // กำหนดสีของค่าน้ำตาลในเลือด (ตัวอย่างเกณฑ์: 70-99 mg/dL)
+  const fastingBloodSugar = parseFloat(healthCheckData.fastingBloodSugar);
+  if (fastingBloodSugar < 70 || fastingBloodSugar > 99) {
+    fastingBloodSugarColor = "#E4080A"; // Red
+  }
   return {
     type: "flex",
     altText: "ผลการตรวจร่างกาย",
@@ -40,8 +52,9 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
             contents: [
               {
                 type: "text",
-                text: `ชื่อ: ${healthCheckData.fullName}` + `${healthCheckData.lastName}`,
+                text: `ชื่อ: ${healthCheckData.fullName}` + " " + `${healthCheckData.lastName}`,
                 size: "sm",
+                weight: "bold",
                 color: "#484848",
                 flex: 0
               }
@@ -56,6 +69,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `น้ำหนัก: ${healthCheckData.weight}`,
                 size: "sm",
+                weight: "bold",
                 color: "#484848",
                 flex: 0
               }
@@ -69,6 +83,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `ส่วนสูง: ${healthCheckData.height}`,
                 size: "sm",
+                weight: "bold",
                 color: "#484848",
                 flex: 0
               }
@@ -82,6 +97,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `ชีพจร: ${healthCheckData.pulseRate}`,
                 size: "sm",
+                weight: "bold",
                 color: "#484848",
                 flex: 0
               }
@@ -95,7 +111,8 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `อุณหภูมิ: ${healthCheckData.temperature}`,
                 size: "sm",
-                color: "#484848",
+                weight: "bold",
+                color: temperatureColor,
                 flex: 0
               }
             ]
@@ -108,7 +125,8 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `ออกซิเจนในเลือด: ${healthCheckData.oxygenLevel}`,
                 size: "sm",
-                color: "#484848",
+                weight: "bold",
+                color: oxygenLevelColor,
                 flex: 0
               }
             ]
@@ -121,6 +139,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `อัตราการหายใจ: ${healthCheckData.respirationRate}`,
                 size: "sm",
+                weight: "bold",
                 color: "#484848",
                 flex: 0
               }
@@ -134,7 +153,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `ค่าน้ำตาลในเลือด: ${healthCheckData.fastingBloodSugar}`,
                 size: "sm",
-                color: "#484848",
+                color: fastingBloodSugarColor,
                 flex: 0
               }
             ]
@@ -160,6 +179,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `รายละเอียดเพิ่มเติม: ${healthCheckData.moreDetails}`,
                 size: "sm",
+                weight: "bold",
                 color: "#484848",
                 flex: 0
               }
@@ -173,6 +193,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `BMI: ${healthCheckData.bmi}`,
                 size: "sm",
+                weight: "bold",
                 color: bmiColor,
                 flex: 0
               }
@@ -186,6 +207,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
                 type: "text",
                 text: `ความดันโลหิต: ${healthCheckData.bloodPressure}`,
                 size: "sm",
+                weight: "bold",
                 color: "#484848",
                 flex: 0
               }
