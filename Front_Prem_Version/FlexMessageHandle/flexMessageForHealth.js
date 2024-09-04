@@ -14,6 +14,10 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
   } else if (bmi >= 30.0) {
     bmiColor = "#FF0000"; // Red
   }
+
+  console.log('BMI:', bmi);
+  console.log('BMI Color:', bmiColor);
+
   return {
     type: "flex",
     altText: "ผลการตรวจร่างกาย",
@@ -196,3 +200,7 @@ function createHealthCheckResultFlexMessage(healthCheckData) {
 module.exports = {
   createHealthCheckResultFlexMessage
 };
+
+// app.listen(3002, () => {
+//   console.log('Server is running on port 3002');
+// });
