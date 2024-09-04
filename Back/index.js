@@ -1,7 +1,7 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
-const { createHealthCheckResultFlexMessage } = require('../../Alternative_front_end_of_Line_Chatbot/flexMessageForHealth');
+const { createHealthCheckResultFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHealth');
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
 
 const app = express();

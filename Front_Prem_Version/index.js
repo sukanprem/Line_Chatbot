@@ -1,6 +1,10 @@
 const express = require('express');
 const { Client, middleware } = require('@line/bot-sdk');
 const axios = require('axios');
+const { createHealthCheckResultFlexMessage } = require('./FlexMessageHandle/flexMessageForHealth');
+const { createBookDoctorAppointmentOnlineFlexMessage } = require('./FlexMessageHandle/flexMessageForBook');
+// console.log(typeof createHealthCheckResultFlexMessage);
+// console.log(typeof createBookDoctorAppointmentOnlineFlexMessage);
 
 const config = {
   channelAccessToken: 'ENKDsvTDe6tM0mXTXuOOfh4Ts9L83gJCgqfKGops41mJ5Oyvu9Y1j4C64O7dxJ5MG5YA6omBrZvfRt12uHdoV/XhMErs/kUE7ecSDcKPkjRFRe3wzjMjQw503jeq8k89ZmyU+bGroGsOVz7na8n73wdB04t89/1O/w1cDnyilFU=',
@@ -75,26 +79,13 @@ async function handleEvent(event) {
     let replyText = 'myHealthFirst\n';
 
     if (healthCheckData) {
-      replyText += `\nผลการตรวจร่างกายของคุณ ${healthCheckData.fullName} ${healthCheckData.lastName}\n` +
-                  `น้ำหนัก: ${healthCheckData.weight} กิโลกรัม\n` +
-                  `ส่วนสูง: ${healthCheckData.height} เซนติเมตร\n` +
-                  `ชีพจร: ${healthCheckData.pulseRate}\n` +
-                  `อุณหภูมิ: ${healthCheckData.temperature}\n` +
-                  `ออกซิเจนในเลือด: ${healthCheckData.oxygenLevel}\n` +
-                  `อัตราการหายใจ: ${healthCheckData.respirationRate}\n` +
-                  `น้ำตาลในเลือด: ${healthCheckData.fastingBloodSugar}\n` +
-                  `เวลา: ${healthCheckData.mealTime} ${healthCheckData.fastingTime}\n` +
-                  `รายละเอียดเพิ่มเติม: ${healthCheckData.moreDetails}\n` +
-                  `BMI: ${healthCheckData.bmi}\n` +
-                  `ความดันโลหิต: ${healthCheckData.bloodPressure}`;
+      const flex_message_for_health_check_data = createHealthCheckResultFlexMessage(healthCheckData);
+      return client.replyMessage(event.replyToken, flex_message_for_health_check_data);
     }
 
     if (appointmentData) {
-      replyText += `\n\nจองพบแพทย์ออนไลน์:\n` +
-                   `${appointmentData.fullName} ${appointmentData.lastName} จอง ${appointmentData.healthPlan}\n` +
-                   `จาก ${appointmentData.hospital}\n` +
-                   `แผนก ${appointmentData.department} วันที่: ${appointmentData.date}\n` +
-                   `เวลา: ${appointmentData.time}`;
+      const flex_message_for_appointment_data = createBookDoctorAppointmentOnlineFlexMessage(appointmentData);
+      return client.replyMessage(event.replyToken, flex_message_for_appointment_data);
     }
 
     if (notificationData) {
