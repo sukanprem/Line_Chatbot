@@ -170,11 +170,12 @@ app.post('/add-health-check-result', async (req, res) => {
       fastingTime, 
       fastingBloodSugar, 
       moreDetails, 
-      bloodPressure
+      bloodPressure,
+      hospital
     } = req.body;
 
     // ตรวจสอบว่าได้รับค่าที่จำเป็นครบหรือไม่
-    if (!fullName || !lastName || !weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure) {
+    if (!fullName || !lastName || !weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure || !hospital) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
@@ -197,7 +198,8 @@ app.post('/add-health-check-result', async (req, res) => {
       fastingBloodSugar,
       moreDetails: moreDetails || '', // ใช้ค่าว่างหากไม่มีข้อความเตือน
       bmi, // ค่า BMI ที่คำนวณได้
-      bloodPressure
+      bloodPressure,
+      hospital
     });
 
     res.send('Health check result added successfully!');
@@ -224,7 +226,8 @@ app.put('/update-health-check-result/:id', async (req, res) => {
       fastingTime, 
       fastingBloodSugar, 
       moreDetails, 
-      bloodPressure
+      bloodPressure,
+      hospital
     } = req.body;
 
     const docRef = db.collection('healthCheckResults').doc(id);
@@ -258,7 +261,8 @@ app.put('/update-health-check-result/:id', async (req, res) => {
       fastingBloodSugar: fastingBloodSugar || doc.data().fastingBloodSugar,
       moreDetails: moreDetails || doc.data().moreDetails,
       bmi: bmi, // ค่า BMI ที่คำนวณได้หรือค่าเดิมถ้าไม่มีการเปลี่ยนแปลง
-      bloodPressure: bloodPressure || doc.data().bloodPressure
+      bloodPressure: bloodPressure || doc.data().bloodPressure,
+      hospital: hospital || doc.data().hospital
     });
 
     // ตรวจสอบการสมัครรับข้อมูลและส่งการแจ้งเตือน
@@ -281,7 +285,8 @@ app.put('/update-health-check-result/:id', async (req, res) => {
         fastingTime: fastingTime || doc.data().fastingTime,
         moreDetails: moreDetails || doc.data().moreDetails,
         bmi: bmi, // ค่า BMI ที่คำนวณได้
-        bloodPressure: bloodPressure || doc.data().bloodPressure
+        bloodPressure: bloodPressure || doc.data().bloodPressure,
+        hospital: hospital || doc.data().hospital
       };
 
       // สร้าง Flex Message โดยใช้ฟังก์ชันที่สร้างขึ้น
