@@ -2,7 +2,9 @@ const express = require('express');
 const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
 const { createHealthCheckResultFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHealth');
+const { createHospitalFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHospital')
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
+// console.log(typeof createHospitalFlexMessage); // Should log 'function'
 
 const app = express();
 const port = 3000;
@@ -291,10 +293,12 @@ app.put('/update-health-check-result/:id', async (req, res) => {
 
       // สร้าง Flex Message โดยใช้ฟังก์ชันที่สร้างขึ้น
       const flexMessageForHealthCheckResult = createHealthCheckResultFlexMessage(healthCheckData);
+      const flexMessageForHospital = createHospitalFlexMessage(healthCheckData);
       console.log('Sending Flex Message:', JSON.stringify(flexMessageForHealthCheckResult, null, 2));  // Log ข้อความที่จะส่ง
+      console.log('Sending Flex Message:', JSON.stringify(flexMessageForHospital, null, 2)); // Log ข้อความที่จะส่ง
 
       // ส่งข้อความไปยัง LINE Chatbot
-      client.pushMessage(subscriptionData.lineUserId, flexMessageForHealthCheckResult)
+      client.pushMessage(subscriptionData.lineUserId, [flexMessageForHealthCheckResult, flexMessageForHospital])
       .then(() => {
         console.log('Flex message sent successfully');
       })
