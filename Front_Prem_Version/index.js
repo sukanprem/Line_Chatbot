@@ -3,13 +3,14 @@ const { Client, middleware } = require('@line/bot-sdk');
 const axios = require('axios');
 const { createHealthCheckResultFlexMessage } = require('./FlexMessageHandle/flexMessageForHealth');
 const { createBookDoctorAppointmentOnlineFlexMessage } = require('./FlexMessageHandle/flexMessageForBook');
-const { createHospitalFlexMessage } = require('./FlexMessageHandle/flexMessageForHospital')
+const { createHospitalFlexMessage } = require('./FlexMessageHandle/flexMessageForHospital');
+require('dotenv').config(); // เรียกใช้ dotenv
 // console.log(typeof createHealthCheckResultFlexMessage);
 // console.log(typeof createBookDoctorAppointmentOnlineFlexMessage);
 
 const config = {
-  channelAccessToken: 'ENKDsvTDe6tM0mXTXuOOfh4Ts9L83gJCgqfKGops41mJ5Oyvu9Y1j4C64O7dxJ5MG5YA6omBrZvfRt12uHdoV/XhMErs/kUE7ecSDcKPkjRFRe3wzjMjQw503jeq8k89ZmyU+bGroGsOVz7na8n73wdB04t89/1O/w1cDnyilFU=',
-  channelSecret: 'caac7ac0d65991394a32b6a1beacdf6e'
+  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+  channelSecret: process.env.CHANNEL_SECRET
 };
 
 const app = express();
