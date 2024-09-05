@@ -3,6 +3,7 @@ const { Client, middleware } = require('@line/bot-sdk');
 const axios = require('axios');
 const { createHealthCheckResultFlexMessage } = require('./FlexMessageHandle/flexMessageForHealth');
 const { createBookDoctorAppointmentOnlineFlexMessage } = require('./FlexMessageHandle/flexMessageForBook');
+const { createHospitalFlexMessage } = require('./FlexMessageHandle/flexMessageForHospital')
 // console.log(typeof createHealthCheckResultFlexMessage);
 // console.log(typeof createBookDoctorAppointmentOnlineFlexMessage);
 
@@ -78,9 +79,21 @@ async function handleEvent(event) {
     // สร้างข้อความตอบกลับ
     let replyText = 'myHealthFirst\n';
 
+    // if (healthCheckData) {
+    //   const flex_message_for_health_check_data = createHealthCheckResultFlexMessage(healthCheckData);
+    //   return client.replyMessage(event.replyToken, flex_message_for_health_check_data);
+    // }
+
     if (healthCheckData) {
+      // Create both Flex messages
       const flex_message_for_health_check_data = createHealthCheckResultFlexMessage(healthCheckData);
-      return client.replyMessage(event.replyToken, flex_message_for_health_check_data);
+      const flex_message_for_hospital = createHospitalFlexMessage(healthCheckData);
+    
+      // Send both messages as an array
+      return client.replyMessage(event.replyToken, [
+        flex_message_for_health_check_data,
+        flex_message_for_hospital
+      ]);
     }
 
     if (appointmentData) {
