@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
 const { createHealthCheckResultFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHealth');
 const { createHospitalFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHospital')
+require('dotenv').config();
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
 // console.log(typeof createHospitalFlexMessage); // Should log 'function'
 
@@ -19,9 +20,14 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+// const config = {
+//   channelAccessToken: 'ENKDsvTDe6tM0mXTXuOOfh4Ts9L83gJCgqfKGops41mJ5Oyvu9Y1j4C64O7dxJ5MG5YA6omBrZvfRt12uHdoV/XhMErs/kUE7ecSDcKPkjRFRe3wzjMjQw503jeq8k89ZmyU+bGroGsOVz7na8n73wdB04t89/1O/w1cDnyilFU=',
+//   channelSecret: 'caac7ac0d65991394a32b6a1beacdf6e'
+// };
+
 const config = {
-  channelAccessToken: 'ENKDsvTDe6tM0mXTXuOOfh4Ts9L83gJCgqfKGops41mJ5Oyvu9Y1j4C64O7dxJ5MG5YA6omBrZvfRt12uHdoV/XhMErs/kUE7ecSDcKPkjRFRe3wzjMjQw503jeq8k89ZmyU+bGroGsOVz7na8n73wdB04t89/1O/w1cDnyilFU=',
-  channelSecret: 'caac7ac0d65991394a32b6a1beacdf6e'
+  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+  channelSecret: process.env.CHANNEL_SECRET
 };
 
 const client = new Client(config);
@@ -245,7 +251,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
     if (weight && height) {
       const heightInMeters = height / 100;
       bmi = weight / (heightInMeters * heightInMeters);
-      console.log('BMI calculated:', bmi);  // Log BMI ที่คำนวณได้
+      // console.log('BMI calculated:', bmi);  // Log BMI ที่คำนวณได้
     }
 
     // อัปเดตเอกสาร
