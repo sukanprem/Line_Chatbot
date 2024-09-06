@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
 const { createHealthCheckResultFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHealth');
 const { createHospitalFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHospital')
+require('dotenv').config();
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
 // console.log(typeof createHospitalFlexMessage); // Should log 'function'
 
@@ -250,7 +251,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
     if (weight && height) {
       const heightInMeters = height / 100;
       bmi = weight / (heightInMeters * heightInMeters);
-      console.log('BMI calculated:', bmi);  // Log BMI ที่คำนวณได้
+      // console.log('BMI calculated:', bmi);  // Log BMI ที่คำนวณได้
     }
 
     // อัปเดตเอกสาร
