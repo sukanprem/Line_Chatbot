@@ -141,7 +141,11 @@ app.get('/health-check-result', async (req, res) => {
     const snapshot = await db.collection('healthCheckResults').get();
     let settings = [];
     snapshot.forEach((doc) => {
-      settings.push(doc.data());
+      // settings.push(doc.data());
+      settings.push({
+        id: doc.id, // Add the document ID
+        ...doc.data() // Spread the rest of the document data
+      })
     });
     res.json(settings);
   } catch (error) {
