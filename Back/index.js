@@ -35,7 +35,7 @@ const config = {
 
 const client = new Client(config);
 
-app.use(cors());
+app.use(cors()); // Enable CORS for all routes
 
 app.use(express.json()); // Middleware สำหรับแปลง JSON body
 
@@ -321,61 +321,11 @@ app.put('/update-health-check-result/:id', async (req, res) => {
         console.error('Error sending flex message:', error);
       });
 
-      // สร้างข้อความสำหรับส่งไปยัง LINE Chatbot
-      // const message_for_health_check_result =
-      //   `myHealthFirst\n\n` +
-      //   `ผลการตรวจร่างกายของคุณ ${fullName || doc.data().fullName} ${lastName || doc.data().lastName}\n` +
-      //   `น้ำหนัก: ${weight || doc.data().weight} กิโลกรัม\n` +
-      //   `ส่วนสูง: ${height || doc.data().height} เซนติเมตร\n` +
-      //   `ชีพจร: ${pulseRate || doc.data().pulseRate}\n` +
-      //   `อุณหภูมิ: ${temperature || doc.data().temperature}\n` +
-      //   `ออกซิเจนในเลือด: ${oxygenLevel || doc.data().oxygenLevel}\n` +
-      //   `อัตราการหายใจ: ${respirationRate || doc.data().respirationRate}\n` +
-      //   `น้ำตาลในเลือด: ${fastingBloodSugar || doc.data().fastingBloodSugar}\n` +
-      //   `เวลา: ${mealTime || doc.data().mealTime}\n` +
-      //   `รายละเอียดเพิ่มเติม: ${moreDetails || doc.data().moreDetails}\n` +
-      //   `BMI: ${bmi.toFixed(2)}\n` +
-      //   `ความดันโลหิต: ${bloodPressure || doc.data().bloodPressure}`
-
-      // const message_for_health_check_result = createHealthCheckResultFlexMessage(healthCheckData);
-
-      // ส่งข้อความไปยัง LINE Chatbot
-      // await client.pushMessage(subscriptionData.lineUserId, {
-      //   type: 'text',
-      //   text: message_for_health_check_result
-      // });
-
-      // await client.pushMessage(lineUserId, message_for_health_check_result);
-
-      // เตรียมข้อมูลที่จะส่งไปให้ฝั่งหน้าบ้านสร้างข้อความและส่งต่อไปยัง LINE
-      // notifications_for_health_check_result.push({
-      //   lineUserId: subscriptionData.lineUserId,
-      //   data: {
-      //     fullName: fullName || doc.data().fullName,
-      //     lastName: lastName || doc.data().lastName,
-      //     weight: weight || doc.data().weight,
-      //     height: height || doc.data().height,
-      //     pulseRate: pulseRate || doc.data().pulseRate,
-      //     temperature: temperature || doc.data().temperature,
-      //     oxygenLevel: oxygenLevel || doc.data().oxygenLevel,
-      //     respirationRate: respirationRate || doc.data().respirationRate,
-      //     fastingBloodSugar: fastingBloodSugar || doc.data().fastingBloodSugar,
-      //     mealTime: mealTime || doc.data().mealTime,
-      //     moreDetails: moreDetails || doc.data().moreDetails,
-      //     bmi: bmi.toFixed(2),
-      //     bloodPressure: bloodPressure || doc.data().bloodPressure
-      //   },
-      //   notificationType: subscriptionData.notificationType
-      // });
-
       // ถ้าเป็นการสมัครรับข้อมูลแบบครั้งเดียว ให้ลบการสมัครรับข้อมูลออก
       if (subscriptionData.notificationType === 'once') {
         await db.collection('Subscriptions').doc(subscriptionDoc.id).delete();
       }
     });
-
-    // ส่งข้อมูลทั้งหมดไปที่หน้าบ้าน
-    // res.json(notifications_for_health_check_result);
 
     res.send('Health check result updated successfully!');
   } catch (error) {
