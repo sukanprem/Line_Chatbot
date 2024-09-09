@@ -7,9 +7,6 @@ require('dotenv').config();
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
 // console.log(typeof createHospitalFlexMessage); // Should log 'function'
 
-const cors = require('cors');
-// app.use(cors());
-
 const app = express();
 const port = 3000;
 
@@ -35,6 +32,7 @@ const config = {
 
 const client = new Client(config);
 
+const cors = require('cors');
 app.use(cors()); // Enable CORS for all routes
 
 app.use(express.json()); // Middleware สำหรับแปลง JSON body
