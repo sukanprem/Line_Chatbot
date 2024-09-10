@@ -8,7 +8,7 @@ require('dotenv').config();
 // console.log(typeof createHospitalFlexMessage); // Should log 'function'
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // Initialize Firebase Admin SDK
 const serviceAccount = require('./line-chatbot-de830-firebase-adminsdk-irdr9-a19bd78a94.json');
