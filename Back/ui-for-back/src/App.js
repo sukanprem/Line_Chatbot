@@ -4,8 +4,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const App = () => {
-  const [healthCheckData, setHealthCheckData] = useState([]);
-  const [appointmentData, setAppointmentData] = useState([]); // State สำหรับข้อมูลการจองแพทย์
+  const [healthCheckData, setHealthCheckData] = useState([]); // State สำหรับข้อมูลผลสุขภาพ
+  const [appointmentData, setAppointmentData] = useState([]); // State สำหรับข้อมูลการจองพบแพทย์ออนไลน์
+  const [subscriptionsData, setSubscriptions] = useState([]); // State สำหรับข้อมูลการติดตามผลสุขภาพ
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -35,6 +36,19 @@ const App = () => {
     }
   };
 
+  // ฟังก์ชันสำหรับดึงข้อมูลจาก API ของ Subscriptions
+  const fetchSubscriptions = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:3001/subscribe');
+      setSubscriptions(response.data);
+      setLoading(false);
+    } catch (error) {
+      message.error('Error fetching subscriptions');
+      setLoading(false);
+    }
+  }
+
   // ฟังก์ชันสำหรับลบข้อมูล health check result
   const deleteHealthCheckResult = async (id) => {
     try {
@@ -57,10 +71,22 @@ const App = () => {
     }
   };
 
+  // ฟังก์ชันสำหรับลบข้อมูล subscriptions
+  const deleteSubscriptions = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3001/delete-subscribe/${id}`);
+      message.success('Subscriptions deleted successfully');
+      setSubscriptions(subscriptionsData.filter(item => item.id !== id));
+    } catch (error) {
+      message.error('Error deleting subscriptions');
+    }
+  };
+
   // ดึงข้อมูลเมื่อคอมโพเนนต์โหลดครั้งแรก
   useEffect(() => {
     fetchHealthCheckResults();
     fetchBookDoctorAppointmentOnline();
+    fetchSubscriptions();
   }, []);
 
   // คอลัมน์ของตารางสำหรับ Health Check Results
@@ -176,76 +202,122 @@ const App = () => {
     },
   ];
 
-    // คอลัมน์ของตารางสำหรับ Book Doctor Appointment
-    const appointmentColumns = [
-      {
-        title: 'Document ID',
-        dataIndex: 'id',
-        key: 'id',
-      },
-      {
-        title: 'Full Name',
-        dataIndex: 'fullName',
-        key: 'fullName',
-      },
-      {
-        title: 'Last Name',
-        dataIndex: 'lastName',
-        key: 'lastName',
-      },
-      {
-        title: 'Health Plan',
-        dataIndex: 'healthPlan',
-        key: 'healthPlan',
-      },
-      {
-        title: 'Hospital',
-        dataIndex: 'hospital',
-        key: 'hospital',
-      },
-      {
-        title: 'Doctor',
-        dataIndex: 'doctor',
-        key: 'doctor',
-      },
-      {
-        title: 'Department',
-        dataIndex: 'department',
-        key: 'department',
-      },
-      {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-      },
-      {
-        title: 'Time',
-        dataIndex: 'time',
-        key: 'time',
-      },
-      {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => (
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <Button
-              type="primary"
-              onClick={() => navigate(`/update-book-doctor-appointment/${record.id}`)}
-            >
-              Update
-            </Button>
-            <Popconfirm
-              title="Are you sure you want to delete this appointment?"
-              onConfirm={() => deleteBookDoctorAppointment(record.id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="primary" danger>Delete</Button>
-            </Popconfirm>
-          </div>
-        ),
-      },
-    ];
+  // คอลัมน์ของตารางสำหรับ Book Doctor Appointment
+  const appointmentColumns = [
+    {
+      title: 'Document ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Full Name',
+      dataIndex: 'fullName',
+      key: 'fullName',
+    },
+    {
+      title: 'Last Name',
+      dataIndex: 'lastName',
+      key: 'lastName',
+    },
+    {
+      title: 'Health Plan',
+      dataIndex: 'healthPlan',
+      key: 'healthPlan',
+    },
+    {
+      title: 'Hospital',
+      dataIndex: 'hospital',
+      key: 'hospital',
+    },
+    {
+      title: 'Doctor',
+      dataIndex: 'doctor',
+      key: 'doctor',
+    },
+    {
+      title: 'Department',
+      dataIndex: 'department',
+      key: 'department',
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+    },
+    {
+      title: 'Time',
+      dataIndex: 'time',
+      key: 'time',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <Button
+            type="primary"
+            onClick={() => navigate(`/update-book-doctor-appointment/${record.id}`)}
+          >
+            Update
+          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this appointment?"
+            onConfirm={() => deleteBookDoctorAppointment(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>Delete</Button>
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+
+  // คอลัมน์ของตารางสำหรับ Subscriptions
+  const subscriptionColumns = [
+    {
+      title: 'Document ID',
+      dataIndex: 'id',
+      key: 'id'
+    },
+    {
+      title: 'Line User Id',
+      dataIndex: 'lineUserId',
+      key: 'lineUserId'
+    },
+    {
+      title: 'Health Check Result ID',
+      dataIndex: 'healthCheckResultId',
+      key: 'healthCheckResultId'
+    },
+    {
+      title: 'Notification Type',
+      dataIndex: 'notificationType',
+      key: 'notificationType'
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <Button
+            type="primary"
+            onClick={() => navigate(`/update-subscriptions/${record.id}`)}
+          >
+            Update
+          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this appointment?"
+            onConfirm={() => deleteSubscriptions(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>Delete</Button>
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ]
 
   return (
     <div style={{ padding: '20px' }}>
@@ -283,6 +355,23 @@ const App = () => {
           dataSource={appointmentData}
           columns={appointmentColumns}
           rowKey="id"
+        />
+      )}
+      <h1>Subscriptions</h1>
+      <Button
+      type='primary'
+      onClick={() => navigate('/create-subscriptions')}
+      style={{ marginBottom: '20px' }}
+      >
+        Create Subscriptions
+      </Button>
+      {loading ? (
+        <Spin size="large" />
+      ) : (
+        <Table
+        dataSource={subscriptionsData}
+        columns={subscriptionColumns}
+        rowKey="id"
         />
       )}
     </div>

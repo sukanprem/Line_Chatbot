@@ -500,7 +500,11 @@ app.get('/subscribe', async (req, res) => {
     const snapshot = await db.collection('Subscriptions').get();
     let settings = [];
     snapshot.forEach((doc) => {
-      settings.push(doc.data());
+      // settings.push(doc.data());
+      settings.push({
+        id: doc.id, // Add the document ID
+        ...doc.data() // Spread the rest of the document data
+      })
     });
     res.json(settings);
   } catch (error) {
