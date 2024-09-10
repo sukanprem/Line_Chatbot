@@ -361,7 +361,11 @@ app.get('/book-doctor-appointment-online', async (req, res) => {
     const snapshot = await db.collection('BookDoctorAppointmentOnline').get();
     let settings = [];
     snapshot.forEach((doc) => {
-      settings.push(doc.data());
+      // settings.push(doc.data());
+      settings.push({
+        id: doc.id, // เพิ่ม Document ID เข้าไปในข้อมูลที่ถูกส่งกลับ
+        ...doc.data() // รวมข้อมูลอื่นๆ ของเอกสาร
+      })
     });
     res.json(settings);
   } catch (error) {
