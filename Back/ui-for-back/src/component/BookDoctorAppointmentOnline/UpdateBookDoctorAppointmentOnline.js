@@ -3,7 +3,7 @@ import { Form, Input, Button, message, DatePicker, TimePicker, Spin } from 'antd
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
-import './BookDoctorAppointmentOnline.css'
+// import './BookDoctorAppointmentOnline.css'
 
 const UpdateBookDoctorAppointmentOnline = () => {
     const [form] = Form.useForm();

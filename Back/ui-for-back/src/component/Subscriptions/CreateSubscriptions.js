@@ -3,7 +3,7 @@ import { Form, Input, Button, message, Radio, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Subscriptions.css'
+// import './Subscriptions.css'
 
 const CreateSubscriptions = () => {
     const [loading, setLoading] = useState(false);

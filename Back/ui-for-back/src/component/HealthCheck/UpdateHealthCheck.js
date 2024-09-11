@@ -3,7 +3,7 @@ import { Form, Input, Button, message, Spin, Space } from 'antd';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import './HealthCheck.css'
+// import '../../App.css';
 
 const UpdateHealthCheck = () => {
     const [form] = Form.useForm();
