@@ -3,6 +3,7 @@ import { Form, Input, Button, message, Spin, Space } from 'antd';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import './HealthCheck.css'
 
 const UpdateHealthCheck = () => {
     const [form] = Form.useForm();
@@ -40,156 +41,166 @@ const UpdateHealthCheck = () => {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Update Health Check Result</h1>
-            {loading ? (
-                <Spin size="large" />
-            ) : (
-                <Form
-                    form={form}
-                    layout="vertical"
-                    onFinish={onFinish}
-                >
-                    
-                    <Form.Item
-                        label="Full Name"
-                        name="fullName"
+        <update>
+            <div
+                /* style={{ padding: '20px' }} */
+                className='padding-20-px'
+            >
+                <h1>Update Health Check Result</h1>
+                {loading ? (
+                    <Spin size="large" />
+                ) : (
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={onFinish}
+                    >
+
+                        <Form.Item
+                            label="Full Name"
+                            name="fullName"
                         // rules={[{ required: true, message: 'Please input full name!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Last Name"
-                        name="lastName"
+                        <Form.Item
+                            label="Last Name"
+                            name="lastName"
                         // rules={[{ required: true, message: 'Please input last name!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Weight (kg)"
-                        name="weight"
+                        <Form.Item
+                            label="Weight (kg)"
+                            name="weight"
                         // rules={[{ required: true, message: 'Please input weight!' }]}
-                    >
-                        <Input type="number" />
-                    </Form.Item>
+                        >
+                            <Input type="number" />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Height (cm)"
-                        name="height"
+                        <Form.Item
+                            label="Height (cm)"
+                            name="height"
                         // rules={[{ required: true, message: 'Please input height!' }]}
-                    >
-                        <Input type="number" />
-                    </Form.Item>
+                        >
+                            <Input type="number" />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Pulse Rate"
-                        name="pulseRate"
+                        <Form.Item
+                            label="Pulse Rate"
+                            name="pulseRate"
                         // rules={[{ required: true, message: 'Please input pulse rate!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Temperature"
-                        name="temperature"
+                        <Form.Item
+                            label="Temperature"
+                            name="temperature"
                         // rules={[{ required: true, message: 'Please input temperature!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Oxygen Level"
-                        name="oxygenLevel"
+                        <Form.Item
+                            label="Oxygen Level"
+                            name="oxygenLevel"
                         // rules={[{ required: true, message: 'Please input oxygen level!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Respiration Rate"
-                        name="respirationRate"
+                        <Form.Item
+                            label="Respiration Rate"
+                            name="respirationRate"
                         // rules={[{ required: true, message: 'Please input respiration rate!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Meal Time"
-                        name="mealTime"
+                        <Form.Item
+                            label="Meal Time"
+                            name="mealTime"
                         // rules={[{ required: true, message: 'Please input meal time!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Fasting Time"
-                        name="fastingTime"
+                        <Form.Item
+                            label="Fasting Time"
+                            name="fastingTime"
                         // rules={[{ required: true, message: 'Please input fasting time!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Fasting Blood Sugar"
-                        name="fastingBloodSugar"
+                        <Form.Item
+                            label="Fasting Blood Sugar"
+                            name="fastingBloodSugar"
                         // rules={[{ required: true, message: 'Please input fasting blood sugar!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item label="More Details">
-                        <Form.List name="moreDetails">
-                            {(fields, { add, remove }) => (
-                                <>
-                                    {fields.map(({ key, name, fieldKey, ...restField }) => (
-                                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name]}
-                                                fieldKey={[fieldKey]}
-                                                rules={[{ required: true, message: 'Please input more details!' }]}
+                        <Form.Item label="More Details">
+                            <Form.List name="moreDetails">
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                            <Space 
+                                            key={key} 
+                                            // style={{ display: 'flex', marginBottom: 8 }} 
+                                            align="baseline"
+                                            className='display-flex margin-bottom-8'
                                             >
-                                                <Input placeholder="Enter detail" />
-                                            </Form.Item>
-                                            <MinusCircleOutlined onClick={() => remove(name)} />
-                                        </Space>
-                                    ))}
-                                    <Form.Item>
-                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                            Add More Details
-                                        </Button>
-                                    </Form.Item>
-                                </>
-                            )}
-                        </Form.List>
-                    </Form.Item>
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name]}
+                                                    fieldKey={[fieldKey]}
+                                                    rules={[{ required: true, message: 'Please input more details!' }]}
+                                                >
+                                                    <Input placeholder="Enter detail" />
+                                                </Form.Item>
+                                                <MinusCircleOutlined onClick={() => remove(name)} />
+                                            </Space>
+                                        ))}
+                                        <Form.Item>
+                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                Add More Details
+                                            </Button>
+                                        </Form.Item>
+                                    </>
+                                )}
+                            </Form.List>
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Blood Pressure"
-                        name="bloodPressure"
+                        <Form.Item
+                            label="Blood Pressure"
+                            name="bloodPressure"
                         // rules={[{ required: true, message: 'Please input blood pressure!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Hospital"
-                        name="hospital"
+                        <Form.Item
+                            label="Hospital"
+                            name="hospital"
                         // rules={[{ required: true, message: 'Please input hospital!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" loading={loading}>
-                            Update
-                        </Button>
-                    </Form.Item>
-                </Form>
-            )}
-        </div>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" loading={loading}>
+                                Update
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                )}
+            </div>
+        </update>
     );
 };
 

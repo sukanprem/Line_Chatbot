@@ -1,7 +1,10 @@
+// Back\ui-for-back\src\App.js
+
 import React, { useState, useEffect } from 'react';
 import { Table, message, Spin, Button, Popconfirm } from 'antd'; // เพิ่ม Popconfirm เพื่อให้ผู้ใช้ยืนยันการลบ
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './App.css'
 
 const App = () => {
   const [healthCheckData, setHealthCheckData] = useState([]); // State สำหรับข้อมูลผลสุขภาพ
@@ -182,22 +185,24 @@ const App = () => {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <Button
-            type="primary"
-            onClick={() => navigate(`/update-health-check-result/${record.id}`)}
-          >
-            Update
-          </Button>
-          <Popconfirm
-            title="Are you sure you want to delete this health check result?"
-            onConfirm={() => deleteHealthCheckResult(record.id)} // เรียกฟังก์ชันลบเมื่อผู้ใช้ยืนยัน
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>Delete</Button>
-          </Popconfirm>
-        </div>
+        <app>
+          <div /* style={{ display: 'flex', gap: '8px' }} */ className='display-flex gap-8-px'>
+            <Button
+              type="primary"
+              onClick={() => navigate(`/update-health-check-result/${record.id}`)}
+            >
+              Update
+            </Button>
+            <Popconfirm
+              title="Are you sure you want to delete this health check result?"
+              onConfirm={() => deleteHealthCheckResult(record.id)} // เรียกฟังก์ชันลบเมื่อผู้ใช้ยืนยัน
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>Delete</Button>
+            </Popconfirm>
+          </div>
+        </app>
       ),
     },
   ];
@@ -253,22 +258,24 @@ const App = () => {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <Button
-            type="primary"
-            onClick={() => navigate(`/update-book-doctor-appointment/${record.id}`)}
-          >
-            Update
-          </Button>
-          <Popconfirm
-            title="Are you sure you want to delete this appointment?"
-            onConfirm={() => deleteBookDoctorAppointment(record.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>Delete</Button>
-          </Popconfirm>
-        </div>
+        <app>
+          <div /* style={{ display: 'flex', gap: '8px' }} */ className='display-flex gap-8-px'>
+            <Button
+              type="primary"
+              onClick={() => navigate(`/update-book-doctor-appointment/${record.id}`)}
+            >
+              Update
+            </Button>
+            <Popconfirm
+              title="Are you sure you want to delete this appointment?"
+              onConfirm={() => deleteBookDoctorAppointment(record.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>Delete</Button>
+            </Popconfirm>
+          </div>
+        </app>
       ),
     },
   ];
@@ -299,82 +306,92 @@ const App = () => {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <Button
-            type="primary"
-            onClick={() => navigate(`/update-subscriptions/${record.id}`)}
-          >
-            Update
-          </Button>
-          <Popconfirm
-            title="Are you sure you want to delete this appointment?"
-            onConfirm={() => deleteSubscriptions(record.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>Delete</Button>
-          </Popconfirm>
-        </div>
+        <app>
+          <div /* style={{ display: 'flex', gap: '8px' }} */ className='display-flex gap-8-px'>
+            <Button
+              type="primary"
+              onClick={() => navigate(`/update-subscriptions/${record.id}`)}
+            >
+              Update
+            </Button>
+            <Popconfirm
+              title="Are you sure you want to delete this subscriptions?"
+              onConfirm={() => deleteSubscriptions(record.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>Delete</Button>
+            </Popconfirm>
+          </div>
+        </app>
       ),
     },
   ]
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Health Check Results</h1>
-      {/* เพิ่มปุ่ม Create */}
-      <Button
-        type="primary"
-        onClick={() => navigate('/create-health-check')}
-        style={{ marginBottom: '20px' }}
-      >
-        Create
-      </Button>
-      {loading ? (
-        <Spin size="large" />
-      ) : (
-        <Table
-          dataSource={healthCheckData}
-          columns={healthCheckColumns}
-          rowKey="id" // กำหนดคีย์เป็น id สำหรับตาราง
-          style={{ marginBottom: '40px' }}
-        />
-      )}
-      <h1>Book Doctor Appointments</h1>
-      <Button
-        type="primary"
-        onClick={() => navigate('/create-book-doctor-appointment')}
-        style={{ marginBottom: '20px' }}
-      >
-        Create Appointment
-      </Button>
-      {loading ? (
-        <Spin size="large" />
-      ) : (
-        <Table
-          dataSource={appointmentData}
-          columns={appointmentColumns}
-          rowKey="id"
-        />
-      )}
-      <h1>Subscriptions</h1>
-      <Button
-      type='primary'
-      onClick={() => navigate('/create-subscriptions')}
-      style={{ marginBottom: '20px' }}
-      >
-        Create Subscriptions
-      </Button>
-      {loading ? (
-        <Spin size="large" />
-      ) : (
-        <Table
-        dataSource={subscriptionsData}
-        columns={subscriptionColumns}
-        rowKey="id"
-        />
-      )}
-    </div>
+    <app>
+      <div /* style={{ padding: '20px' }} */ className='padding-20-px'>
+        <h1>Health Check Results</h1>
+        {/* เพิ่มปุ่ม Create */}
+        <Button
+          type="primary"
+          onClick={() => navigate('/create-health-check')}
+          // style={{ marginBottom: '20px' }}
+          className='margin-bottom-20-px'
+        >
+          Create
+        </Button>
+        {loading ? (
+          <Spin size="large" />
+        ) : (
+          <Table
+            dataSource={healthCheckData}
+            columns={healthCheckColumns}
+            rowKey="id" // กำหนดคีย์เป็น id สำหรับตาราง
+            // style={{ marginBottom: '40px' }}
+            className='margin-bottom-40-px'
+          />
+        )}
+        <h1>Book Doctor Appointments</h1>
+        <Button
+          type="primary"
+          onClick={() => navigate('/create-book-doctor-appointment')}
+          // style={{ marginBottom: '20px' }}
+          className='margin-bottom-20-px'
+        >
+          Create Appointment
+        </Button>
+        {loading ? (
+          <Spin size="large" />
+        ) : (
+          <Table
+            dataSource={appointmentData}
+            columns={appointmentColumns}
+            rowKey="id"
+            className='margin-bottom-40-px'
+          />
+        )}
+        <h1>Subscriptions</h1>
+        <Button
+          type='primary'
+          onClick={() => navigate('/create-subscriptions')}
+          // style={{ marginBottom: '20px' }}
+          className='margin-bottom-20-px'
+        >
+          Create Subscriptions
+        </Button>
+        {loading ? (
+          <Spin size="large" />
+        ) : (
+          <Table
+            dataSource={subscriptionsData}
+            columns={subscriptionColumns}
+            rowKey="id"
+            className='margin-bottom-40-px'
+          />
+        )}
+      </div>
+    </app>
   );
 };
 

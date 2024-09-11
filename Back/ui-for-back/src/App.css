@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,24 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+app .display-flex {
+  display: flex;
+}
+
+app .gap-8-px {
+  gap: 8px;
+}
+
+app .padding-20-px {
+  padding: 20px;
+}
+
+app .margin-bottom-20-px {
+  margin-bottom: 20px;
+}
+
+app .margin-bottom-40-px {
+  margin-bottom: 40px;
 }

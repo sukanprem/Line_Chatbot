@@ -3,6 +3,7 @@ import { Form, Input, Button, message, DatePicker, TimePicker, Spin } from 'antd
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
+import './BookDoctorAppointmentOnline.css'
 
 const UpdateBookDoctorAppointmentOnline = () => {
     const [form] = Form.useForm();
@@ -30,7 +31,7 @@ const UpdateBookDoctorAppointmentOnline = () => {
 
                 // แปลง date และ time เป็น dayjs ก่อนตั้งค่าในฟอร์ม
                 form.setFieldsValue({
-                    ...rest, 
+                    ...rest,
                     date: date ? dayjs(date, 'YYYY-MM-DD') : null,
                     time: time ? dayjs(time, 'HH:mm') : null
                 });
@@ -58,86 +59,91 @@ const UpdateBookDoctorAppointmentOnline = () => {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Update Book Doctor Appointment Online</h1>
-            {loading ? (
-                <Spin size="large" />
-            ) : (
-                <Form
-                    form={form}
-                    layout="vertical"
-                    onFinish={onFinish}
-                >
-
-                    <Form.Item
-                        label="Full Name"
-                        name="fullName"
+        <update>
+            <div
+            // style={{ padding: '20px' }}
+            className='padding-20-px'
+            >
+                <h1>Update Book Doctor Appointment Online</h1>
+                {loading ? (
+                    <Spin size="large" />
+                ) : (
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={onFinish}
                     >
-                        <Input />
-                    </Form.Item>
 
-                    <Form.Item
-                        label="Last Name"
-                        name="lastName"
-                    >
-                        <Input />
-                    </Form.Item>
+                        <Form.Item
+                            label="Full Name"
+                            name="fullName"
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Health Plan"
-                        name="healthPlan"
-                    >
-                        <Input />
-                    </Form.Item>
+                        <Form.Item
+                            label="Last Name"
+                            name="lastName"
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Hospital"
-                        name="hospital"
-                    >
-                        <Input />
-                    </Form.Item>
+                        <Form.Item
+                            label="Health Plan"
+                            name="healthPlan"
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Doctor"
-                        name="doctor"
-                    >
-                        <Input />
-                    </Form.Item>
+                        <Form.Item
+                            label="Hospital"
+                            name="hospital"
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Department"
-                        name="department"
-                    >
-                        <Input />
-                    </Form.Item>
+                        <Form.Item
+                            label="Doctor"
+                            name="doctor"
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Date"
-                        name="date"
+                        <Form.Item
+                            label="Department"
+                            name="department"
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Date"
+                            name="date"
                         // rules={[{ required: true, message: 'Please input date!' }]}
-                    >
-                        <DatePicker onChange={onChangeDate} />
-                    </Form.Item>
+                        >
+                            <DatePicker onChange={onChangeDate} />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Time"
-                        name="time"
-                    >
-                        <TimePicker 
-                            onChange={onChangeTime} 
-                            format="HH:mm"
-                        />
-                    </Form.Item>
+                        <Form.Item
+                            label="Time"
+                            name="time"
+                        >
+                            <TimePicker
+                                onChange={onChangeTime}
+                                format="HH:mm"
+                            />
+                        </Form.Item>
 
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" loading={loading}>
-                            Update
-                        </Button>
-                    </Form.Item>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" loading={loading}>
+                                Update
+                            </Button>
+                        </Form.Item>
 
-                </Form>
-            )}
-        </div>
+                    </Form>
+                )}
+            </div>
+        </update>
     );
 };
 

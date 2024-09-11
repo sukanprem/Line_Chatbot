@@ -6,6 +6,8 @@ import CreateHealthCheck from './component/HealthCheck/CreateHealthCheck';
 import UpdateHealthCheck from './component/HealthCheck/UpdateHealthCheck';
 import CreateBookDoctorAppointmentOnline from './component/BookDoctorAppointmentOnline/CreateBookDoctorAppointmentOnline';
 import UpdateBookDoctorAppointmentOnline from './component/BookDoctorAppointmentOnline/UpdateBookDoctorAppointmentOnline';
+import CreateSubscriptions from './component/Subscriptions/CreateSubscriptions';
+import UpdateSubscriptions from './component/Subscriptions/UpdateSubscriptions';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 
@@ -19,6 +21,8 @@ root.render(
       <Route path="/update-health-check-result/:id" element={<UpdateHealthCheck />} />
       <Route path="/create-book-doctor-appointment" element={<CreateBookDoctorAppointmentOnline />} />
       <Route path="/update-book-doctor-appointment/:id" element={<UpdateBookDoctorAppointmentOnline />} />
+      <Route path="/create-subscriptions" element={<CreateSubscriptions/>} />
+      <Route path="/update-subscriptions/:id" element={<UpdateSubscriptions/>} />
     </Routes>
   </Router>,
   document.getElementById('root')
