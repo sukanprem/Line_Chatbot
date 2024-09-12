@@ -73,6 +73,14 @@ const UpdateHealthCheck = () => {
                         </Form.Item>
 
                         <Form.Item
+                            label="Citizen ID"
+                            name="citizenId"
+                        // rules={[{ required: true, message: 'Please input citizen id!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
                             label="Weight (kg)"
                             name="weight"
                         // rules={[{ required: true, message: 'Please input weight!' }]}
@@ -149,11 +157,11 @@ const UpdateHealthCheck = () => {
                                 {(fields, { add, remove }) => (
                                     <>
                                         {fields.map(({ key, name, fieldKey, ...restField }) => (
-                                            <Space 
-                                            key={key} 
-                                            // style={{ display: 'flex', marginBottom: 8 }} 
-                                            align="baseline"
-                                            className='display-flex margin-bottom-8'
+                                            <Space
+                                                key={key}
+                                                // style={{ display: 'flex', marginBottom: 8 }} 
+                                                align="baseline"
+                                                className='display-flex margin-bottom-8'
                                             >
                                                 <Form.Item
                                                     {...restField}

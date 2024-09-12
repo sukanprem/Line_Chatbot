@@ -89,6 +89,14 @@ const UpdateBookDoctorAppointmentOnline = () => {
                         </Form.Item>
 
                         <Form.Item
+                        label="Citizen ID"
+                        name="citizenId"
+                        // rules={[{ required: true, message: 'Please input citizen id!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                        <Form.Item
                             label="Health Plan"
                             name="healthPlan"
                         >
