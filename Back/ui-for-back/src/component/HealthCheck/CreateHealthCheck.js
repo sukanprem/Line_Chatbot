@@ -47,6 +47,14 @@ const CreateHealthCheck = () => {
                     </Form.Item>
 
                     <Form.Item
+                        label="Citizen ID"
+                        name="citizenId"
+                        rules={[{ required: true, message: 'Please input citizen id!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
                         label="Weight (kg)"
                         name="weight"
                         rules={[{ required: true, message: 'Please input weight!' }]}

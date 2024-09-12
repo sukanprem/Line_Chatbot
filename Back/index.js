@@ -4,6 +4,7 @@ const { Client, middleware } = require('@line/bot-sdk');
 const { createHealthCheckResultFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHealth');
 const { createHospitalFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHospital')
 require('dotenv').config();
+// const CryptoJS = require('crypto-js');
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
 // console.log(typeof createHospitalFlexMessage); // Should log 'function'
 
@@ -19,11 +20,6 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-
-// const config = {
-//   channelAccessToken: 'ENKDsvTDe6tM0mXTXuOOfh4Ts9L83gJCgqfKGops41mJ5Oyvu9Y1j4C64O7dxJ5MG5YA6omBrZvfRt12uHdoV/XhMErs/kUE7ecSDcKPkjRFRe3wzjMjQw503jeq8k89ZmyU+bGroGsOVz7na8n73wdB04t89/1O/w1cDnyilFU=',
-//   channelSecret: 'caac7ac0d65991394a32b6a1beacdf6e'
-// };
 
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
@@ -133,6 +129,12 @@ app.delete('/delete-notification-setting/:id', async (req, res) => {
   }
 });
 
+// นำเข้าไลบรารี crypto-js
+const CryptoJS = require('crypto-js');
+
+// คีย์ลับสำหรับการเข้ารหัส
+const secretKey = process.env.SECRET_KEY;
+
 // The GET method reads the healthCheckResults data.
 app.get('/health-check-result', async (req, res) => {
   try {
@@ -161,7 +163,17 @@ app.get('/health-check-result/:id', async (req, res) => {
     if (!doc.exists) {
       res.status(404).send('Document not found');
     } else {
-      res.json(doc.data());
+      const data = doc.data();
+      
+      // ถอดรหัส citizenId ก่อนส่งข้อมูลกลับ
+      const decryptedCitizenId = CryptoJS.AES.decrypt(data.citizenId, secretKey).toString(CryptoJS.enc.Utf8);
+      
+      res.json({
+        ...data,
+        citizenId: decryptedCitizenId // ส่ง citizenId ที่ถอดรหัสแล้วกลับไป
+      });
+      
+      // res.json(doc.data());
     }
   } catch (error) {
     console.error("Error retrieving health check result: ", error);
@@ -175,6 +187,7 @@ app.post('/add-health-check-result', async (req, res) => {
     const {
       fullName,
       lastName,
+      citizenId,
       weight, 
       height, 
       pulseRate, 
@@ -190,9 +203,12 @@ app.post('/add-health-check-result', async (req, res) => {
     } = req.body;
 
     // ตรวจสอบว่าได้รับค่าที่จำเป็นครบหรือไม่
-    if (!fullName || !lastName || !weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure || !hospital) {
+    if (!fullName || !lastName || !citizenId || !weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure || !hospital) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
+
+    // เข้ารหัส citizenId
+    const encryptedCitizenId = CryptoJS.AES.encrypt(citizenId, secretKey).toString();
 
     // คำนวณ BMI
     const heightInMeters = height / 100; // แปลงจากเซนติเมตรเป็นเมตร
@@ -202,6 +218,7 @@ app.post('/add-health-check-result', async (req, res) => {
     await newDocRef.set({
       fullName,
       lastName,
+      citizenId: encryptedCitizenId, // เก็บ citizenId ที่เข้ารหัส
       weight,
       height,
       pulseRate,
@@ -231,6 +248,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
     const {
       fullName,
       lastName,
+      citizenId, // เพิ่มฟิลด์ citizenId
       weight, 
       height, 
       pulseRate, 
@@ -258,13 +276,19 @@ app.put('/update-health-check-result/:id', async (req, res) => {
     if (weight && height) {
       const heightInMeters = height / 100;
       bmi = weight / (heightInMeters * heightInMeters);
-      // console.log('BMI calculated:', bmi);  // Log BMI ที่คำนวณได้
     }
 
-    // อัปเดตเอกสาร
+    // เข้ารหัส citizenId ถ้ามีการส่งมา
+    let encryptedCitizenId = doc.data().citizenId; // ค่าเดิมจากฐานข้อมูล
+    if (citizenId) {
+      encryptedCitizenId = CryptoJS.AES.encrypt(citizenId, secretKey).toString();
+    }
+
+    // อัปเดตเอกสารใน Firebase
     await docRef.update({
       fullName: fullName || doc.data().fullName,
       lastName: lastName || doc.data().lastName,
+      citizenId: encryptedCitizenId, // เก็บ citizenId ที่เข้ารหัส
       weight: weight || doc.data().weight,
       height: height || doc.data().height,
       pulseRate: pulseRate || doc.data().pulseRate,
@@ -280,9 +304,8 @@ app.put('/update-health-check-result/:id', async (req, res) => {
       hospital: hospital || doc.data().hospital
     });
 
-    // ตรวจสอบการสมัครรับข้อมูลและส่งการแจ้งเตือน
+    // ตรวจสอบการสมัครรับข้อมูลและส่งการแจ้งเตือน (ส่วนนี้คงเดิม)
     const subscriptionsSnapshot = await db.collection('Subscriptions').where('healthCheckResultId', '==', id).get();
-    // let notifications_for_health_check_result = [];
 
     subscriptionsSnapshot.forEach(async (subscriptionDoc) => {
       const subscriptionData = subscriptionDoc.data();
@@ -304,13 +327,10 @@ app.put('/update-health-check-result/:id', async (req, res) => {
         hospital: hospital || doc.data().hospital
       };
 
-      // สร้าง Flex Message โดยใช้ฟังก์ชันที่สร้างขึ้น
+      // สร้าง Flex Message และส่งการแจ้งเตือน (ส่วนนี้คงเดิม)
       const flexMessageForHealthCheckResult = createHealthCheckResultFlexMessage(healthCheckData);
       const flexMessageForHospital = createHospitalFlexMessage(healthCheckData);
-      console.log('Sending Flex Message:', JSON.stringify(flexMessageForHealthCheckResult, null, 2));  // Log ข้อความที่จะส่ง
-      console.log('Sending Flex Message:', JSON.stringify(flexMessageForHospital, null, 2)); // Log ข้อความที่จะส่ง
 
-      // ส่งข้อความไปยัง LINE Chatbot
       client.pushMessage(subscriptionData.lineUserId, [flexMessageForHealthCheckResult, flexMessageForHospital])
       .then(() => {
         console.log('Flex message sent successfully');

@@ -100,6 +100,11 @@ const App = () => {
       key: 'id',
     },
     {
+      title: 'Citizen ID',
+      dataIndex: 'citizenId',
+      key: 'citizenId'
+    },
+    {
       title: 'Full Name',
       dataIndex: 'fullName',
       key: 'fullName',
