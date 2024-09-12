@@ -403,7 +403,22 @@ app.get('/book-doctor-appointment-online/:id', async (req, res) => {
     if (!doc.exists) {
       res.status(404).send('Document not found');
     } else {
-      res.json(doc.data());
+      const data = doc.data();
+      
+      // ตรวจสอบว่ามี citizenId หรือไม่ก่อนถอดรหัส
+      let decryptedCitizenId = null;
+      if (data.citizenId) {
+        try {
+          decryptedCitizenId = CryptoJS.AES.decrypt(data.citizenId, secretKey).toString(CryptoJS.enc.Utf8);
+        } catch (error) {
+          console.error('Error decrypting citizenId:', error);
+        }
+      }
+
+      res.json({
+        ...data,
+        citizenId: decryptedCitizenId // ส่ง citizenId ที่ถอดรหัสแล้วหรือ null ถ้าไม่มี
+      });
     }
   } catch (error) {
     console.error("Error retrieving appointment data: ", error);
@@ -417,6 +432,7 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
     const {
       fullName,
       lastName,
+      citizenId,  // เพิ่มฟิลด์ citizenId
       healthPlan,
       hospital,
       doctor,
@@ -425,14 +441,21 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       time
     } = req.body;
 
-    if(!fullName || !lastName || !healthPlan || !hospital || !doctor || !department || !date || !time) {
+    if (!fullName || !lastName || !healthPlan || !hospital || !doctor || !department || !date || !time || !citizenId) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
+    }
+
+    // เข้ารหัส citizenId ก่อนบันทึกลงในฐานข้อมูล
+    let encryptedCitizenId = null;
+    if (citizenId) {
+      encryptedCitizenId = CryptoJS.AES.encrypt(citizenId, secretKey).toString();
     }
 
     const newDocRef = db.collection('BookDoctorAppointmentOnline').doc();
     await newDocRef.set({
       fullName,
       lastName,
+      citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือ null)
       healthPlan,
       hospital,
       doctor,
@@ -445,7 +468,7 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
 
   } catch (error) {
     console.error("Error adding book a doctor appointment online: ", error);
-    res.status(500).send('Error adding book a doctor appointment online')
+    res.status(500).send('Error adding book a doctor appointment online');
   }
 });
 
@@ -456,6 +479,7 @@ app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
     const {
       fullName,
       lastName,
+      citizenId,  // เพิ่มฟิลด์ citizenId
       healthPlan,
       hospital,
       doctor,
@@ -472,10 +496,17 @@ app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
       return res.status(404).send('Book a doctor appointment online not found');
     }
 
+    // เข้ารหัส citizenId ถ้ามีการส่งมา
+    let encryptedCitizenId = doc.data().citizenId;
+    if (citizenId) {
+      encryptedCitizenId = CryptoJS.AES.encrypt(citizenId, secretKey).toString();
+    }
+
     // อัปเดตเอกสาร
     await docRef.update({
       fullName: fullName || doc.data().fullName,
       lastName: lastName || doc.data().lastName,
+      citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือค่าเดิม)
       healthPlan: healthPlan || doc.data().healthPlan,
       hospital: hospital || doc.data().hospital,
       doctor: doctor || doc.data().doctor,

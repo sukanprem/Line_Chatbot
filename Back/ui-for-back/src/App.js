@@ -35,6 +35,7 @@ const App = () => {
       setLoading(false);
     } catch (error) {
       message.error('Error fetching book doctor appointments');
+      console.log(error);
       setLoading(false);
     }
   };
@@ -216,6 +217,11 @@ const App = () => {
       title: 'Document ID',
       dataIndex: 'id',
       key: 'id',
+    },
+    {
+      title: 'Citizen ID',
+      dataIndex: 'citizenId',
+      key: 'citizenId'
     },
     {
       title: 'Full Name',
