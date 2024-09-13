@@ -13,6 +13,12 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ฟังก์ชัน logout ที่คุณต้องการเพิ่ม
+  const logout = () => {
+    localStorage.removeItem('isAuthenticated'); // ลบสถานะการล็อกอินจาก localStorage
+    navigate('/login'); // Redirect ไปที่หน้า login
+  };
+
   // ฟังก์ชันสำหรับดึงข้อมูลจาก API ของ healthCheckResults
   const fetchHealthCheckResults = async () => {
     setLoading(true);
@@ -335,6 +341,8 @@ const App = () => {
 
   return (
     <div /* style={{ padding: '20px' }} */ className='padding-20-px'>
+      <Button type="primary" onClick={logout} style={{ float: 'right' }}>Logout</Button> {/* ปุ่ม Logout */}
+      
       <h1>Health Check Results</h1>
       {/* เพิ่มปุ่ม Create */}
       <Button

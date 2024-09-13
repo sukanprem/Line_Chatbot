@@ -37,6 +37,20 @@ app.get('/', (req, res) => {
   res.send('Hello World with Firebase!');
 });
 
+app.post('/admin/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Example: Simple username and password authentication
+  const adminUsername = process.env.ADMIN_USERNAME;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (username === adminUsername && password === adminPassword) {
+    res.status(200).send('Login successful');
+  } else {
+    res.status(401).send('Invalid username or password');
+  }
+});
+
 // The GET method reads notificationSettings data.
 app.get('/notification-settings', async (req, res) => {
     try {

@@ -8,6 +8,8 @@ import CreateBookDoctorAppointmentOnline from './component/BookDoctorAppointment
 import UpdateBookDoctorAppointmentOnline from './component/BookDoctorAppointmentOnline/UpdateBookDoctorAppointmentOnline';
 import CreateSubscriptions from './component/Subscriptions/CreateSubscriptions';
 import UpdateSubscriptions from './component/Subscriptions/UpdateSubscriptions';
+import LoginFormPage from './component/LoginFormPage/LoginFormPage'; // Import the LoginFormPage component
+import ProtectedRoute from './component/ProtectedRoute/ProtectedRoute'; // Import ProtectedRoute component
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 
@@ -16,13 +18,16 @@ const root = ReactDOM.createRoot(document.getElementById('root')); // ใช้ 
 root.render(
   <Router>
     <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/create-health-check" element={<CreateHealthCheck />} />
-      <Route path="/update-health-check-result/:id" element={<UpdateHealthCheck />} />
-      <Route path="/create-book-doctor-appointment" element={<CreateBookDoctorAppointmentOnline />} />
-      <Route path="/update-book-doctor-appointment/:id" element={<UpdateBookDoctorAppointmentOnline />} />
-      <Route path="/create-subscriptions" element={<CreateSubscriptions/>} />
-      <Route path="/update-subscriptions/:id" element={<UpdateSubscriptions/>} />
+      <Route path="/login" element={<LoginFormPage />} /> {/* หน้า login ไม่ต้องการการป้องกัน */}
+
+      {/* ปกป้องหน้าที่แอดมินต้องล็อกอินก่อนเข้า */}
+      <Route path="/" element={<ProtectedRoute><App /></ProtectedRoute>} />
+      <Route path="/create-health-check" element={<ProtectedRoute><CreateHealthCheck /></ProtectedRoute>} />
+      <Route path="/update-health-check-result/:id" element={<ProtectedRoute><UpdateHealthCheck /></ProtectedRoute>} />
+      <Route path="/create-book-doctor-appointment" element={<ProtectedRoute><CreateBookDoctorAppointmentOnline /></ProtectedRoute>} />
+      <Route path="/update-book-doctor-appointment/:id" element={<ProtectedRoute><UpdateBookDoctorAppointmentOnline /></ProtectedRoute>} />
+      <Route path="/create-subscriptions" element={<ProtectedRoute><CreateSubscriptions /></ProtectedRoute>} />
+      <Route path="/update-subscriptions/:id" element={<ProtectedRoute><UpdateSubscriptions /></ProtectedRoute>} />
     </Routes>
   </Router>,
   document.getElementById('root')
