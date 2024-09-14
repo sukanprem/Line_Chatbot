@@ -1,9 +1,11 @@
+import './LoginFormPage.css';
 import React, { useState } from 'react';
 import { Form, Input, Button, Checkbox, message, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const { Title, Text } = Typography;
+// import './LoginFormPage.css';
 
 const LoginFormPage = () => {
     const [loading, setLoading] = useState(false);
@@ -32,9 +34,12 @@ const LoginFormPage = () => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div
+            /* style={{ display: 'flex',  flexDirection: 'column',justifyContent: 'center', alignItems: 'center', height: '100vh' }} */
+            className='display-flex-column-center alignItems-center height-100-vh'
+        >
             <Title>Sign in</Title>
-            <Text>Welcome back to AntBlocks UI! Please enter your details below to sign in.</Text>
+            <Text className='padding-top-bottom-8-px'>Welcome back to Back-End UI! Please enter your details below to sign in.</Text>
             <Form
                 name="login_form"
                 className="login-form"
@@ -42,6 +47,10 @@ const LoginFormPage = () => {
                 onFinish={onFinish}
                 style={{ maxWidth: '400px', width: '100%' }}
             >
+                {/* <Form.Item>
+                    <Title className='text-align-center'>Sign in</Title>
+                    <Text className='alignItems-center'>Welcome back to AntBlocks UI! Please enter your details below to sign in.</Text>
+                </Form.Item> */}
                 <Form.Item
                     name="username"
                     rules={[{ required: true, message: 'Please enter your username!' }]}

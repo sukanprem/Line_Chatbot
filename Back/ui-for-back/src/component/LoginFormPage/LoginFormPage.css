@@ -1,0 +1,21 @@
+.display-flex-column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.alignItems-center {
+    align-items: center;
+}
+
+.height-100-vh {
+    height: 100vh;
+}
+
+.padding-top-bottom-8-px {
+    margin: 0.625rem 0 0.625rem 0;
+}
+
+.text-align-center {
+    text-align: center;
+}
