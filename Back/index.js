@@ -53,17 +53,17 @@ app.post('/admin/login', async (req, res) => {
 
 // The GET method reads notificationSettings data.
 app.get('/notification-settings', async (req, res) => {
-    try {
-      const snapshot = await db.collection('notificationSettings').get();
-      let settings = [];
-      snapshot.forEach((doc) => {
-        settings.push(doc.data());
-      });
-      res.json(settings);
-    } catch (error) {
-      console.error("Error retrieving notification settings: ", error);
-      res.status(500).send('Error retrieving notification settings');
-    }
+  try {
+    const snapshot = await db.collection('notificationSettings').get();
+    let settings = [];
+    snapshot.forEach((doc) => {
+      settings.push(doc.data());
+    });
+    res.json(settings);
+  } catch (error) {
+    console.error("Error retrieving notification settings: ", error);
+    res.status(500).send('Error retrieving notification settings');
+  }
 });
 
 // The POST method adds notificationSettings data.
@@ -107,9 +107,9 @@ app.put('/update-notification-setting/:id', async (req, res) => {
 
     // อัปเดตเอกสาร
     await docRef.update({
-      lineForm, 
-      groupName, 
-      token, 
+      lineForm,
+      groupName,
+      token,
       notificationTypes
     });
 
@@ -173,20 +173,20 @@ app.get('/health-check-result/:id', async (req, res) => {
   try {
     const docId = req.params.id;
     const doc = await db.collection('healthCheckResults').doc(docId).get();
-    
+
     if (!doc.exists) {
       res.status(404).send('Document not found');
     } else {
       const data = doc.data();
-      
+
       // ถอดรหัส citizenId ก่อนส่งข้อมูลกลับ
       const decryptedCitizenId = CryptoJS.AES.decrypt(data.citizenId, secretKey).toString(CryptoJS.enc.Utf8);
-      
+
       res.json({
         ...data,
         citizenId: decryptedCitizenId // ส่ง citizenId ที่ถอดรหัสแล้วกลับไป
       });
-      
+
       // res.json(doc.data());
     }
   } catch (error) {
@@ -202,16 +202,16 @@ app.post('/add-health-check-result', async (req, res) => {
       fullName,
       lastName,
       citizenId,
-      weight, 
-      height, 
-      pulseRate, 
-      temperature, 
-      oxygenLevel, 
-      respirationRate, 
-      mealTime, 
-      fastingTime, 
-      fastingBloodSugar, 
-      moreDetails, 
+      weight,
+      height,
+      pulseRate,
+      temperature,
+      oxygenLevel,
+      respirationRate,
+      mealTime,
+      fastingTime,
+      fastingBloodSugar,
+      moreDetails,
       bloodPressure,
       hospital
     } = req.body;
@@ -263,16 +263,16 @@ app.put('/update-health-check-result/:id', async (req, res) => {
       fullName,
       lastName,
       citizenId, // เพิ่มฟิลด์ citizenId
-      weight, 
-      height, 
-      pulseRate, 
-      temperature, 
-      oxygenLevel, 
-      respirationRate, 
-      mealTime, 
-      fastingTime, 
-      fastingBloodSugar, 
-      moreDetails, 
+      weight,
+      height,
+      pulseRate,
+      temperature,
+      oxygenLevel,
+      respirationRate,
+      mealTime,
+      fastingTime,
+      fastingBloodSugar,
+      moreDetails,
       bloodPressure,
       hospital
     } = req.body;
@@ -346,12 +346,12 @@ app.put('/update-health-check-result/:id', async (req, res) => {
       const flexMessageForHospital = createHospitalFlexMessage(healthCheckData);
 
       client.pushMessage(subscriptionData.lineUserId, [flexMessageForHealthCheckResult, flexMessageForHospital])
-      .then(() => {
-        console.log('Flex message sent successfully');
-      })
-      .catch((error) => {
-        console.error('Error sending flex message:', error);
-      });
+        .then(() => {
+          console.log('Flex message sent successfully');
+        })
+        .catch((error) => {
+          console.error('Error sending flex message:', error);
+        });
 
       // ถ้าเป็นการสมัครรับข้อมูลแบบครั้งเดียว ให้ลบการสมัครรับข้อมูลออก
       if (subscriptionData.notificationType === 'once') {
@@ -413,12 +413,12 @@ app.get('/book-doctor-appointment-online/:id', async (req, res) => {
   try {
     const docId = req.params.id;
     const doc = await db.collection('BookDoctorAppointmentOnline').doc(docId).get();
-    
+
     if (!doc.exists) {
       res.status(404).send('Document not found');
     } else {
       const data = doc.data();
-      
+
       // ตรวจสอบว่ามี citizenId หรือไม่ก่อนถอดรหัส
       let decryptedCitizenId = null;
       if (data.citizenId) {
@@ -443,19 +443,23 @@ app.get('/book-doctor-appointment-online/:id', async (req, res) => {
 // The POST method adds BookDoctorAppointmentOnline data.
 app.post('/add-book-doctor-appointment-online', async (req, res) => {
   try {
+    console.log(req.body);
     const {
+      time_slot_id,
       fullName,
       lastName,
+      email,
+      phone,
       citizenId,  // เพิ่มฟิลด์ citizenId
-      healthPlan,
       hospital,
-      doctor,
-      department,
-      date,
-      time
+      doctor_id,
+      status,
+      notes,
+      created_at,
+      updated_at
     } = req.body;
 
-    if (!fullName || !lastName || !healthPlan || !hospital || !doctor || !department || !date || !time || !citizenId) {
+    if (!time_slot_id || !fullName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
@@ -467,15 +471,18 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
 
     const newDocRef = db.collection('BookDoctorAppointmentOnline').doc();
     await newDocRef.set({
+      time_slot_id,
       fullName,
       lastName,
       citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือ null)
-      healthPlan,
+      email,
+      phone,
       hospital,
-      doctor,
-      department,
-      date,
-      time
+      doctor_id,
+      status,
+      notes: notes || '', // ใช้ค่าว่างหากไม่มีข้อความเตือน// notes,
+      created_at,
+      updated_at
     });
 
     res.send('Book a doctor appointment online added successfully!');
@@ -489,17 +496,22 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
 // The PUT method updates BookDoctorAppointmentOnline data.
 app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
   try {
+
     const { id } = req.params;
+
     const {
+      time_slot_id,
       fullName,
       lastName,
+      email,
+      phone,
       citizenId,  // เพิ่มฟิลด์ citizenId
-      healthPlan,
       hospital,
-      doctor,
-      department,
-      date,
-      time
+      doctor_id,
+      status,
+      notes,
+      created_at,
+      updated_at
     } = req.body;
 
     const docRef = db.collection('BookDoctorAppointmentOnline').doc(id);
@@ -518,18 +530,22 @@ app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
 
     // อัปเดตเอกสาร
     await docRef.update({
+      time_slot_id: time_slot_id || doc.data().time_slot_id,
       fullName: fullName || doc.data().fullName,
       lastName: lastName || doc.data().lastName,
       citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือค่าเดิม)
-      healthPlan: healthPlan || doc.data().healthPlan,
+      email: email || doc.data().email,
+      phone: phone || doc.data().phone,
       hospital: hospital || doc.data().hospital,
-      doctor: doctor || doc.data().doctor,
-      department: department || doc.data().department,
-      date: date || doc.data().date,
-      time: time || doc.data().time
+      doctor_id: doctor_id || doc.data().doctor_id,
+      status: status || doc.data().status,
+      notes: notes || doc.data().notes,
+      created_at: created_at || doc.data().created_at,
+      updated_at: updated_at || doc.data().updated_at
     });
 
     res.send('Book a doctor appointment online updated successfully!');
+
   } catch (error) {
     console.error("Error updating Book a doctor appointment online: ", error);
     res.status(500).send('Error updating Book a doctor appointment online');
@@ -583,7 +599,7 @@ app.get('/subscribe/:id', async (req, res) => {
   try {
     const docId = req.params.id;
     const doc = await db.collection('Subscriptions').doc(docId).get();
-    
+
     if (!doc.exists) {
       res.status(404).send('Document not found');
     } else {
@@ -666,6 +682,202 @@ app.delete('/delete-subscribe/:id', async (req, res) => {
   } catch (error) {
     console.error("Error deleting subscriptions: ", error);
     res.status(500).send('Error deleting subscriptions');
+  }
+});
+
+// The GET method reads the Dates data.
+app.get('/dates', async (req, res) => {
+  try {
+    const snapshot = await db.collection('Dates').get();
+    let settings = [];
+    snapshot.forEach((doc) => {
+      // settings.push(doc.data());
+      settings.push({
+        id: doc.id, // Add the document ID
+        ...doc.data() // Spread the rest of the document data
+      })
+    });
+    res.json(settings);
+  } catch (error) {
+    console.error("Error retrieving dates: ", error);
+    res.status(500).send('Error retrieving dates: ');
+  }
+});
+
+// The GET method reads the Dates data by Document ID.
+app.get('/dates/:id', async (req, res) => {
+  try {
+    const docId = req.params.id;
+    const doc = await db.collection('Dates').doc(docId).get();
+
+    if (!doc.exists) {
+      res.status(404).send('Document not found');
+    } else {
+      res.json(doc.data());
+    }
+  } catch (error) {
+    console.error("Error retrieving dates: ", error);
+    res.status(500).send('Error retrieving dates: ');
+  }
+});
+
+// The POST method adds Dates data.
+app.post('/add-dates', async (req, res) => {
+  try {
+    const { date } = req.body;
+
+    if (!date) {
+      return res.status(400).send('Invalid request: Missing or incorrect fields.');
+    }
+
+    const newDocRef = db.collection('Dates').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
+    await newDocRef.set({
+      date
+    });
+
+    res.send('Dates added successfully!');
+  } catch (error) {
+    console.error("Error adding dates: ", error);
+    res.status(500).send('Error adding dates');
+  }
+});
+
+// The PUT method updates Dates data.
+app.put('/update-dates/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { date } = req.body;
+
+    const docRef = db.collection('Dates').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Dates not found');
+    }
+
+    // อัปเดตเอกสาร
+    await docRef.update({
+      date: date || doc.data().date
+    });
+
+    res.send('Dates updated successfully!');
+  } catch (error) {
+    console.error("Error updating dates: ", error);
+    res.status(500).send('Error updating dates');
+  }
+});
+
+// The DELETE method removes Dates data.
+app.delete('/delete-dates/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const docRef = db.collection('Dates').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Dates not found');
+    }
+
+    // ลบเอกสาร
+    await docRef.delete();
+
+    res.send('Dates deleted successfully!');
+  } catch (error) {
+    console.error("Error deleting dates: ", error);
+    res.status(500).send('Error deleting dates');
+  }
+});
+
+// The GET method reads the TimeSlots data.
+app.get('/time-slots', async (req, res) => {
+  try {
+    const snapshot = await db.collection('TimeSlots').get();
+    let settings = [];
+    snapshot.forEach((doc) => {
+      // settings.push(doc.data());
+      settings.push({
+        id: doc.id, // Add the document ID
+        ...doc.data() // Spread the rest of the document data
+      })
+    });
+    res.json(settings);
+  } catch (error) {
+    console.error("Error retrieving time slots: ", error);
+    res.status(500).send('Error retrieving time slots: ');
+  }
+});
+
+// The GET method reads the Time Slots data by Document ID.
+app.get('/time-slots/:id', async (req, res) => {
+  try {
+    const docId = req.params.id;
+    const doc = await db.collection('TimeSlots').doc(docId).get();
+
+    if (!doc.exists) {
+      res.status(404).send('Document not found');
+    } else {
+      res.json(doc.data());
+    }
+  } catch (error) {
+    console.error("Error retrieving time slots: ", error);
+    res.status(500).send('Error retrieving time slots: ');
+  }
+});
+
+// The POST method adds Time Slots data.
+app.post('/add-time-slots', async (req, res) => {
+  try {
+    console.log(req.body); // Log the request body for debugging
+    const { date_id, time_slot, max_appointments, booked_appointments } = req.body;
+
+    if (!date_id || !time_slot || !max_appointments || !booked_appointments) {
+      return res.status(400).send('Invalid request: Missing or incorrect fields.');
+    }
+
+    const newDocRef = db.collection('TimeSlots').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
+    await newDocRef.set({
+      date_id,
+      time_slot,
+      max_appointments,
+      booked_appointments
+    });
+
+    res.send('Time slots added successfully!');
+  } catch (error) {
+    console.error("Error adding time slots: ", error);
+    res.status(500).send('Error adding time slots');
+  }
+});
+
+// The PUT method updates Time Slots data.
+app.put('/update-time-slots/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { date_id, time_slot, max_appointments, booked_appointments } = req.body;
+
+    const docRef = db.collection('TimeSlots').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Dates not found');
+    }
+
+    // อัปเดตเอกสาร
+    await docRef.update({
+      date_id: date_id || doc.data().date_id,
+      time_slot: time_slot || doc.data().time_slot,
+      max_appointments: max_appointments || doc.data().max_appointments,
+      booked_appointments: booked_appointments || doc.data().booked_appointments
+    });
+
+    res.send('Dates updated successfully!');
+  } catch (error) {
+    console.error("Error updating dates: ", error);
+    res.status(500).send('Error updating dates');
   }
 });
 
