@@ -1,11 +1,19 @@
 import React from 'react';
-import HealthCheckResults from './components/HealthCheckResults';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './components/Home';
+import PatientForm from './components/PatientForm';
+import SubscribeForm from './components/SubscribeForm';
+import CalendarBooking from './components/CalendarBooking';
 
 function App() {
   return (
-    <div className="App">
-      <HealthCheckResults />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/calendar-form" element={<CalendarBooking />} />
+        <Route path="/subscribe-form" element={<SubscribeForm />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -1,0 +1,42 @@
+/* CalendarBooking.css */
+
+.rbc-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f1f1f1; /* สีพื้นหลังที่ดูสะอาดตา */
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .rbc-toolbar-label {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .rbc-btn-group {
+    display: flex;
+    gap: 10px; /* เพิ่มช่องว่างระหว่างปุ่ม */
+  }
+  
+  .rbc-btn {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .rbc-btn:hover {
+    background-color: #004c99;
+    color: white;
+  }
+  

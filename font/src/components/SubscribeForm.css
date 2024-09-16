@@ -1,0 +1,71 @@
+.SubscribeForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .SubscribeForm h1 {
+    color: #34495e;
+    margin-bottom: 10px;
+  }
+  
+  .SubscribeForm p {
+    color: #7f8c8d;
+    font-size: 1.1em;
+    margin-bottom: 30px;
+  }
+  
+  .SubscribeForm form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .SubscribeForm input[type="text"], 
+  .SubscribeForm input[type="email"] {
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 100%;
+  }
+  
+  .SubscribeForm .subscribe-btn {
+    background-color: #2980b9;
+    color: #fff;
+    padding: 15px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  .SubscribeForm .subscribe-btn:hover {
+    background-color: #3498db;
+  }
+  
+  .SubscribeForm footer {
+    margin-top: 50px;
+    font-size: 0.9em;
+    color: #95a5a6;
+  }
+  
+  .SubscribeForm .footer-link {
+    color: #3498db;
+    text-decoration: none;
+  }
+  
+  .SubscribeForm .footer-link:hover {
+    text-decoration: underline;
+  }
+  

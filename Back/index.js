@@ -1,8 +1,8 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
-const { createHealthCheckResultFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHealth');
-const { createHospitalFlexMessage } = require('../Front_Prem_Version/FlexMessageHandle/flexMessageForHospital')
+const { createHealthCheckResultFlexMessage } = require('../font/FlexMessageHandle/flexMessageForHealth');
+const { createHospitalFlexMessage } = require('../font/FlexMessageHandle/flexMessageForHospital')
 require('dotenv').config();
 // const CryptoJS = require('crypto-js');
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
