@@ -1,6 +1,0 @@
-# ไฟล์หรือโฟลเดอร์ที่ไม่ต้องการให้ Git ติดตาม
-node_modules/
-.env
-*.log
-*.tmp
-ngrok.exe
