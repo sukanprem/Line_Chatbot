@@ -1,42 +1,268 @@
-/* CalendarBooking.css */
+/* พื้นฐานการจัดเรียงและโครงสร้าง */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+h2 {
+  text-align: center;
+  color: #343a40;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.PatientForm-01 {
+  background-color: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  /* max-width: 1000px; */
+  transition: all 0.3s ease;
+}
+
+/* ปรับปรุงตารางวันที่ */
+.rbc-calendar {
+  border-radius: 10px;
+  overflow: hidden;
+}
 
 .rbc-toolbar {
+  background-color: #17a2b8;
+  color: white;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+}
+.rbc-btn-group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+}
+.rbc-btn-group button {
+  background-color: #17a2b8;
+  border: none;
+  color: white;
+  padding: 10px;
+  margin: 0 5px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.rbc-btn-group button:hover {
+  background-color: #138496;
+}
+
+.rbc-month-view {
+  background-color: white;
+  border-radius: 0 0 10px 10px;
+}
+
+/* กำหนดให้ช่องของวันที่จัดวางเนื้อหาอยู่ตรงกลาง */
+.rbc-date-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  font-size: 1.2rem;
+  padding: 10px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rbc-date-cell:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* สีสำหรับสถานะของวันต่างๆ */
+.rbc-date-cell.gray {
+  color: #6c757d;
+}
+
+.rbc-date-cell.red {
+  color: #ff6b6b;
+}
+
+.rbc-date-cell.green {
+  color: #51cf66;
+}
+
+.rbc-date-cell.black {
+  color: #343a40;
+}
+
+/* ปุ่มใน Modal */
+button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+/* ปิดปุ่มลิงก์ไม่จำเป็น */
+.rbc-button-link {
+  display: none;
+}
+
+/* Modal การเลือกช่วงเวลา */
+.ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+.ReactModal__Content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+
+.ReactModal__Content h2 {
+  font-size: 1.75rem;
+  margin-bottom: 20px;
+  color: #17a2b8;
+}
+
+.ReactModal__Content ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ReactModal__Content li {
+  padding: 10px 0;
+  font-size: 1.2rem;
+  color: #343a40;
+}
+
+/* --- Responsive Design --- */
+
+/* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 1024px (แท็บเล็ต) */
+@media (max-width: 1024px) {
+  .PatientForm-01 {
+    width: 95%;
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .ReactModal__Content {
+    width: 90%;
+  }
+
+  .rbc-date-cell {
+    font-size: 1rem;
+    padding: 8px;
+  }
+}
+
+/* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 768px (แท็บเล็ตขนาดเล็กและมือถือขนาดใหญ่) */
+@media (max-width: 768px) {
+  .PatientForm-01 {
+    width: 100%;
     padding: 10px;
-    background-color: #f1f1f1; /* สีพื้นหลังที่ดูสะอาดตา */
-    color: #333;
-    font-size: 16px;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  .rbc-toolbar {
+    padding: 8px;
+  }
+
+  .rbc-btn-group button {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .rbc-date-cell {
+    font-size: 0.9rem;
+    padding: 5px;
   }
   
-  .rbc-toolbar-label {
-    flex-grow: 1;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
+  .ReactModal__Content {
+    width: 85%;
   }
-  
-  .rbc-btn-group {
-    display: flex;
-    gap: 10px; /* เพิ่มช่องว่างระหว่างปุ่ม */
+}
+
+/* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 576px (มือถือทั่วไป) */
+@media (max-width: 576px) {
+  .PatientForm-01 {
+    width: 100%;
+    padding: 5px;
   }
-  
-  .rbc-btn {
-    background-color: #0066cc;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+
+  h2 {
+    font-size: 1.5rem;
   }
-  
-  .rbc-btn:hover {
-    background-color: #004c99;
-    color: white;
+
+  .rbc-toolbar {
+    padding: 5px;
   }
-  
+
+  .rbc-btn-group button {
+    padding: 6px;
+    font-size: 0.75rem;
+  }
+
+  .rbc-date-cell {
+    font-size: 0.8rem;
+    padding: 3px;
+  }
+
+  .ReactModal__Content {
+    width: 80%;
+    padding: 15px;
+  }
+}
+
+/* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 400px (มือถือขนาดเล็ก) */
+@media (max-width: 400px) {
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  .rbc-toolbar {
+    padding: 4px;
+  }
+
+  .rbc-btn-group button {
+    padding: 5px;
+    font-size: 0.7rem;
+  }
+
+  .rbc-date-cell {
+    font-size: 0.7rem;
+    padding: 2px;
+  }
+
+  .ReactModal__Content {
+    width: 75%;
+  }
+}

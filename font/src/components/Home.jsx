@@ -8,7 +8,7 @@ const Home = () => {
       <h1>Welcome to Our Medical Service</h1>
       <p>Navigate to fill patient form or subscribe for patient updates.</p>
       <div className="button-container">
-        <Link to="/patient-form">
+        <Link to="/calendar-form">
           <button className="home-button">Fill Patient Form</button>
         </Link>
         <Link to="/subscribe-form">
