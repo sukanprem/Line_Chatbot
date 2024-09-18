@@ -721,18 +721,49 @@ app.get('/dates/:id', async (req, res) => {
   }
 });
 
+// The GET method reads the Dates data by a specific date.
+app.get('/dates-by-date', async (req, res) => {
+  try {
+    const { date } = req.query; // Get the date from the query parameters
+
+    if (!date) {
+      return res.status(400).send('Invalid request: Missing date field.');
+    }
+
+    const snapshot = await db.collection('Dates').where('date', '==', date).get();
+
+    if (snapshot.empty) {
+      return res.status(404).send('No documents found for the provided date.');
+    }
+
+    let dates = [];
+    snapshot.forEach((doc) => {
+      dates.push({
+        id: doc.id, // Add the document ID
+        ...doc.data() // Spread the rest of the document data
+      });
+    });
+
+    res.json(dates);
+  } catch (error) {
+    console.error("Error retrieving dates by date: ", error);
+    res.status(500).send('Error retrieving dates by date.');
+  }
+});
+
 // The POST method adds Dates data.
 app.post('/add-dates', async (req, res) => {
   try {
-    const { date } = req.body;
+    const { date, status } = req.body;
 
-    if (!date) {
+    if (!date || !status ) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
     const newDocRef = db.collection('Dates').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
     await newDocRef.set({
-      date
+      date,
+      status
     });
 
     res.send('Dates added successfully!');
@@ -746,7 +777,7 @@ app.post('/add-dates', async (req, res) => {
 app.put('/update-dates/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { date } = req.body;
+    const { date, status } = req.body;
 
     const docRef = db.collection('Dates').doc(id);
 
@@ -758,7 +789,8 @@ app.put('/update-dates/:id', async (req, res) => {
 
     // อัปเดตเอกสาร
     await docRef.update({
-      date: date || doc.data().date
+      date: date || doc.data().date,
+      status: status || doc.data().status
     });
 
     res.send('Dates updated successfully!');
@@ -875,13 +907,57 @@ app.get('/get-time-slots', async (req, res) => {
   }
 });
 
+// The GET method to retrieve all dates with corresponding time slots.
+app.get('/get-all-dates-with-time-slots', async (req, res) => {
+  try {
+    // Step 1: Fetch all the documents from the Dates collection
+    const datesSnapshot = await db.collection('Dates').get();
+
+    if (datesSnapshot.empty) {
+      return res.status(404).send('No dates available.');
+    }
+
+    // Step 2: Prepare an array to hold the results
+    let result = [];
+
+    // Step 3: Loop through each date document
+    for (let dateDoc of datesSnapshot.docs) {
+      const dateData = dateDoc.data();
+      const date_id = dateDoc.id;
+
+      // Step 4: Query TimeSlots collection for each date_id
+      const timeSlotsSnapshot = await db.collection('TimeSlots').where('date_id', '==', date_id).get();
+
+      let timeSlots = [];
+      timeSlotsSnapshot.forEach(timeSlotDoc => {
+        timeSlots.push({
+          id: timeSlotDoc.id, // The document ID for the time slot
+          ...timeSlotDoc.data() // All other fields from the time slot document
+        });
+      });
+
+      // Step 5: Add the date and its corresponding time slots to the result
+      result.push({
+        date: dateData.date,
+        timeSlots
+      });
+    }
+
+    // Step 6: Return the aggregated result
+    res.json(result);
+  } catch (error) {
+    console.error("Error retrieving dates with time slots: ", error);
+    res.status(500).send('Error retrieving dates with time slots.');
+  }
+});
+
 // The POST method adds Time Slots data.
 app.post('/add-time-slots', async (req, res) => {
   try {
     console.log(req.body); // Log the request body for debugging
     const { date_id, time_slot, max_appointments, booked_appointments } = req.body;
 
-    if (!date_id || !time_slot || !max_appointments || !booked_appointments) {
+    if (!date_id || !time_slot || !max_appointments || booked_appointments === undefined || booked_appointments === null) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
@@ -926,6 +1002,29 @@ app.put('/update-time-slots/:id', async (req, res) => {
   } catch (error) {
     console.error("Error updating dates: ", error);
     res.status(500).send('Error updating dates');
+  }
+});
+
+// The DELETE method removes Time Slots data.
+app.delete('/delete-time-slots/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const docRef = db.collection('TimeSlots').doc(id);
+
+    // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Dates not found');
+    }
+
+    // ลบเอกสาร
+    await docRef.delete();
+
+    res.send('Time slots deleted successfully!');
+  } catch (error) {
+    console.error("Error deleting Time slots: ", error);
+    res.status(500).send('Error deleting time slots');
   }
 });
 
