@@ -827,6 +827,54 @@ app.get('/time-slots/:id', async (req, res) => {
   }
 });
 
+// The GET method to retrieve available time slots for a specific date.
+app.get('/get-time-slots', async (req, res) => {
+  try {
+    const { date } = req.query;
+
+    if (!date) {
+      return res.status(400).send('Invalid request: Missing date.');
+    }
+
+    // Step 1: Find the document in the Dates collection based on the provided date.
+    const datesSnapshot = await db.collection('Dates').where('date', '==', date).get();
+
+    if (datesSnapshot.empty) {
+      return res.status(404).send('No available time slots for the given date.');
+    }
+
+    // Step 2: Retrieve the date_id from the Dates collection
+    let date_id = null;
+    datesSnapshot.forEach(doc => {
+      date_id = doc.id;  // Assuming you only have one date for each date value.
+    });
+
+    // Step 3: Use the date_id to query the TimeSlots collection
+    const timeSlotsSnapshot = await db.collection('TimeSlots').where('date_id', '==', date_id).get();
+
+    if (timeSlotsSnapshot.empty) {
+      return res.status(404).send('No time slots available for the selected date.');
+    }
+
+    // Step 4: Gather all time slots and send them in the response
+    const timeSlots = [];
+    timeSlotsSnapshot.forEach(doc => {
+      timeSlots.push({
+        id: doc.id, // The document ID for reference if needed
+        ...doc.data() // All other fields from the time slot document
+      });
+    });
+
+    res.json({
+      date,
+      timeSlots
+    });
+  } catch (error) {
+    console.error("Error retrieving time slots: ", error);
+    res.status(500).send('Error retrieving time slots.');
+  }
+});
+
 // The POST method adds Time Slots data.
 app.post('/add-time-slots', async (req, res) => {
   try {
