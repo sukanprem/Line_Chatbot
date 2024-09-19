@@ -459,9 +459,9 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       updated_at
     } = req.body;
 
-    if (!time_slot_id || !fullName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
-      return res.status(400).send('Invalid request: Missing or incorrect fields.');
-    }
+    // if (!time_slot_id || !fullName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
+    //   return res.status(400).send('Invalid request: Missing or incorrect fields.');
+    // }
 
     // เข้ารหัส citizenId ก่อนบันทึกลงในฐานข้อมูล
     let encryptedCitizenId = null;
