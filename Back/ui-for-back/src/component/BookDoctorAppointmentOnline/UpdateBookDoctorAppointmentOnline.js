@@ -59,10 +59,9 @@ const UpdateBookDoctorAppointmentOnline = () => {
     };
 
     return (
-        <update>
             <div
-            // style={{ padding: '20px' }}
-            className='padding-20-px'
+                // style={{ padding: '20px' }}
+                className='padding-20-px'
             >
                 <h1>Update Book Doctor Appointment Online</h1>
                 {loading ? (
@@ -75,8 +74,8 @@ const UpdateBookDoctorAppointmentOnline = () => {
                     >
 
                         <Form.Item
-                            label="Full Name"
-                            name="fullName"
+                            label="First Name"
+                            name="firstName"
                         >
                             <Input />
                         </Form.Item>
@@ -89,16 +88,23 @@ const UpdateBookDoctorAppointmentOnline = () => {
                         </Form.Item>
 
                         <Form.Item
-                        label="Citizen ID"
-                        name="citizenId"
+                            label="Citizen ID"
+                            name="citizenId"
                         // rules={[{ required: true, message: 'Please input citizen id!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
 
                         <Form.Item
-                            label="Health Plan"
-                            name="healthPlan"
+                            label="Email"
+                            name="email"
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Phone"
+                            name="phone"
                         >
                             <Input />
                         </Form.Item>
@@ -111,35 +117,38 @@ const UpdateBookDoctorAppointmentOnline = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Doctor"
-                            name="doctor"
+                            label="Doctor ID"
+                            name="doctor_id"
                         >
                             <Input />
                         </Form.Item>
 
                         <Form.Item
-                            label="Department"
-                            name="department"
+                            label="Status"
+                            name="status"
                         >
                             <Input />
                         </Form.Item>
 
                         <Form.Item
-                            label="Date"
-                            name="date"
-                        // rules={[{ required: true, message: 'Please input date!' }]}
+                            label="Notes"
+                            name="notes"
                         >
-                            <DatePicker onChange={onChangeDate} />
+                            <Input />
                         </Form.Item>
 
                         <Form.Item
-                            label="Time"
-                            name="time"
+                            label="Created at"
+                            name="created_at"
                         >
-                            <TimePicker
-                                onChange={onChangeTime}
-                                format="HH:mm"
-                            />
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Updated at"
+                            name="updated_at"
+                        >
+                            <Input />
                         </Form.Item>
 
                         <Form.Item>
@@ -151,7 +160,6 @@ const UpdateBookDoctorAppointmentOnline = () => {
                     </Form>
                 )}
             </div>
-        </update>
     );
 };
 

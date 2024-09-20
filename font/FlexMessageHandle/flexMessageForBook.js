@@ -29,7 +29,7 @@ function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
             contents: [
               {
                 type: "text",
-                text: `${appointmentData.fullName} ${appointmentData.lastName} จอง`,
+                text: `${appointmentData.firstName} ${appointmentData.lastName} จอง`,
                 size: "sm",
                 color: "#484848",
                 flex: 0

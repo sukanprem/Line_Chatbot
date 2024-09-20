@@ -35,7 +35,7 @@ function createHospitalFlexMessage(healthCheckData) {
                         contents: [
                           {
                             type: "text",
-                            text: `ชื่อ: ${healthCheckData.fullName}` + " " + `${healthCheckData.lastName}`,
+                            text: `ชื่อ: ${healthCheckData.firstName}` + " " + `${healthCheckData.lastName}`,
                             size: "sm",
                             weight: "bold",
                             color: "#484848",
