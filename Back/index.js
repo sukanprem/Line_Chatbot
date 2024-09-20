@@ -474,6 +474,7 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       time_slot_id,
       firstName,
       lastName,
+      citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือ null)
       email,
       phone,
       hospital,
