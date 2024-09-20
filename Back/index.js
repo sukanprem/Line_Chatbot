@@ -444,20 +444,20 @@ app.get('/book-doctor-appointment-online/:id', async (req, res) => {
 app.post('/add-book-doctor-appointment-online', async (req, res) => {
   try {
     console.log(req.body);
-    const {
+    await newDocRef.set({
       time_slot_id,
-      fullName,
-      lastName,
+      fullName, // บันทึก fullName ที่สร้างจาก frontend
+      lastName, // บันทึก lastName ตามที่รับมา
+      citizenId: encryptedCitizenId, // บันทึก citizenId ที่เข้ารหัส
       email,
       phone,
-      citizenId,  // เพิ่มฟิลด์ citizenId
       hospital,
-      doctor_id,
+      doctor_id: notes || '',
       status,
-      notes,
-      created_at,
-      updated_at
-    } = req.body;
+      notes: notes || '', // ใช้ค่าว่างหากไม่มีหมายเหตุ
+      created_at: created_at || new Date().toISOString(), // ตั้งค่าเวลาปัจจุบันถ้าไม่มี
+      updated_at: updated_at || new Date().toISOString(),
+    });
 
     // if (!time_slot_id || !fullName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
     //   return res.status(400).send('Invalid request: Missing or incorrect fields.');
