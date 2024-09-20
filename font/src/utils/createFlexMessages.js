@@ -30,7 +30,7 @@ export function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
               contents: [
                 {
                   type: "text",
-                  text: `${appointmentData.fullName} ${appointmentData.lastName} จอง`,
+                  text: `${appointmentData.firstName} ${appointmentData.lastName} จอง`,
                   size: "sm",
                   color: "#484848",
                   flex: 0
@@ -143,7 +143,7 @@ export function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
               contents: [
                 {
                   type: "text",
-                  text: `ชื่อ: ${healthCheckData.fullName} ${healthCheckData.lastName}`,
+                  text: `ชื่อ: ${healthCheckData.firstName} ${healthCheckData.lastName}`,
                   size: "sm",
                   weight: "bold",
                   color: "#484848",
@@ -290,7 +290,7 @@ export function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
               contents: [
                 {
                   type: "text",
-                  text: `ชื่อ: ${healthCheckData.fullName} ${healthCheckData.lastName}`,
+                  text: `ชื่อ: ${healthCheckData.firstName} ${healthCheckData.lastName}`,
                   size: "sm",
                   weight: "bold",
                   color: "#484848",

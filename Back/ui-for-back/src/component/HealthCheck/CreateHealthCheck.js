@@ -31,8 +31,8 @@ const CreateHealthCheck = () => {
                     onFinish={onFinish}
                 >
                     <Form.Item
-                        label="Full Name"
-                        name="fullName"
+                        label="First Name"
+                        name="firstName"
                         rules={[{ required: true, message: 'Please input full name!' }]}
                     >
                         <Input />

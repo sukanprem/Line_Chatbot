@@ -3,7 +3,7 @@ import './PatientForm.css';
 
 const PatientForm = () => {
   const [formData, setFormData] = useState({
-    fullname: '',
+    firstName: '',
     gender: '',
     age: '',
     symptoms: '',
@@ -24,8 +24,8 @@ const PatientForm = () => {
     <div className="PatientForm-01"> {/* ใช้ className แทนแท็กที่กำหนดเอง */}
       <h2>ฟอร์มกรอกข้อมูลผู้ป่วย</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="fullname">ชื่อ-นามสกุล:</label>
-        <input type="text" id="fullname" name="fullname" placeholder="กรอกชื่อและนามสกุล" required onChange={handleChange} />
+        <label htmlFor="firstName">ชื่อ-นามสกุล:</label>
+        <input type="text" id="firstName" name="firstName" placeholder="กรอกชื่อและนามสกุล" required onChange={handleChange} />
 
         <label htmlFor="gender">เพศ:</label>
         <select id="gender" name="gender" required onChange={handleChange}>

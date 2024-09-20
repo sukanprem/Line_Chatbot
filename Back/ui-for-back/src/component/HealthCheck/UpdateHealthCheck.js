@@ -57,8 +57,8 @@ const UpdateHealthCheck = () => {
                     >
 
                         <Form.Item
-                            label="Full Name"
-                            name="fullName"
+                            label="Firs Name"
+                            name="firstName"
                         // rules={[{ required: true, message: 'Please input full name!' }]}
                         >
                             <Input />

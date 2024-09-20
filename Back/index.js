@@ -199,7 +199,7 @@ app.get('/health-check-result/:id', async (req, res) => {
 app.post('/add-health-check-result', async (req, res) => {
   try {
     const {
-      fullName,
+      firstName,
       lastName,
       citizenId,
       weight,
@@ -217,7 +217,7 @@ app.post('/add-health-check-result', async (req, res) => {
     } = req.body;
 
     // ตรวจสอบว่าได้รับค่าที่จำเป็นครบหรือไม่
-    if (!fullName || !lastName || !citizenId || !weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure || !hospital) {
+    if (!firstName || !lastName || !citizenId || !weight || !height || !pulseRate || !temperature || !oxygenLevel || !respirationRate || !mealTime || !fastingTime || !fastingBloodSugar || !bloodPressure || !hospital) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
@@ -230,7 +230,7 @@ app.post('/add-health-check-result', async (req, res) => {
 
     const newDocRef = db.collection('healthCheckResults').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
     await newDocRef.set({
-      fullName,
+      firstName,
       lastName,
       citizenId: encryptedCitizenId, // เก็บ citizenId ที่เข้ารหัส
       weight,
@@ -260,7 +260,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const {
-      fullName,
+      firstName,
       lastName,
       citizenId, // เพิ่มฟิลด์ citizenId
       weight,
@@ -300,7 +300,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
 
     // อัปเดตเอกสารใน Firebase
     await docRef.update({
-      fullName: fullName || doc.data().fullName,
+      firstName: firstName || doc.data().firstName,
       lastName: lastName || doc.data().lastName,
       citizenId: encryptedCitizenId, // เก็บ citizenId ที่เข้ารหัส
       weight: weight || doc.data().weight,
@@ -325,7 +325,7 @@ app.put('/update-health-check-result/:id', async (req, res) => {
       const subscriptionData = subscriptionDoc.data();
 
       const healthCheckData = {
-        fullName: fullName || doc.data().fullName,
+        firstName: firstName || doc.data().firstName,
         lastName: lastName || doc.data().lastName,
         weight: weight || doc.data().weight,
         height: height || doc.data().height,
@@ -446,9 +446,8 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
     console.log(req.body);
     await newDocRef.set({
       time_slot_id,
-      fullName, // บันทึก fullName ที่สร้างจาก frontend
-      lastName, // บันทึก lastName ตามที่รับมา
-      citizenId: encryptedCitizenId, // บันทึก citizenId ที่เข้ารหัส
+      firstName,
+      lastName,
       email,
       phone,
       hospital,
@@ -459,7 +458,7 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       updated_at: updated_at || new Date().toISOString(),
     });
 
-    // if (!time_slot_id || !fullName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
+    // if (!time_slot_id || !firstName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
     //   return res.status(400).send('Invalid request: Missing or incorrect fields.');
     // }
 
@@ -472,7 +471,7 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
     const newDocRef = db.collection('BookDoctorAppointmentOnline').doc();
     await newDocRef.set({
       time_slot_id,
-      fullName,
+      firstName,
       lastName,
       citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือ null)
       email,
@@ -501,7 +500,7 @@ app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
 
     const {
       time_slot_id,
-      fullName,
+      firstName,
       lastName,
       email,
       phone,
@@ -531,7 +530,7 @@ app.put('/update-book-doctor-appointment-online/:id', async (req, res) => {
     // อัปเดตเอกสาร
     await docRef.update({
       time_slot_id: time_slot_id || doc.data().time_slot_id,
-      fullName: fullName || doc.data().fullName,
+      firstName: firstName || doc.data().firstName,
       lastName: lastName || doc.data().lastName,
       citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือค่าเดิม)
       email: email || doc.data().email,

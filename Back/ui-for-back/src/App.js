@@ -112,9 +112,9 @@ const App = () => {
       key: 'citizenId'
     },
     {
-      title: 'Full Name',
-      dataIndex: 'fullName',
-      key: 'fullName',
+      title: 'First Name',
+      dataIndex: 'firstName',
+      key: 'firstName',
     },
     {
       title: 'Last Name',
@@ -230,9 +230,9 @@ const App = () => {
       key: 'citizenId'
     },
     {
-      title: 'Full Name',
-      dataIndex: 'fullName',
-      key: 'fullName',
+      title: 'First Name',
+      dataIndex: 'firstName',
+      key: 'firstName',
     },
     {
       title: 'Last Name',
@@ -240,9 +240,14 @@ const App = () => {
       key: 'lastName',
     },
     {
-      title: 'Health Plan',
-      dataIndex: 'healthPlan',
-      key: 'healthPlan',
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phone',
     },
     {
       title: 'Hospital',
@@ -250,24 +255,34 @@ const App = () => {
       key: 'hospital',
     },
     {
-      title: 'Doctor',
-      dataIndex: 'doctor',
-      key: 'doctor',
+      title: 'Doctor ID',
+      dataIndex: 'doctor_id',
+      key: 'doctor_id',
     },
     {
-      title: 'Department',
-      dataIndex: 'department',
-      key: 'department',
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
     },
     {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
+      title: 'Notes',
+      dataIndex: 'notes',
+      key: 'notes',
     },
     {
-      title: 'Time',
-      dataIndex: 'time',
-      key: 'time',
+      title: 'Created at',
+      dataIndex: 'created_at',
+      key: 'created_at',
+    },
+    {
+      title: 'Updated at',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+    },
+    {
+      title: 'Time slot id',
+      dataIndex: 'time_slot_id',
+      key: 'time_slot_id',
     },
     {
       title: 'Action',
