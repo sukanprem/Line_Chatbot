@@ -444,19 +444,20 @@ app.get('/book-doctor-appointment-online/:id', async (req, res) => {
 app.post('/add-book-doctor-appointment-online', async (req, res) => {
   try {
     console.log(req.body);
-    await newDocRef.set({
+    const {
       time_slot_id,
-      firstName,
-      lastName,
+      firstName, // รับ fullName ที่รวมจาก frontend
+      lastName, // ยังรับ lastName ตามที่ frontend ส่งมา
       email,
       phone,
+      citizenId,
       hospital,
-      doctor_id: notes || '',
+      doctor_id,
       status,
-      notes: notes || '', // ใช้ค่าว่างหากไม่มีหมายเหตุ
-      created_at: created_at || new Date().toISOString(), // ตั้งค่าเวลาปัจจุบันถ้าไม่มี
-      updated_at: updated_at || new Date().toISOString(),
-    });
+      notes,
+      created_at,
+      updated_at
+    } = req.body;
 
     // if (!time_slot_id || !firstName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
     //   return res.status(400).send('Invalid request: Missing or incorrect fields.');
@@ -473,15 +474,14 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       time_slot_id,
       firstName,
       lastName,
-      citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือ null)
       email,
       phone,
       hospital,
-      doctor_id,
+      doctor_id: notes || '',
       status,
-      notes: notes || '', // ใช้ค่าว่างหากไม่มีข้อความเตือน// notes,
-      created_at,
-      updated_at
+      notes: notes || '', // ใช้ค่าว่างหากไม่มีหมายเหตุ
+      created_at: created_at || new Date().toISOString(), // ตั้งค่าเวลาปัจจุบันถ้าไม่มี
+      updated_at: updated_at || new Date().toISOString(),
     });
 
     res.send('Book a doctor appointment online added successfully!');
