@@ -1,9 +1,9 @@
 const express = require('express');
 const { Client, middleware } = require('@line/bot-sdk');
 const axios = require('axios');
-const { createHealthCheckResultFlexMessage } = require('../../Front_Prem_Version/FlexMessageHandle/flexMessageForHealth');
-const { createBookDoctorAppointmentOnlineFlexMessage } = require('../../Front_Prem_Version/FlexMessageHandle/flexMessageForBook');
-const { createHospitalFlexMessage } = require('../../Front_Prem_Version/FlexMessageHandle/flexMessageForHospital');
+const { createHealthCheckResultFlexMessage } = require('../../font/FlexMessageHandle/flexMessageForHealth');
+const { createBookDoctorAppointmentOnlineFlexMessage } = require('../../font/FlexMessageHandle/flexMessageForBook');
+const { createHospitalFlexMessage } = require('../../font/FlexMessageHandle/flexMessageForHospital');
 require('dotenv').config(); // เรียกใช้ dotenv
 // console.log(typeof createHealthCheckResultFlexMessage);
 // console.log(typeof createBookDoctorAppointmentOnlineFlexMessage);
