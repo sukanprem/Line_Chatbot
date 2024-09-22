@@ -987,7 +987,7 @@ app.put('/update-time-slots/:id', async (req, res) => {
     // ตรวจสอบว่าเอกสารมีอยู่หรือไม่
     const doc = await docRef.get();
     if (!doc.exists) {
-      return res.status(404).send('Dates not found');
+      return res.status(404).send('Time slots not found');
     }
 
     // อัปเดตเอกสาร
@@ -998,10 +998,10 @@ app.put('/update-time-slots/:id', async (req, res) => {
       booked_appointments: booked_appointments || doc.data().booked_appointments
     });
 
-    res.send('Dates updated successfully!');
+    res.send('Time slots updated successfully!');
   } catch (error) {
-    console.error("Error updating dates: ", error);
-    res.status(500).send('Error updating dates');
+    console.error("Error updating time slots: ", error);
+    res.status(500).send('Error updating time slots');
   }
 });
 

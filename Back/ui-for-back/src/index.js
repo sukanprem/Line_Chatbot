@@ -8,6 +8,10 @@ import CreateBookDoctorAppointmentOnline from './component/BookDoctorAppointment
 import UpdateBookDoctorAppointmentOnline from './component/BookDoctorAppointmentOnline/UpdateBookDoctorAppointmentOnline';
 import CreateSubscriptions from './component/Subscriptions/CreateSubscriptions';
 import UpdateSubscriptions from './component/Subscriptions/UpdateSubscriptions';
+import CreateDates from './component/Dates/CreateDates';
+import UpdateDates from './component/Dates/UpdateDates';
+import CreateTimeSlots from './component/TimeSlots/CreateTimeSlots';
+import UpdateTimeSlots from './component/TimeSlots/UpdateTimeSlots';
 import LoginFormPage from './component/LoginFormPage/LoginFormPage'; // Import the LoginFormPage component
 import ProtectedRoute from './component/ProtectedRoute/ProtectedRoute'; // Import ProtectedRoute component
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -28,6 +32,10 @@ root.render(
       <Route path="/update-book-doctor-appointment/:id" element={<ProtectedRoute><UpdateBookDoctorAppointmentOnline /></ProtectedRoute>} />
       <Route path="/create-subscriptions" element={<ProtectedRoute><CreateSubscriptions /></ProtectedRoute>} />
       <Route path="/update-subscriptions/:id" element={<ProtectedRoute><UpdateSubscriptions /></ProtectedRoute>} />
+      <Route path="/create-dates" element={<ProtectedRoute><CreateDates /></ProtectedRoute>} />
+      <Route path="/update-dates/:id" element={<ProtectedRoute><UpdateDates /></ProtectedRoute>} />
+      <Route path="/create-time-slots" element={<ProtectedRoute><CreateTimeSlots /></ProtectedRoute>} />
+      <Route path="/update-time-slots/:id" element={<ProtectedRoute><UpdateTimeSlots /></ProtectedRoute>} />
     </Routes>
   </Router>,
   document.getElementById('root')

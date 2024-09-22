@@ -10,6 +10,8 @@ const App = () => {
   const [healthCheckData, setHealthCheckData] = useState([]); // State สำหรับข้อมูลผลสุขภาพ
   const [appointmentData, setAppointmentData] = useState([]); // State สำหรับข้อมูลการจองพบแพทย์ออนไลน์
   const [subscriptionsData, setSubscriptions] = useState([]); // State สำหรับข้อมูลการติดตามผลสุขภาพ
+  const [datesData, setDates] = useState([]); // State สำหรับข้อมูลวันที่
+  const [timeSlotsData, setTimeSlots] = useState([]); // State สำหรับข้อมูลวันที่
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -59,6 +61,32 @@ const App = () => {
     }
   }
 
+  // ฟังก์ชันสำหรับดึงข้อมูลจาก API ของ Dates
+  const fetchDates = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:3001/dates');
+      setDates(response.data);
+      setLoading(false);
+    } catch (error) {
+      message.error('Error fetching dates')
+      setLoading(false)
+    }
+  }
+
+  // ฟังก์ชันสำหรับดึงข้อมูลจาก API ของ TimeSlots
+  const fetchTimeSlots = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:3001/time-slots');
+      setTimeSlots(response.data);
+      setLoading(false);
+    } catch (error) {
+      message.error('Error fetching time slots');
+      setLoading(false);
+    }
+  }
+
   // ฟังก์ชันสำหรับลบข้อมูล health check result
   const deleteHealthCheckResult = async (id) => {
     try {
@@ -92,11 +120,34 @@ const App = () => {
     }
   };
 
+  // ฟังก์ชันสำหรับลบข้อมูล Dates
+  const deleteDates = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3001/delete-dates/${id}`);
+      message.success('Dates deleted successfully');
+      setDates(datesData.filter(item => item.id !== id));
+    } catch (error) {
+      message.error('Error deleting dates');
+    }
+  };
+
+  // ฟังก์ชันสำหรับลบข้อมูล TimeSlots
+  const deleteTimeSlots = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3001/delete-time-slots/${id}`);
+      message.success('Time slots deleted successfully');
+    } catch (error) {
+      message.error('Error deleting time slots');
+    }
+  }
+
   // ดึงข้อมูลเมื่อคอมโพเนนต์โหลดครั้งแรก
   useEffect(() => {
     fetchHealthCheckResults();
     fetchBookDoctorAppointmentOnline();
     fetchSubscriptions();
+    fetchDates();
+    fetchTimeSlots();
   }, []);
 
   // คอลัมน์ของตารางสำหรับ Health Check Results
@@ -354,10 +405,102 @@ const App = () => {
     },
   ]
 
+  // คอลัมน์ของตารางสำหรับ Dates
+  const datesColumns = [
+    {
+      title: 'Document ID',
+      dataIndex: 'id',
+      key: 'id'
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date'
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status'
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <div /* style={{ display: 'flex', gap: '8px' }} */ className='display-flex gap-8-px'>
+          <Button
+            type="primary"
+            onClick={() => navigate(`/update-dates/${record.id}`)}
+          >
+            Update
+          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this subscriptions?"
+            onConfirm={() => deleteDates(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>Delete</Button>
+          </Popconfirm>
+        </div>
+      ),
+    }
+  ]
+
+  // คอลัมน์ของตารางสำหรับ TimeSlots
+  const timeSlotsColumns = [
+    {
+      title: 'Document ID',
+      dataIndex: 'id',
+      key: 'id'
+    },
+    {
+      title: 'Date id',
+      dataIndex: 'date_id',
+      key: 'date_id'
+    },
+    {
+      title: 'Time slots',
+      dataIndex: 'time_slot',
+      key: 'time_slot'
+    },
+    {
+      title: 'Max appointments',
+      dataIndex: 'max_appointments',
+      key: 'max_appointments'
+    },
+    {
+      title: 'Booked appointments',
+      dataIndex: 'booked_appointments',
+      key: 'booked_appointments'
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <div /* style={{ display: 'flex', gap: '8px' }} */ className='display-flex gap-8-px'>
+          <Button
+            type="primary"
+            onClick={() => navigate(`/update-time-slots/${record.id}`)}
+          >
+            Update
+          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this subscriptions?"
+            onConfirm={() => deleteTimeSlots(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>Delete</Button>
+          </Popconfirm>
+        </div>
+      ),
+    }
+  ]
+
   return (
     <div /* style={{ padding: '20px' }} */ className='padding-20-px'>
       <Button type="primary" onClick={logout} style={{ float: 'right' }}>Logout</Button> {/* ปุ่ม Logout */}
-      
+
       <h1>Health Check Results</h1>
       {/* เพิ่มปุ่ม Create */}
       <Button
@@ -413,6 +556,46 @@ const App = () => {
         <Table
           dataSource={subscriptionsData}
           columns={subscriptionColumns}
+          rowKey="id"
+          className='margin-bottom-40-px'
+        />
+      )}
+
+      <h1>Dates</h1>
+      <Button
+        type='primary'
+        onClick={() => navigate('/create-dates')}
+        // style={{ marginBottom: '20px' }}
+        className='margin-bottom-20-px'
+      >
+        Create Dates
+      </Button>
+      {loading ? (
+        <Spin size="large" />
+      ) : (
+        <Table
+          dataSource={datesData}
+          columns={datesColumns}
+          rowKey="id"
+          className='margin-bottom-40-px'
+        />
+      )}
+
+      <h1>Time Slots</h1>
+      <Button
+        type='primary'
+        onClick={() => navigate('/create-time-slots')}
+        // style={{ marginBottom: '20px' }}
+        className='margin-bottom-20-px'
+      >
+        Create Time Slots
+      </Button>
+      {loading ? (
+        <Spin size="large" />
+      ) : (
+        <Table
+          dataSource={timeSlotsData}
+          columns={timeSlotsColumns}
           rowKey="id"
           className='margin-bottom-40-px'
         />
