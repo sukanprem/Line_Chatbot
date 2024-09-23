@@ -14,7 +14,7 @@ const UpdateDates = () => {
         const fetchDates = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:3001/dates/${id}`);
+                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/dates/${id}`);
                 form.setFieldsValue(response.data); // ตั้งค่าในฟอร์ม
                 setLoading(false);
             } catch (error) {
@@ -29,7 +29,7 @@ const UpdateDates = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`http://localhost:3001/update-dates/${id}`, values);
+            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-dates/${id}`, values);
             message.success('Dates updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ

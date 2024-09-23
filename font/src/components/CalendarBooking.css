@@ -127,12 +127,11 @@ button:hover {
 
 .ReactModal__Content {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: auto;
+  left: auto;
   right: auto;
   bottom: auto;
   margin-right: -50%;
-  transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
   border-radius: 10px;
@@ -157,6 +156,11 @@ button:hover {
   font-size: 1.2rem;
   color: #343a40;
 }
+button.full {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+  
 
 /* --- Responsive Design --- */
 

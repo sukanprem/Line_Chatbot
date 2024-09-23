@@ -12,7 +12,7 @@ const CreateHealthCheck = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.post('http://localhost:3001/add-health-check-result', values);
+            await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-health-check-result', values);
             message.success('Health check result added successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากเพิ่มสำเร็จ

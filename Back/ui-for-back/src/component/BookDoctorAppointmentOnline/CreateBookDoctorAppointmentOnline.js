@@ -20,7 +20,7 @@ const CreateBookDoctorAppointmentOnline = () => {
 
     const onFinish = async (values) => {
         try {
-            await axios.post('http://localhost:3001/add-book-doctor-appointment-online', values);
+            await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-book-doctor-appointment-online', values);
             message.success('Book doctor appointment online added successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากเพิ่มสำเร็จ

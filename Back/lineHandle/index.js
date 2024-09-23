@@ -19,10 +19,12 @@ app.post('/webhook', middleware(config), (req, res) => {
   const events = req.body.events;
 
   Promise.all(events.map(handleEvent))
-    .then((result) => res.json(result))
+    .then((result) => {
+      res.status(200).json(result); // ส่ง status 200 ให้ LINE Platform
+    })
     .catch((err) => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).end(); // ในกรณีเกิดข้อผิดพลาด
     });
 });
 
@@ -47,7 +49,7 @@ async function handleEvent(event) {
     // ตรวจสอบในฐานข้อมูล HealthCheckResults
     let healthCheckData = null;
     try {
-      const responseHealthCheck = await axios.get(`http://localhost:3001/health-check-result/${documentId}`);
+      const responseHealthCheck = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/health-check-result/${documentId}`);
       healthCheckData = responseHealthCheck.data;
     //   whereID = '1';
     } catch (error) {
@@ -58,7 +60,7 @@ async function handleEvent(event) {
     // ตรวจสอบในฐานข้อมูล BookDoctorAppointmentOnline
     let appointmentData = null;
     try {
-      const responseAppointment = await axios.get(`http://localhost:3001/book-doctor-appointment-online/${documentId}`);
+      const responseAppointment = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/book-doctor-appointment-online/${documentId}`);
       appointmentData = responseAppointment.data;
     //   whereID = '2';
     } catch (error) {
@@ -69,7 +71,7 @@ async function handleEvent(event) {
     // ตรวจสอบในฐานข้อมูล NotificationSettings
     let notificationData = null;
     try {
-      const responseNotification = await axios.get(`http://localhost:3001/notification-settings/${documentId}`);
+      const responseNotification = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/notification-settings/${documentId}`);
       notificationData = responseNotification.data;
     //   whereID = '3';
     } catch (error) {
@@ -132,7 +134,7 @@ async function handleSubscription(event, documentId) {
     const lineUserId = event.source.userId;
   
     try {
-      const response = await axios.post('http://localhost:3001/add-subscribe', {
+      const response = await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-subscribe', {
         lineUserId: lineUserId,
         healthCheckResultId: documentId,
         notificationType: 'update' // หรือ 'once' ถ้าต้องการให้เป็นแบบครั้งเดียว

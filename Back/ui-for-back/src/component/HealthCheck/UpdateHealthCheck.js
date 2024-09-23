@@ -15,7 +15,7 @@ const UpdateHealthCheck = () => {
         const fetchHealthCheckResult = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:3001/health-check-result/${id}`);
+                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/health-check-result/${id}`);
                 form.setFieldsValue(response.data); // ตั้งค่าในฟอร์ม
                 setLoading(false);
             } catch (error) {
@@ -30,7 +30,7 @@ const UpdateHealthCheck = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`http://localhost:3001/update-health-check-result/${id}`, values);
+            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-health-check-result/${id}`, values);
             message.success('Health check result updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ

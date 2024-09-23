@@ -25,7 +25,7 @@ const App = () => {
   const fetchHealthCheckResults = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3001/health-check-result');
+      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/health-check-result');
       setHealthCheckData(response.data);
       setLoading(false);
     } catch (error) {
@@ -38,7 +38,7 @@ const App = () => {
   const fetchBookDoctorAppointmentOnline = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3001/book-doctor-appointment-online');
+      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/book-doctor-appointment-online');
       setAppointmentData(response.data);
       setLoading(false);
     } catch (error) {
@@ -52,7 +52,7 @@ const App = () => {
   const fetchSubscriptions = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3001/subscribe');
+      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/subscribe');
       setSubscriptions(response.data);
       setLoading(false);
     } catch (error) {
@@ -65,7 +65,7 @@ const App = () => {
   const fetchDates = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3001/dates');
+      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/dates');
       setDates(response.data);
       setLoading(false);
     } catch (error) {
@@ -78,7 +78,7 @@ const App = () => {
   const fetchTimeSlots = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3001/time-slots');
+      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/time-slots');
       setTimeSlots(response.data);
       setLoading(false);
     } catch (error) {
@@ -90,7 +90,7 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล health check result
   const deleteHealthCheckResult = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/delete-health-check-result/${id}`);
+      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-health-check-result/${id}`);
       message.success('Health check result deleted successfully');
       setHealthCheckData(healthCheckData.filter(item => item.id !== id));
     } catch (error) {
@@ -101,7 +101,7 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล book doctor appointment
   const deleteBookDoctorAppointment = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/delete-book-doctor-appointment-online/${id}`);
+      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-book-doctor-appointment-online/${id}`);
       message.success('Book doctor appointment deleted successfully');
       setAppointmentData(appointmentData.filter(item => item.id !== id));
     } catch (error) {
@@ -112,7 +112,7 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล subscriptions
   const deleteSubscriptions = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/delete-subscribe/${id}`);
+      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-subscribe/${id}`);
       message.success('Subscriptions deleted successfully');
       setSubscriptions(subscriptionsData.filter(item => item.id !== id));
     } catch (error) {
@@ -123,7 +123,7 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล Dates
   const deleteDates = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/delete-dates/${id}`);
+      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-dates/${id}`);
       message.success('Dates deleted successfully');
       setDates(datesData.filter(item => item.id !== id));
     } catch (error) {
@@ -134,7 +134,7 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล TimeSlots
   const deleteTimeSlots = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/delete-time-slots/${id}`);
+      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-time-slots/${id}`);
       message.success('Time slots deleted successfully');
     } catch (error) {
       message.error('Error deleting time slots');

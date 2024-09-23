@@ -14,7 +14,7 @@ const UpdateTimeSlots = () => {
         const fetchTimeSlots = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:3001/time-slots/${id}`);
+                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/time-slots/${id}`);
                 form.setFieldsValue(response.data); // ตั้งค่าในฟอร์ม
                 setLoading(false);
             } catch (error) {
@@ -29,7 +29,7 @@ const UpdateTimeSlots = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`http://localhost:3001/update-time-slots/${id}`);
+            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-time-slots/${id}`);
             message.success('Time slots updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ

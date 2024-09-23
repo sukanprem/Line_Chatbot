@@ -12,7 +12,7 @@ const CreateSubscriptions = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.post('http://localhost:3001/add-subscribe', values);
+            await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-subscribe', values);
             message.success('Subscriptions added successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากเพิ่มสำเร็จ

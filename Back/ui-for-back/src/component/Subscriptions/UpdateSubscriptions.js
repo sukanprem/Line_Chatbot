@@ -16,7 +16,7 @@ const UpdateSubscriptions = () => {
         const fetchSubscriptions = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:3001/subscribe/${id}`);
+                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/subscribe/${id}`);
                 form.setFieldsValue(response.data); // ตั้งค่าในฟอร์ม
                 setLoading(false);
             } catch (error) {
@@ -31,7 +31,7 @@ const UpdateSubscriptions = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`http://localhost:3001/update-subscribe/${id}`, values);
+            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-subscribe/${id}`, values);
             message.success('Subscriptions updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ

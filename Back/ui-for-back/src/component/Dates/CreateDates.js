@@ -11,7 +11,7 @@ const CreateDates = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.post('http://localhost:3001/add-dates', values);
+            await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-dates', values);
             message.success('Dates added successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากเพิ่มสำเร็จ
