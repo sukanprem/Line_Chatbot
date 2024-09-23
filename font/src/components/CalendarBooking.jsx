@@ -5,6 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './CalendarBooking.css'; 
 import Modal from 'react-modal';
 import BookingForm from './BookingForm'; // นำเข้าคอมโพเนนต์ BookingForm
+import { BASE_URL, HEADERS } from '../Global/config';
 
 const localizer = momentLocalizer(moment);
 
@@ -20,32 +21,38 @@ const CalendarBooking = () => {
   useEffect(() => {
     const fetchTimeSlots = async () => {
       try {
-        const response = await fetch('https://d1dd-223-205-61-145.ngrok-free.app/get-all-dates-with-time-slots');
+        const response = await fetch(`${BASE_URL}/get-all-dates-with-time-slots`, {
+          method: 'GET',
+          headers: HEADERS
+        });
+        
         const data = await response.json();
+        console.log("[FETCH]:", data)
+
         setTimeSlots(data);
       } catch (error) {
-        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลการนัดหมาย:', error);
-      }
+        // console.error('เกิดข้อผิดพลาดในการดึงข้อมูลการนัดหมาย:', error);
+        console.log(error)      }
     };
 
     fetchTimeSlots();
   }, []);
 
-  useEffect(() => {
-    const fetchHolidays = async () => {
-      try {
-        const response = await fetch(
-          'https://holidayapi.com/v1/holidays?key=YOUR_API_KEY&country=TH&year=2023'
-        );
-        const data = await response.json();
-        setHolidays(data.holidays);
-      } catch (error) {
-        console.error('เกิดข้อผิดพลาดในการดึงวันหยุด:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchHolidays = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         'https://holidayapi.com/v1/holidays?key=YOUR_API_KEY&country=TH&year=2023'
+  //       );
+  //       const data = await response.json();
+  //       setHolidays(data.holidays);
+  //     } catch (error) {
+  //       console.error('เกิดข้อผิดพลาดในการดึงวันหยุด:', error);
+  //     }
+  //   };
 
-    fetchHolidays();
-  }, []);
+  //   fetchHolidays();
+  // }, []);
 
   const handleSelectSlot = (slotInfo) => {
     const date = moment(slotInfo.start).format('YYYY-MM-DD');
@@ -59,6 +66,8 @@ const CalendarBooking = () => {
     const selectedDaySlots = timeSlots.find(
       (slot) => moment(slot.date).format('YYYY-MM-DD') === date
     );
+
+    console.log("SLOT:", selectedDaySlots)
 
     if (selectedDaySlots && selectedDaySlots.timeSlots.length > 0) {
       setSelectedDate(date);

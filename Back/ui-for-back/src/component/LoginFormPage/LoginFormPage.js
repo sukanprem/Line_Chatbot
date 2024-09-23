@@ -4,6 +4,8 @@ import { Form, Input, Button, Checkbox, message, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { BASE_URL, HEADERS } from '../Global/config';
+
 const { Title, Text } = Typography;
 // import './LoginFormPage.css';
 
@@ -14,7 +16,8 @@ const LoginFormPage = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            const response = await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/admin/login', {
+            const response = await axios.post(`${BASE_URL}/admin/login`, {
+                header: HEADERS,
                 username: values.username,
                 password: values.password,
             });

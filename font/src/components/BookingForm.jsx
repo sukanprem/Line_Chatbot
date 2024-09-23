@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // นำเข้า axios
-import './BookingForm.css'; 
+import './BookingForm.css';
+import { BASE_URL, HEADERS } from '../Global/config';
 
 const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
     const [formData, setFormData] = useState({
@@ -19,7 +20,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
   useEffect(() => {
     const fetchTimeSlots = async () => {
       try {
-        const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/get-all-dates-with-time-slots');
+        const response = await axios.get(`${BASE_URL}/get-all-dates-with-time-slots`, {
+          headers: HEADERS
+        });
         const data = response.data;
 
         const foundDate = data.find((item) => item.date === selectedDate);
@@ -56,13 +59,18 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
         ...formData,
       });
       // ส่งข้อมูลการจองไปยัง backend โดยใช้ axios
-      await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-book-doctor-appointment-online', {
+      // const url = "http://eewwe.yjyu/dsaddsaads"
+      await axios.post(`${BASE_URL}/add-book-doctor-appointment-online`, {
         ...formData,
+      }, {
+        headers: HEADERS
       });
   
       // อัปเดตจำนวนการจองใน time slot
-      await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-time-slots/${formData.time_slot_id}`, {
+      await axios.put(`${BASE_URL}/update-time-slots/${formData.time_slot_id}`, {
         booked_appointments: selectedSlot.booked_appointments + 1,
+      }, {
+        headers: HEADERS
       });
   
       alert('การจองเสร็จสมบูรณ์!');

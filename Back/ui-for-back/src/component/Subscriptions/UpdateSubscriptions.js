@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message, Spin, Space } from 'antd';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+// import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { BASE_URL, HEADERS } from '../Global/config'
 // import './Subscriptions.css'
 
 const UpdateSubscriptions = () => {
@@ -16,7 +17,9 @@ const UpdateSubscriptions = () => {
         const fetchSubscriptions = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/subscribe/${id}`);
+                const response = await axios.get(`${BASE_URL}/subscribe/${id}`, {
+                    headers: HEADERS
+                });
                 form.setFieldsValue(response.data); // ตั้งค่าในฟอร์ม
                 setLoading(false);
             } catch (error) {
@@ -31,7 +34,9 @@ const UpdateSubscriptions = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-subscribe/${id}`, values);
+            await axios.put(`${BASE_URL}/update-subscribe/${id}`, values, {
+                headers: HEADERS
+            });
             message.success('Subscriptions updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 // import '../../App.css';
+import { BASE_URL, HEADERS } from '../Global/config';
 
 const UpdateHealthCheck = () => {
     const [form] = Form.useForm();
@@ -15,7 +16,9 @@ const UpdateHealthCheck = () => {
         const fetchHealthCheckResult = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/health-check-result/${id}`);
+                const response = await axios.get(`${BASE_URL}/health-check-result/${id}`, {
+                    headers: HEADERS
+                });
                 form.setFieldsValue(response.data); // ตั้งค่าในฟอร์ม
                 setLoading(false);
             } catch (error) {
@@ -30,7 +33,9 @@ const UpdateHealthCheck = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-health-check-result/${id}`, values);
+            await axios.put(`${BASE_URL}/update-health-check-result/${id}`, values, {
+                headers: HEADERS
+            });
             message.success('Health check result updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ

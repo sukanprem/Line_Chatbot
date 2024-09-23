@@ -3,6 +3,7 @@ import { Form, Input, Button, message, DatePicker, TimePicker, Spin } from 'antd
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { BASE_URL, HEADERS } from '../Global/config';
 // import './BookDoctorAppointmentOnline.css'
 
 const UpdateBookDoctorAppointmentOnline = () => {
@@ -24,7 +25,9 @@ const UpdateBookDoctorAppointmentOnline = () => {
         const fetchBookDoctorAppointmentOnline = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/book-doctor-appointment-online/${id}`);
+                const response = await axios.get(`${BASE_URL}/book-doctor-appointment-online/${id}`, {
+                    headers: HEADERS
+                });
 
                 // แยก date และ time ออกมาเพราะต้องแปลงเป็น dayjs object
                 const { date, time, ...rest } = response.data;
@@ -48,7 +51,9 @@ const UpdateBookDoctorAppointmentOnline = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-book-doctor-appointment-online/${id}`, values);
+            await axios.put(`${BASE_URL}/update-book-doctor-appointment-online/${id}`, values, {
+                headers: HEADERS
+            });
             message.success('Book doctor appointment online updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ

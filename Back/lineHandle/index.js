@@ -4,6 +4,7 @@ const axios = require('axios');
 const { createHealthCheckResultFlexMessage } = require('../../font/FlexMessageHandle/flexMessageForHealth');
 const { createBookDoctorAppointmentOnlineFlexMessage } = require('../../font/FlexMessageHandle/flexMessageForBook');
 const { createHospitalFlexMessage } = require('../../font/FlexMessageHandle/flexMessageForHospital');
+const { BASE_URL, HEADERS } = require('../ui-for-back/src/component/Global/config')
 require('dotenv').config(); // เรียกใช้ dotenv
 // console.log(typeof createHealthCheckResultFlexMessage);
 // console.log(typeof createBookDoctorAppointmentOnlineFlexMessage);
@@ -44,14 +45,16 @@ async function handleEvent(event) {
 
   // แยกข้อความเพื่อดึง Document ID ที่ผู้ใช้ส่งมา
   const documentId = event.message.text.trim();
-//   let whereID ='';
+  //   let whereID ='';
   try {
     // ตรวจสอบในฐานข้อมูล HealthCheckResults
     let healthCheckData = null;
     try {
-      const responseHealthCheck = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/health-check-result/${documentId}`);
+      const responseHealthCheck = await axios.get(`${BASE_URL}/health-check-result/${documentId}`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       healthCheckData = responseHealthCheck.data;
-    //   whereID = '1';
+      //   whereID = '1';
     } catch (error) {
       // ถ้าไม่พบข้อมูลใน HealthCheckResults, ไม่ทำอะไร
       healthCheckData = null;
@@ -60,9 +63,11 @@ async function handleEvent(event) {
     // ตรวจสอบในฐานข้อมูล BookDoctorAppointmentOnline
     let appointmentData = null;
     try {
-      const responseAppointment = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/book-doctor-appointment-online/${documentId}`);
+      const responseAppointment = await axios.get(`${BASE_URL}/book-doctor-appointment-online/${documentId}`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       appointmentData = responseAppointment.data;
-    //   whereID = '2';
+      //   whereID = '2';
     } catch (error) {
       // ถ้าไม่พบข้อมูลใน BookDoctorAppointmentOnline, ไม่ทำอะไร
       appointmentData = null;
@@ -71,9 +76,11 @@ async function handleEvent(event) {
     // ตรวจสอบในฐานข้อมูล NotificationSettings
     let notificationData = null;
     try {
-      const responseNotification = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/notification-settings/${documentId}`);
+      const responseNotification = await axios.get(`${BASE_URL}/notification-settings/${documentId}`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       notificationData = responseNotification.data;
-    //   whereID = '3';
+      //   whereID = '3';
     } catch (error) {
       // ถ้าไม่พบข้อมูลใน NotificationSettings, ไม่ทำอะไร
       notificationData = null;
@@ -91,7 +98,7 @@ async function handleEvent(event) {
       // Create both Flex messages
       const flex_message_for_health_check_data = createHealthCheckResultFlexMessage(healthCheckData);
       const flex_message_for_hospital = createHospitalFlexMessage(healthCheckData);
-    
+
       // Send both messages as an array
       return client.replyMessage(event.replyToken, [
         flex_message_for_health_check_data,
@@ -106,9 +113,9 @@ async function handleEvent(event) {
 
     if (notificationData) {
       replyText += `ชื่อกลุ่ม: ${notificationData.groupName}\n` +
-                   `ประเภท Line: ${notificationData.lineForm}\n` +
-                   `ประเภทการแจ้งเตือน: ${notificationData.notificationTypes}\n` +
-                   `Token: ${notificationData.token}\n`
+        `ประเภท Line: ${notificationData.lineForm}\n` +
+        `ประเภทการแจ้งเตือน: ${notificationData.notificationTypes}\n` +
+        `Token: ${notificationData.token}\n`
     }
 
     if (!healthCheckData && !appointmentData && !notificationData) {
@@ -131,29 +138,30 @@ async function handleEvent(event) {
 }
 
 async function handleSubscription(event, documentId) {
-    const lineUserId = event.source.userId;
-  
-    try {
-      const response = await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-subscribe', {
-        lineUserId: lineUserId,
-        healthCheckResultId: documentId,
-        notificationType: 'update' // หรือ 'once' ถ้าต้องการให้เป็นแบบครั้งเดียว
-      });
-  
-      // ส่งข้อความตอบกลับไปยังผู้ใช้
-      return client.replyMessage(event.replyToken, {
-        type: 'text',
-        text: 'คุณได้สมัครรับการแจ้งเตือนสำเร็จแล้ว!'
-      });
-    } catch (error) {
-      console.error("Error subscribing to notifications: ", error);
-  
-      // ส่งข้อความแสดงข้อผิดพลาดหากเกิดข้อผิดพลาดในการสมัคร
-      return client.replyMessage(event.replyToken, {
-        type: 'text',
-        text: 'ขออภัย ไม่สามารถสมัครรับการแจ้งเตือนได้ กรุณาลองใหม่อีกครั้ง'
-      });
-    }
+  const lineUserId = event.source.userId;
+
+  try {
+    const response = await axios.post('${BASE_URL}/add-subscribe', {
+      headers: HEADERS, // ใช้ headers จาก config.js
+      lineUserId: lineUserId,
+      healthCheckResultId: documentId,
+      notificationType: 'update' // หรือ 'once' ถ้าต้องการให้เป็นแบบครั้งเดียว
+    });
+
+    // ส่งข้อความตอบกลับไปยังผู้ใช้
+    return client.replyMessage(event.replyToken, {
+      type: 'text',
+      text: 'คุณได้สมัครรับการแจ้งเตือนสำเร็จแล้ว!'
+    });
+  } catch (error) {
+    console.error("Error subscribing to notifications: ", error);
+
+    // ส่งข้อความแสดงข้อผิดพลาดหากเกิดข้อผิดพลาดในการสมัคร
+    return client.replyMessage(event.replyToken, {
+      type: 'text',
+      text: 'ขออภัย ไม่สามารถสมัครรับการแจ้งเตือนได้ กรุณาลองใหม่อีกครั้ง'
+    });
+  }
 }
 
 app.listen(3002, () => {

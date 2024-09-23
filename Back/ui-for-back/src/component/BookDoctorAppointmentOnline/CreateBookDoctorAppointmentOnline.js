@@ -3,6 +3,7 @@ import { Form, Input, Button, message, Radio, /* Space, */DatePicker, TimePicker
 // import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { BASE_URL, HEADERS } from '../Global/config'
 import { useNavigate } from 'react-router-dom';
 // import './BookDoctorAppointmentOnline.css'
 
@@ -20,7 +21,9 @@ const CreateBookDoctorAppointmentOnline = () => {
 
     const onFinish = async (values) => {
         try {
-            await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-book-doctor-appointment-online', values);
+            await axios.post(`${BASE_URL}/add-book-doctor-appointment-online`, values, {
+                headers: HEADERS
+            });
             message.success('Book doctor appointment online added successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากเพิ่มสำเร็จ

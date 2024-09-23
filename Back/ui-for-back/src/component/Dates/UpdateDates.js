@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message, Spin, Space } from 'antd';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+// import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { BASE_URL, HEADERS } from '../Global/config';
 
 const UpdateDates = () => {
     const [form] = Form.useForm();
@@ -14,7 +15,9 @@ const UpdateDates = () => {
         const fetchDates = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/dates/${id}`);
+                const response = await axios.get(`${BASE_URL}/dates/${id}`, {
+                    headers: HEADERS
+                });
                 form.setFieldsValue(response.data); // ตั้งค่าในฟอร์ม
                 setLoading(false);
             } catch (error) {
@@ -29,7 +32,9 @@ const UpdateDates = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-dates/${id}`, values);
+            await axios.put(`${BASE_URL}/update-dates/${id}`, values, {
+                headers: HEADERS
+            });
             message.success('Dates updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ

@@ -4,6 +4,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 // import './Subscriptions.css'
+import { BASE_URL, HEADERS } from '../Global/config';
 
 const CreateSubscriptions = () => {
     const [loading, setLoading] = useState(false);
@@ -12,7 +13,9 @@ const CreateSubscriptions = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-subscribe', values);
+            await axios.post(`${BASE_URL}/add-subscribe`, values, {
+                headers: HEADERS
+            });
             message.success('Subscriptions added successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากเพิ่มสำเร็จ

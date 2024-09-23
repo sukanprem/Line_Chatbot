@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, message, Spin, Button, Popconfirm } from 'antd'; // เพิ่ม Popconfirm เพื่อให้ผู้ใช้ยืนยันการลบ
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL, HEADERS } from './component/Global/config'
 import './App.css'
 
 const App = () => {
@@ -25,7 +26,9 @@ const App = () => {
   const fetchHealthCheckResults = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/health-check-result');
+      const response = await axios.get(`${BASE_URL}/health-check-result`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       setHealthCheckData(response.data);
       setLoading(false);
     } catch (error) {
@@ -38,7 +41,9 @@ const App = () => {
   const fetchBookDoctorAppointmentOnline = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/book-doctor-appointment-online');
+      const response = await axios.get(`${BASE_URL}/book-doctor-appointment-online`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       setAppointmentData(response.data);
       setLoading(false);
     } catch (error) {
@@ -52,7 +57,9 @@ const App = () => {
   const fetchSubscriptions = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/subscribe');
+      const response = await axios.get(`${BASE_URL}/subscribe`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       setSubscriptions(response.data);
       setLoading(false);
     } catch (error) {
@@ -65,7 +72,9 @@ const App = () => {
   const fetchDates = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/dates');
+      const response = await axios.get(`${BASE_URL}/dates`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       setDates(response.data);
       setLoading(false);
     } catch (error) {
@@ -78,7 +87,9 @@ const App = () => {
   const fetchTimeSlots = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://d1dd-223-205-61-145.ngrok-free.app/time-slots');
+      const response = await axios.get(`${BASE_URL}/time-slots`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       setTimeSlots(response.data);
       setLoading(false);
     } catch (error) {
@@ -90,7 +101,9 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล health check result
   const deleteHealthCheckResult = async (id) => {
     try {
-      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-health-check-result/${id}`);
+      await axios.delete(`${BASE_URL}/delete-health-check-result/${id}`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       message.success('Health check result deleted successfully');
       setHealthCheckData(healthCheckData.filter(item => item.id !== id));
     } catch (error) {
@@ -101,7 +114,9 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล book doctor appointment
   const deleteBookDoctorAppointment = async (id) => {
     try {
-      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-book-doctor-appointment-online/${id}`);
+      await axios.delete(`${BASE_URL}/delete-book-doctor-appointment-online/${id}`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       message.success('Book doctor appointment deleted successfully');
       setAppointmentData(appointmentData.filter(item => item.id !== id));
     } catch (error) {
@@ -112,7 +127,9 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล subscriptions
   const deleteSubscriptions = async (id) => {
     try {
-      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-subscribe/${id}`);
+      await axios.delete(`${BASE_URL}/delete-subscribe/${id}`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       message.success('Subscriptions deleted successfully');
       setSubscriptions(subscriptionsData.filter(item => item.id !== id));
     } catch (error) {
@@ -123,7 +140,9 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล Dates
   const deleteDates = async (id) => {
     try {
-      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-dates/${id}`);
+      await axios.delete(`${BASE_URL}/delete-dates/${id}`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       message.success('Dates deleted successfully');
       setDates(datesData.filter(item => item.id !== id));
     } catch (error) {
@@ -134,7 +153,9 @@ const App = () => {
   // ฟังก์ชันสำหรับลบข้อมูล TimeSlots
   const deleteTimeSlots = async (id) => {
     try {
-      await axios.delete(`https://d1dd-223-205-61-145.ngrok-free.app/delete-time-slots/${id}`);
+      await axios.delete(`${BASE_URL}/delete-time-slots/${id}`, {
+        headers: HEADERS // ใช้ headers จาก config.js
+      });
       message.success('Time slots deleted successfully');
     } catch (error) {
       message.error('Error deleting time slots');

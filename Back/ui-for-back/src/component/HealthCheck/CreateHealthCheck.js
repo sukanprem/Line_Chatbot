@@ -3,6 +3,7 @@ import { Form, Input, Button, message, Radio, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL, HEADERS } from '../Global/config';
 // import '../../App.css';
 
 const CreateHealthCheck = () => {
@@ -12,7 +13,9 @@ const CreateHealthCheck = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.post('https://d1dd-223-205-61-145.ngrok-free.app/add-health-check-result', values);
+            await axios.post(`${BASE_URL}/add-health-check-result`, values, {
+                headers: HEADERS
+            });
             message.success('Health check result added successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากเพิ่มสำเร็จ

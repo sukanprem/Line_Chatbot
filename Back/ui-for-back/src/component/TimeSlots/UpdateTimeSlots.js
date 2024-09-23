@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message, Spin, Space, Radio } from 'antd';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+// import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { BASE_URL, HEADERS } from '../Global/config';
 
 const UpdateTimeSlots = () => {
     const [form] = Form.useForm();
@@ -14,7 +15,9 @@ const UpdateTimeSlots = () => {
         const fetchTimeSlots = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`https://d1dd-223-205-61-145.ngrok-free.app/time-slots/${id}`);
+                const response = await axios.get(`${BASE_URL}/time-slots/${id}`, {
+                    headers: HEADERS
+                });
                 form.setFieldsValue(response.data); // ตั้งค่าในฟอร์ม
                 setLoading(false);
             } catch (error) {
@@ -29,7 +32,9 @@ const UpdateTimeSlots = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await axios.put(`https://d1dd-223-205-61-145.ngrok-free.app/update-time-slots/${id}`);
+            await axios.put(`${BASE_URL}/update-time-slots/${id}`, {
+                headers: HEADERS
+            });
             message.success('Time slots updated successfully');
             setLoading(false);
             navigate('/'); // กลับไปยังหน้าแสดงผลข้อมูลหลังจากอัปเดตสำเร็จ
