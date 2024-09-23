@@ -90,8 +90,18 @@ const CalendarBooking = () => {
   };
 
   const handleSlotSelect = (slot) => {
-    setSelectedSlot(slot); 
+    setSelectedSlot(slot);
+    const slotElements = document.querySelectorAll('.slot');
+    slotElements.forEach((el) => {
+      el.classList.remove('selected'); // ลบคลาสที่เลือกจากทุกๆ slot
+    });
+    
+    const selectedElement = document.querySelector(`li[data-slot="${slot.time_slot}"]`);
+    if (selectedElement) {
+      selectedElement.classList.add('selected'); // เพิ่มคลาสให้กับ slot ที่เลือก
+    }
   };
+  
 
   const confirmBooking = () => {
     if (selectedSlot) {
@@ -185,14 +195,15 @@ const CalendarBooking = () => {
             <li
               key={slot.time_slot}
               className={slot.booked_appointments >= slot.max_appointments ? 'slot booked' : 'slot available'}
+              data-slot={slot.time_slot} // เพิ่ม data-slot
               onClick={() => handleSlotSelect(slot)}
             >
               {slot.time_slot}
             </li>
           ))}
         </ul>
-        <button onClick={confirmBooking}>จะเอาเวลานี้</button>
-        <button onClick={closeModal}>ปิด</button>
+        <button className="button-confirm" onClick={confirmBooking}>จองเวลานี้</button>
+        <button className="modal-button" onClick={closeModal}>ปิด</button>
       </Modal>
       <Modal
         isOpen={bookingFormIsOpen}

@@ -85,8 +85,8 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
     <div className="booking-form">
       <h2>ฟอร์มการจอง</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          ชื่อ:
+        <div>
+          <label>ชื่อ:</label>
           <input
             type="text"
             name="firstName"
@@ -94,9 +94,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
             onChange={handleChange}
             required
           />
-        </label>
-        <label>
-          นามสกุล:
+        </div>
+        <div>
+          <label>นามสกุล:</label>
           <input
             type="text"
             name="lastName"
@@ -104,9 +104,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
             onChange={handleChange}
             required
           />
-        </label>
-        <label>
-          อีเมล:
+        </div>
+        <div>
+          <label>อีเมล:</label>
           <input
             type="email"
             name="email"
@@ -114,9 +114,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
             onChange={handleChange}
             required
           />
-        </label>
-        <label>
-          เบอร์โทร:
+        </div>
+        <div>
+          <label>เบอร์โทร:</label>
           <input
             type="tel"
             name="phone"
@@ -124,9 +124,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
             onChange={handleChange}
             required
           />
-        </label>
-        <label>
-          เลขบัตรประชาชน:
+        </div>
+        <div>
+          <label>เลขบัตรประชาชน:</label>
           <input
             type="text"
             name="citizenId"
@@ -134,9 +134,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
             onChange={handleChange}
             required
           />
-        </label>
-        <label>
-          โรงพยาบาล:
+        </div>
+        <div>
+          <label>โรงพยาบาล:</label>
           <input
             type="text"
             name="hospital"
@@ -144,11 +144,11 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
             onChange={handleChange}
             required
           />
-        </label>
-        <label>
-          หมายเหตุ:
+        </div>
+        <div>
+          <label>หมายเหตุ:</label>
           <textarea name="notes" value={formData.notes} onChange={handleChange} />
-        </label>
+        </div>
 
         <p>วันที่ที่เลือก: {selectedDate}</p>
         <p>ช่วงเวลาที่เลือก: {selectedSlot.time_slot}</p>
@@ -157,6 +157,7 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose }) => {
       </form>
     </div>
   );
+
 };
 
 export default BookingForm;
