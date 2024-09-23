@@ -82,7 +82,7 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
       setSuccessMessage('การจองเสร็จสมบูรณ์! คุณจะได้รับข้อความยืนยันใน LINE ของคุณ'); // Show success message
 
       setIsSubmitting(false); // Reset submitting state
-      // alert('การจองเสร็จสมบูรณ์!');
+      alert('การจองเสร็จสมบูรณ์!');
       onClose(); // ปิดหน้าแบบฟอร์ม
     } catch (error) {
       console.error('เกิดข้อผิดพลาดในการจอง:', error.response?.data || error.message);
