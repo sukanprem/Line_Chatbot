@@ -447,14 +447,13 @@ app.get('/book-doctor-appointment-online/:id', async (req, res) => {
   }
 });
 
-// The POST method adds BookDoctorAppointmentOnline data.
+// The POST method adds a new booking to BookDoctorAppointmentOnline and sends a Flex Message
 app.post('/add-book-doctor-appointment-online', async (req, res) => {
   try {
-    console.log(req.body);
     const {
       time_slot_id,
-      firstName, // รับ fullName ที่รวมจาก frontend
-      lastName, // ยังรับ lastName ตามที่ frontend ส่งมา
+      firstName,
+      lastName,
       email,
       phone,
       citizenId,
@@ -464,54 +463,61 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       notes,
       created_at,
       updated_at,
-      lineUserId // Make sure the user's Line ID is passed from the frontend
+      lineUserId,
+      selectedSlot, // Ensure selectedSlot is coming from the frontend
+      selectedDate // Ensure selectedDate is coming from the frontend
     } = req.body;
 
-    // if (!time_slot_id || !firstName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
-    //   return res.status(400).send('Invalid request: Missing or incorrect fields.');
-    // }
-
-    // เข้ารหัส citizenId ก่อนบันทึกลงในฐานข้อมูล
+    // Encrypt citizenId before saving to the database
     let encryptedCitizenId = null;
     if (citizenId) {
       encryptedCitizenId = CryptoJS.AES.encrypt(citizenId, secretKey).toString();
     }
 
+    // Save booking to Firestore
     const newDocRef = db.collection('BookDoctorAppointmentOnline').doc();
     await newDocRef.set({
       time_slot_id,
       firstName,
       lastName,
-      citizenId: encryptedCitizenId,  // บันทึก citizenId ที่เข้ารหัส (หรือ null)
+      citizenId: encryptedCitizenId,
       email,
       phone,
       hospital,
       doctor_id: doctor_id || '',
       status,
-      notes: notes || '', // ใช้ค่าว่างหากไม่มีหมายเหตุ
-      created_at: created_at || new Date().toISOString(), // ตั้งค่าเวลาปัจจุบันถ้าไม่มี
+      notes: notes || '',
+      created_at: created_at || new Date().toISOString(),
       updated_at: updated_at || new Date().toISOString(),
     });
 
-    // Send Flex Message to user via Line
-    const flexMessage = createBookDoctorAppointmentOnlineFlexMessage({
+    // Prepare the data to be sent in the Flex Message
+    const appointmentData = {
       firstName,
       lastName,
       hospital,
-      // doctor: doctor_id, // Add any other necessary fields here
-      department: "General Medicine", // Replace with actual department if available
-      date: selectedDate, // You need to pass the selected date from the frontend
-      time: selectedSlot.time_slot // Pass the selected time slot from the frontend
-    });
+      doctor: doctor_id || 'N/A',
+      department: 'General Medicine', // Replace with actual department if available
+      date: selectedDate, // Use selectedDate from the frontend
+      time: selectedSlot.time_slot // Use selectedSlot.time_slot from the frontend
+    };
 
-    // Send the Flex Message to the user
-    await client.pushMessage(lineUserId, flexMessage);
+    // Create Flex Message using the data
+    const flexMessageForAppointment = createBookDoctorAppointmentOnlineFlexMessage(appointmentData);
 
-    res.send('Book a doctor appointment online added successfully!');
+    // Send the Flex Message to the user on Line
+    await client.pushMessage(lineUserId, flexMessageForAppointment)
+      .then(() => {
+        console.log('Flex message sent successfully');
+      })
+      .catch((error) => {
+        console.error('Error sending flex message:', error);
+      });
 
+    res.send('Booking confirmed and message sent to Line user!');
   } catch (error) {
-    console.error("Error adding book a doctor appointment online: ", error);
-    res.status(500).send('Error adding book a doctor appointment online');
+    console.error('Error adding doctor appointment booking:', error);
+    res.status(500).send('Error adding doctor appointment booking');
   }
 });
 

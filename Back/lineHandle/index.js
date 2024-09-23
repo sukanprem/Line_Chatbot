@@ -36,6 +36,9 @@ async function handleEvent(event) {
     return Promise.resolve(null);
   }
 
+  // Extract lineUserId from the event object
+  const lineUserId = event.source.userId;
+
   const messageText = event.message.text.trim();
 
   if (messageText.startsWith("subscribe ")) {
