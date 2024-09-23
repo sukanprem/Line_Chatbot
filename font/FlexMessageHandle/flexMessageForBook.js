@@ -29,7 +29,33 @@ function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
             contents: [
               {
                 type: "text",
-                text: `${appointmentData.firstName} ${appointmentData.lastName} จอง`,
+                text: `${appointmentData.firstName} ${appointmentData.lastName}`,
+                size: "sm",
+                color: "#484848",
+                flex: 0
+              }
+            ]
+          },
+          // {
+          //   type: "box",
+          //   layout: "baseline",
+          //   contents: [
+          //     {
+          //       type: "text",
+          //       text: `${appointmentData.healthPlan}`,
+          //       size: "sm",
+          //       color: "#484848",
+          //       flex: 0
+          //     }
+          //   ]
+          // },
+          {
+            type: "box",
+            layout: "baseline",
+            contents: [
+              {
+                type: "text",
+                text: `${appointmentData.hospital}`,
                 size: "sm",
                 color: "#484848",
                 flex: 0
@@ -42,7 +68,7 @@ function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
             contents: [
               {
                 type: "text",
-                text: `${appointmentData.healthPlan}`,
+                text: `วันที่: ${appointmentData.time_slot_id}`,
                 size: "sm",
                 color: "#484848",
                 flex: 0
@@ -55,33 +81,7 @@ function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
             contents: [
               {
                 type: "text",
-                text: `${appointmentData.hospital} กับ ${appointmentData.doctor}`,
-                size: "sm",
-                color: "#484848",
-                flex: 0
-              }
-            ]
-          },
-          {
-            type: "box",
-            layout: "baseline",
-            contents: [
-              {
-                type: "text",
-                text: `แผนก ${appointmentData.department} วันที่: ${appointmentData.date}`,
-                size: "sm",
-                color: "#484848",
-                flex: 0
-              }
-            ]
-          },
-          {
-            type: "box",
-            layout: "baseline",
-            contents: [
-              {
-                type: "text",
-                text: `เวลา: ${appointmentData.time}`,
+                text: `เวลา: ${appointmentData.time_slot_id}`,
                 size: "sm",
                 color: "#484848",
                 flex: 0
