@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
 const { createHealthCheckResultFlexMessage } = require('../font/FlexMessageHandle/flexMessageForHealth');
 const { createHospitalFlexMessage } = require('../font/FlexMessageHandle/flexMessageForHospital')
+const { createBookDoctorAppointmentOnlineFlexMessage } = require('../font/FlexMessageHandle/flexMessageForBook')
 require('dotenv').config();
 // const CryptoJS = require('crypto-js');
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
@@ -462,7 +463,8 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       status,
       notes,
       created_at,
-      updated_at
+      updated_at,
+      lineUserId // Make sure the user's Line ID is passed from the frontend
     } = req.body;
 
     // if (!time_slot_id || !firstName || !lastName || !email || !phone || !hospital || !doctor_id || !status || !created_at || !updated_at || !citizenId) {
@@ -490,6 +492,20 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       created_at: created_at || new Date().toISOString(), // ตั้งค่าเวลาปัจจุบันถ้าไม่มี
       updated_at: updated_at || new Date().toISOString(),
     });
+
+    // Send Flex Message to user via Line
+    const flexMessage = createBookDoctorAppointmentOnlineFlexMessage({
+      firstName,
+      lastName,
+      hospital,
+      // doctor: doctor_id, // Add any other necessary fields here
+      department: "General Medicine", // Replace with actual department if available
+      date: selectedDate, // You need to pass the selected date from the frontend
+      time: selectedSlot.time_slot // Pass the selected time slot from the frontend
+    });
+
+    // Send the Flex Message to the user
+    await client.pushMessage(lineUserId, flexMessage);
 
     res.send('Book a doctor appointment online added successfully!');
 
