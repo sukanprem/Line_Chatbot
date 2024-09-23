@@ -199,6 +199,7 @@ app.get('/health-check-result/:id', async (req, res) => {
 app.post('/add-health-check-result', async (req, res) => {
   try {
     const {
+      documentId, // เพิ่มฟิลด์ documentId เพื่อให้ระบุได้
       firstName,
       lastName,
       citizenId,
@@ -228,7 +229,12 @@ app.post('/add-health-check-result', async (req, res) => {
     const heightInMeters = height / 100; // แปลงจากเซนติเมตรเป็นเมตร
     const bmi = weight / (heightInMeters * heightInMeters);
 
-    const newDocRef = db.collection('healthCheckResults').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
+    // ถ้ามีการระบุ documentId ให้ใช้ documentId ที่ส่งมา
+    const newDocRef = documentId
+      ? db.collection('healthCheckResults').doc(documentId) // ระบุ ID เอง
+      : db.collection('healthCheckResults').doc(); // ถ้าไม่มี ID ให้ Firebase สร้าง ID อัตโนมัติ
+
+    // เพิ่มข้อมูลไปยัง Firebase Firestore
     await newDocRef.set({
       firstName,
       lastName,
@@ -756,7 +762,7 @@ app.post('/add-dates', async (req, res) => {
   try {
     const { date, status } = req.body;
 
-    if (!date || !status ) {
+    if (!date || !status) {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
