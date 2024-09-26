@@ -1,10 +1,13 @@
 const express = require('express');
+const axios = require('axios')
+const qs = require("qs")
 const admin = require('firebase-admin');
 const { Client, middleware } = require('@line/bot-sdk');
 const { createHealthCheckResultFlexMessage } = require('../font/FlexMessageHandle/flexMessageForHealth');
 const { createHospitalFlexMessage } = require('../font/FlexMessageHandle/flexMessageForHospital')
 const { createBookDoctorAppointmentOnlineFlexMessage } = require('../font/FlexMessageHandle/flexMessageForBook')
 require('dotenv').config();
+const { REDIRECT_URI_FOR_BOOK, CLIENT_ID, CHANNEL_SECRET, REDIRECT_URI_FOR_SUBSCRIBED } = require('./ui-for-back/src/component/Global/config')
 // const CryptoJS = require('crypto-js');
 // console.log(typeof createHealthCheckResultFlexMessage); // Should log 'function'
 // console.log(typeof createHospitalFlexMessage); // Should log 'function'
@@ -146,6 +149,7 @@ app.delete('/delete-notification-setting/:id', async (req, res) => {
 
 // นำเข้าไลบรารี crypto-js
 const CryptoJS = require('crypto-js');
+const { REDIRECT_URI_FOR_BOOK } = require('./ui-for-back/src/component/Global/config');
 
 // คีย์ลับสำหรับการเข้ารหัส
 const secretKey = process.env.SECRET_KEY;
@@ -447,46 +451,85 @@ app.get('/book-doctor-appointment-online/:id', async (req, res) => {
   }
 });
 
-app.get('/get-line-profile', async (req, res) => {
+app.get('/get-line-profile-for-booked', async (req, res) => {
   const { code } = req.query;
+  // res.send({code: code})
 
   try {
-      // Exchange the authorization code for an access token
-      const tokenResponse = await axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify({
-          grant_type: 'authorization_code',
-          code: code,
-          redirect_uri: 'https://2e25-223-205-61-145.ngrok-free.app/calendar-form',
-          client_id: '2006377527',
-          client_secret: 'ed68198215c38554ee8e748bc3c3e07c',
-      }), {
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-          },
-      });
 
-      const { id_token, access_token } = tokenResponse.data;
+    // Exchange the authorization code for an access token
+    const tokenResponse = await axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify({
+      grant_type: 'authorization_code',
+      code: decodeURIComponent(code),
+      redirect_uri: `${REDIRECT_URI_FOR_BOOK}`,
+      client_id: `${CLIENT_ID}`,
+      client_secret: `${CHANNEL_SECRET}`,
+    }), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
 
-      // Verify the ID token and get the user's profile information
-      const decodedIdToken = jwt.decode(id_token);
-      const userProfile = decodedIdToken;
+    const { id_token, access_token } = tokenResponse.data;
 
-      // Optionally, you can get additional profile info using the access token
-      const profileResponse = await axios.get('https://api.line.me/v2/profile', {
-          headers: {
-              Authorization: `Bearer ${access_token}`,
-          },
-      });
 
-      const profile = profileResponse.data;
+    // Optionally, you can get additional profile info using the access token
+    const profileResponse = await axios.get('https://api.line.me/v2/profile', {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
 
-      // Now you have the user's profile
-      res.send(profile);
+    const profile = profileResponse.data;
+
+    // Now you have the user's profile
+    res.send(profile);
   } catch (error) {
-      console.error(error);
-      res.status(500).send('Error in LINE login');
+    console.error('Error fetching user profile:', error.response ? error.response.data : error.message);
+    res.status(500).send({ error: error.response ? error.response.data : error.message });
+
   }
 });
 
+app.get('/get-line-profile-for-subscribed', async (req, res) => {
+  const { code } = req.query;
+  // res.send({code: code})
+
+  try {
+
+    // Exchange the authorization code for an access token
+    const tokenResponse = await axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify({
+      grant_type: 'authorization_code',
+      code: decodeURIComponent(code),
+      redirect_uri: `${REDIRECT_URI_FOR_SUBSCRIBED}`,
+      client_id: `${CLIENT_ID}`,
+      client_secret: `${CHANNEL_SECRET}`,
+    }), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    const { id_token, access_token } = tokenResponse.data;
+
+
+    // Optionally, you can get additional profile info using the access token
+    const profileResponse = await axios.get('https://api.line.me/v2/profile', {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    const profile = profileResponse.data;
+
+    // Now you have the user's profile
+    res.send(profile);
+  } catch (error) {
+    console.error('Error fetching user profile:', error.response ? error.response.data : error.message);
+    res.status(500).send({ error: error.response ? error.response.data : error.message });
+
+  }
+});
 
 // The POST method adds BookDoctorAppointmentOnline data.
 app.post('/add-book-doctor-appointment-online', async (req, res) => {
@@ -504,9 +547,7 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       notes,
       created_at,
       updated_at,
-      lineUserId,
-      selectedSlot, // Ensure selectedSlot is coming from the frontend
-      selectedDate // Ensure selectedDate is coming from the frontend
+      lineUserId
     } = req.body;
 
     // Encrypt citizenId before saving to the database
@@ -532,6 +573,25 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       updated_at: updated_at || new Date().toISOString(),
     });
 
+    // Retrieve time slot data from the TimeSlots collection
+    const timeSlotDoc = await db.collection('TimeSlots').doc(time_slot_id).get();
+    if (!timeSlotDoc.exists) {
+      throw new Error('Time slot not found');
+    }
+
+    const timeSlotData = timeSlotDoc.data();
+    const dateId = timeSlotData.date_id;
+    const appointmentTime = timeSlotData.time_slot;
+
+    // Now query the Dates collection using the dateId from the TimeSlots document
+    const dateDoc = await db.collection('Dates').doc(dateId).get();
+    if (!dateDoc.exists) {
+      throw new Error('Date not found');
+    }
+
+    const dateData = dateDoc.data();
+    const appointmentDate = dateData.date;  // Assuming this field stores the actual date
+
     // Prepare the data to be sent in the Flex Message
     const appointmentData = {
       firstName,
@@ -539,9 +599,13 @@ app.post('/add-book-doctor-appointment-online', async (req, res) => {
       hospital,
       doctor: doctor_id || 'N/A',
       department: 'General Medicine', // Replace with actual department if available
-      date: selectedDate, // Use selectedDate from the frontend
-      time: selectedSlot.time_slot // Use selectedSlot.time_slot from the frontend
+      date: appointmentDate,  // Use the actual date from the Dates collection
+      time: appointmentTime   // Use the time from the TimeSlots collection
     };
+
+    console.log(appointmentTime)
+    console.log(appointmentDate)
+    console.log(appointmentData)
 
     // Create Flex Message using the data
     const flexMessageForAppointment = createBookDoctorAppointmentOnlineFlexMessage(appointmentData);

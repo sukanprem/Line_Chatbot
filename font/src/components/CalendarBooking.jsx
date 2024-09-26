@@ -10,8 +10,9 @@ import { useParams } from 'react-router-dom';
 const localizer = momentLocalizer(moment);
 
 const CalendarBooking = () => {
-  let {code} = useParams();
-
+  const queryParameters = new URLSearchParams(window.location.search)
+  const code = queryParameters.get("code")
+  const localLineID = localStorage.getItem("lineUserID") || null
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [bookingFormIsOpen, setBookingFormIsOpen] = useState(false); // ติดตามการแสดงฟอร์มการจอง
   const [selectedDate, setSelectedDate] = useState('');
@@ -19,7 +20,7 @@ const CalendarBooking = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [holidays, setHolidays] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [lineUserID, setLineUserID] = useState(null)
+  const [lineUserID, setLineUserID] = useState(localLineID)
   useEffect(() => {
     const fetchTimeSlots = async () => {
       try {
@@ -29,7 +30,7 @@ const CalendarBooking = () => {
         });
         
         const data = await response.json();
-        console.log("[FETCH]:", data)
+        // console.log("[FETCH]:", data)
 
         setTimeSlots(data);
       } catch (error) {
@@ -42,23 +43,42 @@ const CalendarBooking = () => {
 
   const getLineUserID = async () => {
     try {
+      console.log("Code:", code)
       if(!code) {
-        alert("Code not define")
+        // alert("Code not define")
+        return;
+        // throw "error"
       } 
-      const url = 'https://e87d-223-205-61-145.ngrok-free.app/get-line-profile'
+      const url = `https://${BASE_URL}/get-line-profile-for-booked?code=${encodeURIComponent(code)}`;
       const response = await fetch(url,  {
         method: 'GET',
-        headers: HEADERS,
-        body: {code: code}
+        headers: HEADERS
       })
 
-      console.log(response)
+      
+    console.log("FETCH:", response);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user ID');
+    }
+
+    const data = await response.json(); // Assuming the response is in JSON format
+    setLineUserID(data?.userId)
+    localStorage?.setItem("lineUserID", data?.userId)
+    // console.log("User Data:", data);
+
     } catch (error) {
       console.log(error)
     }
   }
 
-  useEffect(() => {getLineUserID()},[])
+  useEffect(() => {
+    if(!lineUserID) { 
+      getLineUserID()
+    }
+  },[])
+
+  useEffect(() => {console.log("ID:", lineUserID)}, [lineUserID])
 
   // useEffect(() => {
   //   const fetchHolidays = async () => {
@@ -177,6 +197,7 @@ const CalendarBooking = () => {
 
   return (
     <div className="PatientForm-01">
+
       <h2>ปฏิทินการจองคิวหมอ</h2>
       <Calendar
         localizer={localizer}
@@ -250,6 +271,7 @@ const CalendarBooking = () => {
           selectedSlot={selectedSlot}
           selectedDate={selectedDate}
           onClose={closeBookingForm}
+          lineUserId={lineUserID}
         />
       </Modal>
     </div>

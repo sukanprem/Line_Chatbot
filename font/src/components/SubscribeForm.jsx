@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SubscribeForm.css'; // อย่าลืมเพิ่ม import นี้เพื่อเชื่อมโยงกับ CSS
+import { BASE_URL, HEADERS } from '../Global/config';
 
 const SubscribeForm = () => {
   const [subscribeData, setSubscribeData] = useState({
@@ -17,6 +18,48 @@ const SubscribeForm = () => {
     // Handle form submission logic, such as sending data to a server
     console.log('Subscribe Data:', subscribeData);
   };
+
+  const queryParameters = new URLSearchParams(window.location.search)
+  const code = queryParameters.get("code")
+  const localLineID = localStorage.getItem("lineUserID") || null
+  const [lineUserID, setLineUserID] = useState(localLineID)
+
+  const getLineUserID = async () => {
+    try {
+      console.log("Code:", code)
+      if(!code) {
+        // alert("Code not define")
+        return;
+        // throw "error"
+      } 
+      const url = `https://${BASE_URL}/get-line-profile-for-subscribed?code=${encodeURIComponent(code)}`;
+      const response = await fetch(url,  {
+        method: 'GET',
+        headers: HEADERS
+      })
+
+      
+    console.log("FETCH:", response);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user ID');
+    }
+
+    const data = await response.json(); // Assuming the response is in JSON format
+    setLineUserID(data?.userId)
+    localStorage?.setItem("lineUserID", data?.userId)
+    // console.log("User Data:", data);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if(!lineUserID) { 
+      getLineUserID()
+    }
+  },[])
 
   return (
     <div className="SubscribeForm"> {/* ใช้ className แทน div */}

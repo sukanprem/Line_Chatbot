@@ -1,5 +1,4 @@
 function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
-
   return {
     type: "flex",
     altText: "ผลการจองพบแพทย์ออนไลน์",
@@ -36,26 +35,13 @@ function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
               }
             ]
           },
-          // {
-          //   type: "box",
-          //   layout: "baseline",
-          //   contents: [
-          //     {
-          //       type: "text",
-          //       text: `${appointmentData.healthPlan}`,
-          //       size: "sm",
-          //       color: "#484848",
-          //       flex: 0
-          //     }
-          //   ]
-          // },
           {
             type: "box",
             layout: "baseline",
             contents: [
               {
                 type: "text",
-                text: `${appointmentData.hospital}`,
+                text: `โรงพยาบาลที่นัด: ${appointmentData.hospital}`,
                 size: "sm",
                 color: "#484848",
                 flex: 0
@@ -68,7 +54,7 @@ function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
             contents: [
               {
                 type: "text",
-                text: `วันที่: ${appointmentData.time_slot_id}`,
+                text: `วันที่: ${appointmentData.date}`, // Use the actual date from appointmentData
                 size: "sm",
                 color: "#484848",
                 flex: 0
@@ -81,18 +67,17 @@ function createBookDoctorAppointmentOnlineFlexMessage(appointmentData) {
             contents: [
               {
                 type: "text",
-                text: `เวลา: ${appointmentData.time_slot_id}`,
+                text: `เวลา: ${appointmentData.time}`, // Use the actual time from appointmentData
                 size: "sm",
                 color: "#484848",
                 flex: 0
               }
             ]
-          },
+          }
         ]
       }
     }
-  }
-
+  };
 }
 
 module.exports = {
