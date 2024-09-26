@@ -6,10 +6,12 @@ import './CalendarBooking.css';
 import Modal from 'react-modal';
 import BookingForm from './BookingForm'; // นำเข้าคอมโพเนนต์ BookingForm
 import { BASE_URL, HEADERS } from '../Global/config';
-
+import { useParams } from 'react-router-dom';
 const localizer = momentLocalizer(moment);
 
 const CalendarBooking = () => {
+  let {code} = useParams();
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [bookingFormIsOpen, setBookingFormIsOpen] = useState(false); // ติดตามการแสดงฟอร์มการจอง
   const [selectedDate, setSelectedDate] = useState('');
@@ -17,7 +19,7 @@ const CalendarBooking = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [holidays, setHolidays] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
-
+  const [lineUserID, setLineUserID] = useState(null)
   useEffect(() => {
     const fetchTimeSlots = async () => {
       try {
@@ -37,6 +39,26 @@ const CalendarBooking = () => {
 
     fetchTimeSlots();
   }, []);
+
+  const getLineUserID = async () => {
+    try {
+      if(!code) {
+        alert("Code not define")
+      } 
+      const url = 'https://e87d-223-205-61-145.ngrok-free.app/get-line-profile'
+      const response = await fetch(url,  {
+        method: 'GET',
+        headers: HEADERS,
+        body: {code: code}
+      })
+
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {getLineUserID()},[])
 
   // useEffect(() => {
   //   const fetchHolidays = async () => {

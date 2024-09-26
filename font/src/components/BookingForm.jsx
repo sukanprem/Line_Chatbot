@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // นำเข้า axios
+import axios from 'axios'; 
 import './BookingForm.css';
 import { BASE_URL, HEADERS } from '../Global/config';
+import BookingConfirmation from './Confirmation'; // Import หน้าจอยืนยันการจอง
 
 const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
   const [formData, setFormData] = useState({
     firstName: '',
-    lastName: '',  // lastName ใน frontend
+    lastName: '', 
     email: '',
     phone: '',
     citizenId: '',
     hospital: '',
     notes: '',
-    time_slot_id: '', // เก็บ id ของ time slot
-    status: 'confirmed', // สถานะการจอง
+    time_slot_id: '',
+    status: 'confirmed',
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false); // New state for button loading
-  const [successMessage, setSuccessMessage] = useState(''); // New state for success feedback
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isBookingConfirmed, setIsBookingConfirmed] = useState(false); // เพิ่มสถานะเพื่อจัดการหน้าจอ
 
   useEffect(() => {
     const fetchTimeSlots = async () => {
@@ -54,66 +56,71 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true); // Set submitting state
+    setIsSubmitting(true); 
 
     try {
-      // รวม firstName และ lastName เพื่อสร้าง fullName ก่อนส่ง
-
-      console.log("Sending data:", {
-        ...formData,
-        lineUserId, // Include the Line User ID in the form submission
-      });
-      // ส่งข้อมูลการจองไปยัง backend โดยใช้ axios
-      // const url = "http://eewwe.yjyu/dsaddsaads"
       await axios.post(`${BASE_URL}/add-book-doctor-appointment-online`, {
         ...formData,
-        lineUserId, // Pass the Line User ID to the backend
+        lineUserId,
       }, {
         headers: HEADERS
       });
 
-      // อัปเดตจำนวนการจองใน time slot
       await axios.put(`${BASE_URL}/update-time-slots/${formData.time_slot_id}`, {
         booked_appointments: selectedSlot.booked_appointments + 1,
       }, {
         headers: HEADERS
       });
 
-      setSuccessMessage('การจองเสร็จสมบูรณ์! คุณจะได้รับข้อความยืนยันใน LINE ของคุณ'); // Show success message
-
-      setIsSubmitting(false); // Reset submitting state
-      // alert('การจองเสร็จสมบูรณ์!');
-      onClose(); // ปิดหน้าแบบฟอร์ม
+      setIsBookingConfirmed(true); // ตั้งสถานะให้แสดงหน้าจอการจองสำเร็จ
+      setSuccessMessage('การจองเสร็จสมบูรณ์! คุณจะได้รับข้อความยืนยันใน LINE ของคุณ');
+      setIsSubmitting(false); 
     } catch (error) {
       console.error('เกิดข้อผิดพลาดในการจอง:', error.response?.data || error.message);
-      setIsSubmitting(false); // Reset submitting state
+      setIsSubmitting(false); 
     }
   };
 
+  // หากการจองสำเร็จ จะแสดงหน้าจอยืนยันการจอง
+  if (isBookingConfirmed) {
+    return (
+      <BookingConfirmation 
+        bookingDetails={{
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          hospital: formData.hospital,
+          date: selectedDate,
+          time: selectedSlot.time_slot
+        }} 
+      />
+    );
+  }
 
   return (
     <div className="booking-form">
       <h2>ฟอร์มการจอง</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>ชื่อ:</label>
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>นามสกุล:</label>
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
+        <div className="two-columns">
+          <div>
+            <label>ชื่อ:</label>
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label>นามสกุล:</label>
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
         <div>
           <label>อีเมล:</label>
@@ -166,12 +173,11 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'กำลังยืนยันการจอง...' : 'ยืนยันการจอง'}
         </button>
-        
-        {successMessage && <p className="success-message">{successMessage}</p>} {/* Show success message */}
+
+        {successMessage && <p className="success-message">{successMessage}</p>}
       </form>
     </div>
   );
-
 };
 
 export default BookingForm;

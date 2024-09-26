@@ -1,0 +1,33 @@
+.confirmation-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .confirmation-header {
+    font-size: 1.8rem;
+    color: #17a2b8;
+    margin-bottom: 10px;
+  }
+  
+  .confirmation-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .confirmation-container p {
+    font-size: 1rem;
+    margin: 5px 0;
+  }
+  
+  strong {
+    color: #007bff;
+    font-weight: bold;
+  }
+  

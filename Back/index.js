@@ -447,6 +447,47 @@ app.get('/book-doctor-appointment-online/:id', async (req, res) => {
   }
 });
 
+app.get('/get-line-profile', async (req, res) => {
+  const { code } = req.query;
+
+  try {
+      // Exchange the authorization code for an access token
+      const tokenResponse = await axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify({
+          grant_type: 'authorization_code',
+          code: code,
+          redirect_uri: 'https://2e25-223-205-61-145.ngrok-free.app/calendar-form',
+          client_id: '2006377527',
+          client_secret: 'ed68198215c38554ee8e748bc3c3e07c',
+      }), {
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+      });
+
+      const { id_token, access_token } = tokenResponse.data;
+
+      // Verify the ID token and get the user's profile information
+      const decodedIdToken = jwt.decode(id_token);
+      const userProfile = decodedIdToken;
+
+      // Optionally, you can get additional profile info using the access token
+      const profileResponse = await axios.get('https://api.line.me/v2/profile', {
+          headers: {
+              Authorization: `Bearer ${access_token}`,
+          },
+      });
+
+      const profile = profileResponse.data;
+
+      // Now you have the user's profile
+      res.send(profile);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error in LINE login');
+  }
+});
+
+
 // The POST method adds BookDoctorAppointmentOnline data.
 app.post('/add-book-doctor-appointment-online', async (req, res) => {
   try {

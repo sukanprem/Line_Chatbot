@@ -2,7 +2,7 @@
   max-height: 80vh; /* ความสูงสูงสุดที่ 80% ของหน้าจอ */
   overflow-y: auto; /* ทำให้สามารถเลื่อนลงได้ */
   max-width: 500px; /* ความกว้างสูงสุดของฟอร์ม */
-  margin: auto; /* จัดให้อยู่กลาง */
+  margin: 20px auto; /* จัดให้อยู่กลางและเพิ่มระยะห่างด้านบนและล่าง */
   padding: 20px; /* การเว้นระยะภายใน */
   background-color: #f9f9f9; /* สีพื้นหลังของฟอร์ม */
   border-radius: 10px; /* มุมโค้ง */
@@ -17,18 +17,23 @@
 
 .booking-form label {
   display: block; /* จัดให้ label เป็นบล็อก */
-  margin-bottom: 10px; /* ระยะห่างระหว่าง label */
+  margin-bottom: 5px; /* ระยะห่างระหว่าง label และกล่องข้อความ */
   font-weight: bold; /* ทำให้ตัวหนา */
+  text-align: left; /* ชิดซ้าย */
+  margin-left: 10px; /* ระยะห่างจากขอบซ้ายของ label */
 }
 
 .booking-form input,
 .booking-form textarea {
-  width: 100%; /* กว้างเต็มที่ */
+  width: calc(100% - 20px); /* กำหนดความกว้างโดยเว้นระยะขอบ */
   padding: 10px; /* การเว้นระยะภายใน */
   margin-bottom: 15px; /* ระยะห่างระหว่างช่อง */
   border: 1px solid #ced4da; /* เส้นขอบ */
   border-radius: 5px; /* มุมโค้ง */
   font-size: 1rem; /* ขนาดฟอนต์ */
+  margin-left: 10px; /* ระยะห่างจากขอบซ้าย */
+  margin-right: 10px; /* ระยะห่างจากขอบขวา */
+  box-sizing: border-box; /* รวม padding และ border ในการคำนวณความกว้าง */
 }
 
 .booking-form input:focus,
@@ -37,8 +42,19 @@
   outline: none; /* ไม่มีกรอบ */
 }
 
+.booking-form .two-columns {
+  display: flex;
+  gap: 20px; /* ช่องว่างระหว่างกล่องชื่อและนามสกุล */
+}
+
+.booking-form .two-columns div {
+  flex: 1;
+}
+
 .booking-form button {
-  width: 100%; /* ปุ่มกว้างเต็มที่ */
+  width: calc(100% - 20px); /* ปุ่มกว้างเต็มที่โดยเว้นระยะขอบ */
+  margin-left: 10px; /* ระยะห่างจากขอบซ้าย */
+  margin-right: 10px; /* ระยะห่างจากขอบขวา */
   background-color: #007bff; /* สีพื้นหลังของปุ่ม */
   color: white;
   padding: 10px; /* การเว้นระยะภายใน */
@@ -57,73 +73,4 @@
   text-align: center; /* จัดกลาง */
   margin: 10px 0; /* ระยะห่าง */
   font-size: 1rem; /* ขนาดฟอนต์ */
-}
-.booking-form div {
-  display: flex; /* ใช้ flexbox สำหรับจัดเรียง */
-  align-items: center; /* จัดให้อยู่กลางในแนวตั้ง */
-  margin-bottom: 15px; /* ระยะห่างระหว่างแถว */
-}
-
-.booking-form label {
-  flex: 0 0 150px; /* กำหนดความกว้างของ label */
-  margin-right: 10px; /* ระยะห่างระหว่าง label กับ input */
-  font-weight: bold; /* ทำให้ตัวหนา */
-  text-align: left; /* จัดข้อความใน label ชิดซ้าย */
-}
-
-.booking-form input, 
-.booking-form textarea {
-  flex: 1; /* ให้ช่องกรอกข้อมูลใช้พื้นที่ที่เหลือ */
-}
-
-
-.booking-form .ReactModal__Overlay {
-  background-color: rgba(0, 0, 0, 0.75) !important; /* สีพื้นหลังที่เข้มขึ้น */
-}
-
-.booking-form .ReactModal__Content {
-  position: absolute;
-  top: 50%; /* จัดให้อยู่กลางหน้าจอ */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  border-radius: 10px; /* มุมโค้ง */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* เงา */
-  padding: 20px;
-  width: 90%; /* ความกว้าง 90% */
-  max-width: 600px; /* ความกว้างสูงสุด */
-  text-align: center;
-  overflow: hidden; /* ป้องกันการล้น */
-}
-
-.booking-form .ReactModal__Content h2 {
-  font-size: 1.8rem; /* ขนาดฟอนต์ของหัวข้อ */
-  margin-bottom: 15px;
-  color: #17a2b8; /* เปลี่ยนสี */
-}
-
-.booking-form .ReactModal__Content ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.booking-form .ReactModal__Content li {
-  padding: 10px 0;
-  font-size: 1.1rem; /* ขนาดฟอนต์ของรายการ */
-  color: #343a40;
-}
-
-.booking-form .ReactModal__Content button {
-  background-color: #0048ff; /* สีพื้นหลังของปุ่ม */
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.booking-form .ReactModal__Content button:hover {
-  background-color: #0056b3; /* เปลี่ยนสีเมื่อเอาเมาส์ชี้ */
 }
