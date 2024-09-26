@@ -25,7 +25,7 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
     const fetchTimeSlots = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/get-all-dates-with-time-slots`, {
-          headers: HEADERS
+          headers: HEADERS,
         });
         const data = response.data;
 
@@ -42,7 +42,7 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
           }
         }
       } catch (error) {
-        console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+        console.error('Error fetching time slots:', error);
       }
     };
 
@@ -81,6 +81,53 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsSubmitting(true); 
+
+  //   try {
+  //     console.log('Sending data:', {
+  //       ...formData,
+  //       selectedSlot, // Make sure selectedSlot is passed
+  //       selectedDate, // Include selectedDate if needed
+  //       lineUserId, // Include the Line User ID in the submission
+  //     });
+
+  //     // Send booking data to the backend
+  //     await axios.post(
+  //       `${BASE_URL}/add-book-doctor-appointment-online`,
+  //       {
+  //         ...formData,
+  //         selectedSlot, // Make sure selectedSlot is passed
+  //         selectedDate, // Include selectedDate if needed
+  //         lineUserId, // Automatically include lineUserId
+  //       },
+  //       {
+  //         headers: HEADERS,
+  //       }
+  //     );
+
+  //     // Update the number of bookings in the time slot
+  //     await axios.put(
+  //       `${BASE_URL}/update-time-slots/${formData.time_slot_id}`,
+  //       {
+  //         booked_appointments: selectedSlot.booked_appointments + 1,
+  //       },
+  //       {
+  //         headers: HEADERS,
+  //       }
+  //     );
+
+  //     // setSuccessMessage('การจองเสร็จสมบูรณ์! คุณจะได้รับข้อความยืนยันใน LINE ของคุณ'); // Show success message
+  //     alert("การจองเสร็จสมบูรณ์! คุณจะได้รับข้อความยืนยันใน LINE ของคุณ")
+  //     setIsSubmitting(false); // Reset submitting state
+  //     onClose(); // Close the form
+  //   } catch (error) {
+  //     console.error('Error during booking:', error.response?.data || error.message);
+  //     setIsSubmitting(false); // Reset submitting state
+  //   }
+  // };
+
   // หากการจองสำเร็จ จะแสดงหน้าจอยืนยันการจอง
   if (isBookingConfirmed) {
     return (
@@ -100,30 +147,28 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
     <div className="booking-form">
       <h2>ฟอร์มการจอง</h2>
       <form onSubmit={handleSubmit}>
-        <div className="two-columns">
-          <div>
-            <label>ชื่อ:</label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>นามสกุล:</label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        </div>
-        <div>
-          <label>อีเมล:</label>
+        <label>
+          ชื่อ:
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          นามสกุล:
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          อีเมล:
           <input
             type="email"
             name="email"
@@ -131,9 +176,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label>เบอร์โทร:</label>
+        </label>
+        <label>
+          เบอร์โทร:
           <input
             type="tel"
             name="phone"
@@ -141,9 +186,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label>เลขบัตรประชาชน:</label>
+        </label>
+        <label>
+          เลขบัตรประชาชน:
           <input
             type="text"
             name="citizenId"
@@ -151,9 +196,9 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label>โรงพยาบาล:</label>
+        </label>
+        <label>
+          โรงพยาบาล:
           <input
             type="text"
             name="hospital"
@@ -161,11 +206,11 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label>หมายเหตุ:</label>
+        </label>
+        <label>
+          หมายเหตุ:
           <textarea name="notes" value={formData.notes} onChange={handleChange} />
-        </div>
+        </label>
 
         <p>วันที่ที่เลือก: {selectedDate}</p>
         <p>ช่วงเวลาที่เลือก: {selectedSlot.time_slot}</p>
@@ -174,7 +219,7 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
           {isSubmitting ? 'กำลังยืนยันการจอง...' : 'ยืนยันการจอง'}
         </button>
 
-        {successMessage && <p className="success-message">{successMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>} {/* Show success message */}
       </form>
     </div>
   );
