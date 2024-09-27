@@ -49,7 +49,7 @@ const CalendarBooking = () => {
         return;
         // throw "error"
       } 
-      const url = `https://${BASE_URL}/get-line-profile-for-booked?code=${encodeURIComponent(code)}`;
+      const url = `${BASE_URL}/get-line-profile-for-booked?code=${encodeURIComponent(code)}`;
       const response = await fetch(url,  {
         method: 'GET',
         headers: HEADERS
@@ -196,7 +196,7 @@ const CalendarBooking = () => {
   };
 
   return (
-    <div className="PatientForm-01">
+    <div className="PatientForm-01" /* onClick={console.log("ID:", lineUserID)}*/ >
 
       <h2>ปฏิทินการจองคิวหมอ</h2>
       <Calendar

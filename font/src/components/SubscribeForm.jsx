@@ -1,81 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import './SubscribeForm.css'; // อย่าลืมเพิ่ม import นี้เพื่อเชื่อมโยงกับ CSS
 import { BASE_URL, HEADERS } from '../Global/config';
+import './SubscribeForm.css'; // Create a CSS file for styling
 
 const SubscribeForm = () => {
-  const [subscribeData, setSubscribeData] = useState({
-    patientName: '',
-    relativeEmail: '',
-    relation: ''
-  });
+  const queryParameters = new URLSearchParams(window.location.search);
+  const code = queryParameters.get("code");
+  const localLineID = localStorage.getItem("lineUserID") || null;
+  const [lineUserID, setLineUserID] = useState(localLineID);
+  const [healthCheckResultId, setHealthCheckResultId] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
 
-  const handleChange = (e) => {
-    setSubscribeData({ ...subscribeData, [e.target.name]: e.target.value });
-  };
+  // Set notificationType to 'update' automatically
+  const notificationType = 'update';
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic, such as sending data to a server
-    console.log('Subscribe Data:', subscribeData);
-  };
-
-  const queryParameters = new URLSearchParams(window.location.search)
-  const code = queryParameters.get("code")
-  const localLineID = localStorage.getItem("lineUserID") || null
-  const [lineUserID, setLineUserID] = useState(localLineID)
-
-  const getLineUserID = async () => {
-    try {
-      console.log("Code:", code)
-      if(!code) {
-        // alert("Code not define")
-        return;
-        // throw "error"
-      } 
-      const url = `https://${BASE_URL}/get-line-profile-for-subscribed?code=${encodeURIComponent(code)}`;
-      const response = await fetch(url,  {
-        method: 'GET',
-        headers: HEADERS
-      })
-
-      
-    console.log("FETCH:", response);
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch user ID');
-    }
-
-    const data = await response.json(); // Assuming the response is in JSON format
-    setLineUserID(data?.userId)
-    localStorage?.setItem("lineUserID", data?.userId)
-    // console.log("User Data:", data);
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
+  // Fetch LINE User ID when component mounts
   useEffect(() => {
-    if(!lineUserID) { 
-      getLineUserID()
+    const fetchLineUserID = async () => {
+      try {
+        if (!code) return;
+        const response = await fetch(`${BASE_URL}/get-line-profile-for-subscribe?code=${encodeURIComponent(code)}`, {
+          method: 'GET',
+          headers: HEADERS,
+        });
+
+        const data = await response.json();
+        setLineUserID(data?.userId);
+        localStorage.setItem("lineUserID", data?.userId);
+      } catch (error) {
+        console.log("Error fetching Line User ID:", error);
+      }
+    };
+
+    if (!lineUserID) {
+      fetchLineUserID();
     }
-  },[])
+  }, [code, lineUserID]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${BASE_URL}/add-subscribe`, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify({
+          lineUserId: lineUserID,
+          healthCheckResultId,
+          notificationType, // Automatically set as 'update'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add subscription');
+      }
+
+      const result = await response.text();
+      setStatusMessage(result);
+    } catch (error) {
+      setStatusMessage('Error adding subscription');
+      console.log('Subscription Error:', error);
+    }
+  };
 
   return (
-    <div className="SubscribeForm"> {/* ใช้ className แทน div */}
-      <h1>Subscribe to Patient Updates</h1>
-      <p>กรอกข้อมูลของคุณเพื่อรับการอัปเดตเกี่ยวกับสถานะผู้ป่วยที่คุณต้องการติดตาม</p>
+    <div className="subscribe-form-container">
+      <h2>Subscribe for Health Updates</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" id="patient-name" name="patientName" placeholder="ชื่อผู้ป่วย" required onChange={handleChange} />
-        <input type="email" id="relative-email" name="relativeEmail" placeholder="อีเมลญาติ" required onChange={handleChange} />
-        <input type="text" id="relation" name="relation" placeholder="ความสัมพันธ์กับผู้ป่วย (เช่น พ่อ, แม่, พี่)" required onChange={handleChange} />
-        <button type="submit" className="subscribe-btn">
-          <i className="fas fa-bell"></i> Subscribe
-        </button>
+        <div className="form-group">
+          <label htmlFor="healthCheckResultId">Health Check Result ID</label>
+          <input
+            type="text"
+            id="healthCheckResultId"
+            value={healthCheckResultId}
+            onChange={(e) => setHealthCheckResultId(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="submit-btn">Subscribe</button>
       </form>
-      <footer>
-        <p>Powered by <a href="https://your-hospital-website.com" className="footer-link">Your Hospital Name</a></p>
-      </footer>
+      {statusMessage && <p>{statusMessage}</p>}
     </div>
   );
 };

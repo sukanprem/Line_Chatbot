@@ -1,71 +1,90 @@
-.SubscribeForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
-  
-  .SubscribeForm h1 {
-    color: #34495e;
-    margin-bottom: 10px;
-  }
-  
-  .SubscribeForm p {
-    color: #7f8c8d;
-    font-size: 1.1em;
-    margin-bottom: 30px;
-  }
-  
-  .SubscribeForm form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .SubscribeForm input[type="text"], 
-  .SubscribeForm input[type="email"] {
+/* General form styling */
+.subscribe-form-container {
+  max-width: 600px; /* Set max width for larger screens */
+  margin: 0 auto;   /* Center form */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input[type="text"] {
+  width: 100%; /* Make input full width */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+
+p {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Responsive styles for tablets and mobile devices */
+@media screen and (max-width: 768px) {
+  .subscribe-form-container {
     padding: 15px;
-    margin: 10px 0;
-    border: 1px solid #dcdcdc;
-    border-radius: 5px;
-    font-size: 1em;
-    width: 100%;
   }
-  
-  .SubscribeForm .subscribe-btn {
-    background-color: #2980b9;
-    color: #fff;
-    padding: 15px;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
+
+  h2 {
+    font-size: 22px;
   }
-  
-  .SubscribeForm .subscribe-btn:hover {
-    background-color: #3498db;
+
+  input[type="text"], .submit-btn {
+    font-size: 14px;
+    padding: 10px;
   }
-  
-  .SubscribeForm footer {
-    margin-top: 50px;
-    font-size: 0.9em;
-    color: #95a5a6;
+}
+
+/* Responsive styles for mobile devices (phones) */
+@media screen and (max-width: 480px) {
+  .subscribe-form-container {
+    padding: 10px;
   }
-  
-  .SubscribeForm .footer-link {
-    color: #3498db;
-    text-decoration: none;
+
+  h2 {
+    font-size: 20px;
   }
-  
-  .SubscribeForm .footer-link:hover {
-    text-decoration: underline;
+
+  input[type="text"], .submit-btn {
+    font-size: 12px;
+    padding: 8px;
   }
-  
+}

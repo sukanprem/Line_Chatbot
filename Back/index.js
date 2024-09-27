@@ -149,7 +149,7 @@ app.delete('/delete-notification-setting/:id', async (req, res) => {
 
 // นำเข้าไลบรารี crypto-js
 const CryptoJS = require('crypto-js');
-const { REDIRECT_URI_FOR_BOOK } = require('./ui-for-back/src/component/Global/config');
+// const { REDIRECT_URI_FOR_BOOK } = require('./ui-for-back/src/component/Global/config');
 
 // คีย์ลับสำหรับการเข้ารหัส
 const secretKey = process.env.SECRET_KEY;
