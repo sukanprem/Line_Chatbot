@@ -26,50 +26,48 @@ const CreateSubscriptions = () => {
     };
 
     return (
-        <create>
-            <div 
+        <div
             // style={{ padding: '20px' }}
             className='padding-20-px'
+        >
+            <h1>Add Subscriptions</h1>
+            <Form
+                layout="vertical"
+                onFinish={onFinish}
             >
-                <h1>Add Subscriptions</h1>
-                <Form
-                    layout="vertical"
-                    onFinish={onFinish}
+
+                <Form.Item
+                    label="Line User ID"
+                    name="lineUserId"
+                    rules={[{ required: true, message: 'Please input line user id!' }]}
                 >
+                    <Input />
+                </Form.Item>
 
-                    <Form.Item
-                        label="Line User ID"
-                        name="lineUserId"
-                        rules={[{ required: true, message: 'Please input line user id!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                <Form.Item
+                    label="Health Check Result ID"
+                    name="healthCheckResultId"
+                    rules={[{ required: true, message: 'Please input health check result id!' }]}
+                >
+                    <Input />
+                </Form.Item>
 
-                    <Form.Item
-                        label="Health Check Result ID"
-                        name="healthCheckResultId"
-                        rules={[{ required: true, message: 'Please input health check result id!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                <Form.Item
+                    label="Notification Type"
+                    name="notificationType"
+                    rules={[{ required: true, message: 'Please input notification type!' }]}
+                >
+                    <Input />
+                </Form.Item>
 
-                    <Form.Item
-                        label="Notification Type"
-                        name="notificationType"
-                        rules={[{ required: true, message: 'Please input notification type!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                        Submit
+                    </Button>
+                </Form.Item>
 
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" loading={loading}>
-                            Submit
-                        </Button>
-                    </Form.Item>
-
-                </Form>
-            </div>
-        </create>
+            </Form>
+        </div>
     )
 };
 

@@ -55,14 +55,14 @@ const CreateTimeSlots = () => {
                     name="max_appointments"
                     rules={[{ required: true, message: 'Please select meal time!' }]}
                 >
-                    <Input />
+                    <Input type='number' />
                 </Form.Item>
                 <Form.Item
                     label="Booked appointments"
                     name="booked_appointments"
                     rules={[{ required: true, message: 'Please select meal time!' }]}
                 >
-                    <Input />
+                    <Input type='number' />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={loading}>

@@ -77,7 +77,7 @@ const CreateHealthCheck = () => {
                     name="pulseRate"
                     rules={[{ required: true, message: 'Please input pulse rate!' }]}
                 >
-                    <Input />
+                    <Input type="number" />
                 </Form.Item>
 
                 <Form.Item
@@ -85,7 +85,7 @@ const CreateHealthCheck = () => {
                     name="temperature"
                     rules={[{ required: true, message: 'Please input temperature!' }]}
                 >
-                    <Input />
+                    <Input type="number" />
                 </Form.Item>
 
                 <Form.Item
@@ -101,7 +101,7 @@ const CreateHealthCheck = () => {
                     name="respirationRate"
                     rules={[{ required: true, message: 'Please input respiration rate!' }]}
                 >
-                    <Input />
+                    <Input type="number" />
                 </Form.Item>
 
                 <Form.Item
@@ -129,7 +129,7 @@ const CreateHealthCheck = () => {
                     name="fastingBloodSugar"
                     rules={[{ required: true, message: 'Please input fasting blood sugar!' }]}
                 >
-                    <Input />
+                    <Input type="number" />
                 </Form.Item>
 
                 <Form.Item label="More Details">
