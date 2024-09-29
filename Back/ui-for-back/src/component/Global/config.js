@@ -1,10 +1,10 @@
 // Line_Chatbot\Global\config.js
 
-const BASE_URL = 'https://e87d-223-205-61-145.ngrok-free.app';
+const BASE_URL = 'https://ffb0-223-205-178-219.ngrok-free.app';
 
-const REDIRECT_URI_FOR_BOOK = 'https://2e25-223-205-61-145.ngrok-free.app/calendar-form'
+const REDIRECT_URI_FOR_BOOK = 'https://f6df-223-205-178-219.ngrok-free.app/calendar-form'
 
-const REDIRECT_URI_FOR_SUBSCRIBED = 'https://2e25-223-205-61-145.ngrok-free.app/subscribe-form'
+const REDIRECT_URI_FOR_SUBSCRIBED = 'https://f6df-223-205-178-219.ngrok-free.app/subscribe-form'
 
 const CLIENT_ID = '2006377527'
 

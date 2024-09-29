@@ -63,10 +63,10 @@ const SubscribeForm = () => {
 
   return (
     <div className="subscribe-form-container">
-      <h2>Subscribe for Health Updates</h2>
+      <h2>ติดตามข้อมูลผลสุขภาพ</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="healthCheckResultId">Health Check Result ID</label>
+          <label htmlFor="healthCheckResultId">กรุณากรอกข้อมูลเลขบัตรประชาชนคนไข้</label>
           <input
             type="text"
             id="healthCheckResultId"

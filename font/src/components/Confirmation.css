@@ -1,33 +1,84 @@
 .confirmation-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-family: 'Arial', sans-serif;
+  max-width: 600px; /* ขยายขนาดความกว้างของกล่อง */
+  margin: 30px auto; /* เพิ่มระยะห่างด้านบนและจัดกึ่งกลาง */
+  padding: 30px 20px; /* เพิ่ม padding */
+  background-color: #ffffff; /* สีพื้นหลังขาว */
+  border-radius: 15px; /* มุมโค้ง */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* เพิ่มเงา */
+  text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
+  font-family: 'Poppins', sans-serif; /* ใช้ฟอนต์ Poppins เพื่อความทันสมัย */
+}
+
+.confirmation-header {
+  font-size: 2.2rem; /* ขยายขนาดตัวอักษร */
+  color: #28a745; /* เปลี่ยนสีเป็นสีเขียว */
+  margin-bottom: 15px;
+}
+
+.confirmation-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #343a40; /* สีเทาเข้ม */
+}
+
+.confirmation-container p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+  color: #495057; /* สีข้อความเทาเข้มเพื่อให้ดูชัดเจน */
+}
+
+.confirmation-container strong {
+  color: #007bff; /* ใช้สีน้ำเงินสำหรับข้อความที่เน้น */
+  font-weight: bold;
+}
+
+.confirmation-container .button-confirm {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.confirmation-container .button-confirm:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .confirmation-container {
+      max-width: 90%;
+      padding: 20px;
   }
-  
   .confirmation-header {
-    font-size: 1.8rem;
-    color: #17a2b8;
-    margin-bottom: 10px;
+      font-size: 1.8rem;
   }
-  
   .confirmation-subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    font-weight: bold;
+      font-size: 1.2rem;
   }
-  
   .confirmation-container p {
-    font-size: 1rem;
-    margin: 5px 0;
+      font-size: 1rem;
   }
-  
-  strong {
-    color: #007bff;
-    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+  .confirmation-container {
+      max-width: 100%;
+      padding: 15px;
   }
-  
+  .confirmation-header {
+      font-size: 1.5rem;
+  }
+  .confirmation-subtitle {
+      font-size: 1rem;
+  }
+  .confirmation-container p {
+      font-size: 0.9rem;
+  }
+}

@@ -55,7 +55,7 @@ h2 {
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  width: 100๔;
+  width: 100%;
   /* max-width: 1000px; */
   transition: all 0.3s ease;
 }
@@ -65,6 +65,7 @@ h2 {
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
+  min-width: 350px;
   height: 100vh; /* ใช้ความสูงทั้งหมดของหน้าจอ */
   overflow: hidden; /* ป้องกันการเลื่อนเมื่อไม่จำเป็น */
 }
@@ -97,7 +98,9 @@ h2 {
   background-color: white;
   border-radius: 0 0 10px 10px;
 }
-
+.rbc-button-link {
+  display: none;
+}
 /* กำหนดให้ช่องของวันที่จัดวางเนื้อหาอยู่ตรงกลาง */
 .rbc-date-cell {
   display: flex;
@@ -123,7 +126,10 @@ h2 {
 
 .rbc-date-cell.red {
   color: #ff6b6b;
+  pointer-events: none; /* ปิดการกดปุ่มสีแดง */
+  opacity: 0.6; /* ลดความชัดเจน */
 }
+
 
 .rbc-date-cell.green {
   color: #51cf66;
@@ -193,31 +199,60 @@ button.full {
     cursor: not-allowed;
   }
   
-
-/* --- Responsive Design --- */
-
-/* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 1024px (แท็บเล็ต) */
-/* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 1024px (แท็บเล็ต) */
-@media (max-width: 1024px) {
-  .PatientForm-01 {
-    width: 95%;
-    padding: 15px;
-  }
-
-  .rbc-calendar {
-    max-width: 90%; /* Prevents it from being too narrow */
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-
-  .rbc-date-cell {
-    font-size: 1rem;
-    padding: 8px;
-    min-width: 50px; /* Ensures cells have a minimum width */
-  }
+/* ปุ่มเปิด/ปิด Legend */
+.toggle-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
+
+.legend {
+  display: flex;
+  flex-direction: column; /* เรียงตามแนวตั้ง */
+  align-items: center; /* ชิดซ้าย */
+}
+
+.legend p {
+  display: flex;
+  align-items: flex-start; /* จัดกลางแนวตั้ง */
+}
+
+.legend .red-dot,
+.legend .green-dot,
+.legend .gray-dot,
+.legend .black-dot {
+  width: 20px; /* ขนาดของจุดสี */
+  height: 20px; /* ขนาดของจุดสี */
+  border-radius: 50%; /* ทำให้เป็นวงกลม */
+  margin-right: 10px; /* ระยะห่างจากข้อความ */
+}
+
+.red-dot {
+  background-color: red; /* สีแดง */
+}
+
+.green-dot {
+  background-color: green; /* สีเขียว */
+}
+
+.gray-dot {
+  background-color: gray; /* สีเทา */
+}
+
+.black-dot {
+  background-color: black; /* สีดำ */
+}
+
+.slot.booked {
+  color: gray; /* เปลี่ยนสีของข้อความให้เป็นสีเทา */
+  pointer-events: none; /* ปิดการเลือกเวลาที่จองเต็ม */
+  opacity: 0.6; /* ลดความชัดเจนเพื่อแสดงว่าไม่สามารถเลือกได้ */
+}
+/* --- Responsive Design --- */
 
 /* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 768px (แท็บเล็ตขนาดเล็กและมือถือขนาดใหญ่) */
 @media (max-width: 768px) {
@@ -227,7 +262,7 @@ button.full {
   }
 
   h2 {
-    font-size: 1.75rem;
+    font-size: 1.75rem; /* ลดขนาดฟอนต์ของหัวข้อ */
   }
 
   .rbc-toolbar {
@@ -240,15 +275,12 @@ button.full {
   }
 
   .rbc-date-cell {
-    font-size: 0.9rem;
-    padding: 5px;
+    font-size: 1rem; /* ลดขนาดฟอนต์สำหรับวันที่ */
+    padding: 4px; /* ปรับ padding สำหรับวันที่ */
     min-width: 40px; /* Adjust minimum width */
   }
-
-  .ReactModal__Content {
-    width: 85%;
-  }
 }
+
 
 /* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 576px (มือถือทั่วไป) */
 @media (max-width: 576px) {
@@ -258,7 +290,7 @@ button.full {
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* ลดขนาดฟอนต์ของหัวข้อ */
   }
 
   .rbc-toolbar {
@@ -267,25 +299,25 @@ button.full {
 
   .rbc-btn-group button {
     padding: 6px;
-    font-size: 0.75rem;
+    font-size: 0.75rem; /* ลดขนาดฟอนต์สำหรับปุ่ม */
   }
 
   .rbc-date-cell {
-    font-size: 0.8rem;
-    padding: 3px;
-    min-width: 35px; /* Further adjust for small screens */
+    font-size: 1rem; /* ลดขนาดฟอนต์สำหรับวันที่ */
+    padding: 2px; /* ปรับ padding สำหรับวันที่ */
+    min-width: 35px; /* Adjust minimum width */
   }
 
   .ReactModal__Content {
     width: 80%;
-    padding: 10px;
+    padding: 10px; /* ปรับ padding ของ modal */
   }
 }
 
 /* ปรับให้แสดงผลในหน้าจอที่มีความกว้างสูงสุด 400px (มือถือขนาดเล็ก) */
 @media (max-width: 400px) {
   h2 {
-    font-size: 1.3rem;
+    font-size: 1.3rem; /* ลดขนาดฟอนต์ของหัวข้อ */
   }
 
   .rbc-toolbar {
@@ -294,12 +326,12 @@ button.full {
 
   .rbc-btn-group button {
     padding: 5px;
-    font-size: 0.7rem;
+    font-size: 0.7rem; /* ลดขนาดฟอนต์สำหรับปุ่ม */
   }
 
   .rbc-date-cell {
-    font-size: 0.7rem;
-    padding: 2px;
+    font-size: 1rem; /* ลดขนาดฟอนต์สำหรับวันที่ */
+    padding: 2px; /* ปรับ padding สำหรับวันที่ */
     min-width: 30px; /* Ensure cells remain accessible */
   }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './CalendarBooking.css'; 
+import './CalendarBooking.css';
 import Modal from 'react-modal';
 import BookingForm from './BookingForm'; // นำเข้าคอมโพเนนต์ BookingForm
 import { BASE_URL, HEADERS } from '../Global/config';
@@ -28,14 +28,15 @@ const CalendarBooking = () => {
           method: 'GET',
           headers: HEADERS
         });
-        
+
         const data = await response.json();
         // console.log("[FETCH]:", data)
 
         setTimeSlots(data);
       } catch (error) {
         // console.error('เกิดข้อผิดพลาดในการดึงข้อมูลการนัดหมาย:', error);
-        console.log(error)      }
+        console.log(error)
+      }
     };
 
     fetchTimeSlots();
@@ -44,41 +45,63 @@ const CalendarBooking = () => {
   const getLineUserID = async () => {
     try {
       console.log("Code:", code)
-      if(!code) {
+      if (!code) {
         // alert("Code not define")
         return;
         // throw "error"
-      } 
+      }
       const url = `${BASE_URL}/get-line-profile-for-booked?code=${encodeURIComponent(code)}`;
-      const response = await fetch(url,  {
+      const response = await fetch(url, {
         method: 'GET',
         headers: HEADERS
       })
 
-      
-    console.log("FETCH:", response);
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch user ID');
-    }
+      console.log("FETCH:", response);
 
-    const data = await response.json(); // Assuming the response is in JSON format
-    setLineUserID(data?.userId)
-    localStorage?.setItem("lineUserID", data?.userId)
-    // console.log("User Data:", data);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user ID');
+      }
+
+      const data = await response.json(); // Assuming the response is in JSON format
+      setLineUserID(data?.userId)
+      localStorage?.setItem("lineUserID", data?.userId)
+      // console.log("User Data:", data);
 
     } catch (error) {
       console.log(error)
     }
   }
+  useEffect(() => {
+    const fetchDatesStatus = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/dates`, { // เรียก API /dates
+          method: 'GET',
+          headers: HEADERS
+        });
+  
+        const data = await response.json();
+        setHolidays(data); // เก็บข้อมูลวันที่และสถานะ
+      } catch (error) {
+        console.error('Error fetching dates status:', error);
+      }
+    };
+  
+    fetchDatesStatus();
+  }, []);
 
   useEffect(() => {
-    if(!lineUserID) { 
+    if (!lineUserID) {
       getLineUserID()
     }
-  },[])
+  }, [])
 
-  useEffect(() => {console.log("ID:", lineUserID)}, [lineUserID])
+  // useEffect(() => {
+  //   const calendar = document.querySelector('.calendar-date');
+  //   calendar && calendar.offsetHeight; // บังคับให้ปฏิทินรีเฟรช
+  // }, [selectedDate]); // Effect นี้จะทำงานเมื่อวันที่หรือเดือนเปลี่ยนไป
+  
+  useEffect(() => { console.log("ID:", lineUserID) }, [lineUserID])
 
   // useEffect(() => {
   //   const fetchHolidays = async () => {
@@ -95,38 +118,48 @@ const CalendarBooking = () => {
 
   //   fetchHolidays();
   // }, []);
-
+  
   const handleSelectSlot = (slotInfo) => {
     const date = moment(slotInfo.start).format('YYYY-MM-DD');
     const today = moment().startOf('day');
-
+  
+    // ถ้าเลือกวันที่ผ่านไปแล้ว จะไม่อนุญาตให้จอง
     if (moment(date).isBefore(today)) {
-    //   alert('ไม่สามารถจองวันก่อนหน้านี้ได้');
       return;
     }
-
+  
+    // ค้นหา slot ในวันที่เลือก
     const selectedDaySlots = timeSlots.find(
       (slot) => moment(slot.date).format('YYYY-MM-DD') === date
     );
-
-    console.log("SLOT:", selectedDaySlots)
-
-    if (selectedDaySlots && selectedDaySlots.timeSlots.length > 0) {
+  
+    // ตรวจสอบว่ามี slot ในวันนั้นไหม
+    if (selectedDaySlots) {
+      const allTimeSlotsFull = selectedDaySlots.timeSlots.every(
+        (timeSlot) => timeSlot.booked_appointments >= timeSlot.max_appointments
+      );
+  
+      // ถ้าคิวเต็มทั้งหมด ไม่ให้เปิดโมดอล
+      if (allTimeSlotsFull) {
+        alert('วันที่เลือกนี้ไม่สามารถจองได้');
+        return;
+      }
+  
       setSelectedDate(date);
-
+  
       const sortedSlots = selectedDaySlots.timeSlots.sort((a, b) => {
         const timeA = moment(a.time_slot.split(' - ')[0], 'HH:mm');
         const timeB = moment(b.time_slot.split(' - ')[0], 'HH:mm');
         return timeA - timeB;
       });
-
+  
       setAvailableSlots(sortedSlots);
       setModalIsOpen(true);
     } else {
-      alert('วันที่เลือกนี้ไม่สามารถจองได้');
+      alert('วันที่เลือกนี้ไม่มีการจองคิว');
     }
   };
-
+  
   const closeModal = () => {
     setModalIsOpen(false);
   };
@@ -137,13 +170,13 @@ const CalendarBooking = () => {
     slotElements.forEach((el) => {
       el.classList.remove('selected'); // ลบคลาสที่เลือกจากทุกๆ slot
     });
-    
+
     const selectedElement = document.querySelector(`li[data-slot="${slot.time_slot}"]`);
     if (selectedElement) {
       selectedElement.classList.add('selected'); // เพิ่มคลาสให้กับ slot ที่เลือก
     }
   };
-  
+
 
   const confirmBooking = () => {
     if (selectedSlot) {
@@ -162,9 +195,9 @@ const CalendarBooking = () => {
     const today = moment().startOf('day');
     const dateValue = moment(value).startOf('day');
 
-    const isHolidays = holidays.some(
-      (holiday) => moment(holiday.date).format('YYYY-MM-DD') === dateValue.format('YYYY-MM-DD')
-    );
+    // const isHolidays = holidays.some(
+    //   (holiday) => moment(holiday.date).format('YYYY-MM-DD') === dateValue.format('YYYY-MM-DD')
+    // );
 
     const isWeekend = dateValue.day() === 0 || dateValue.day() === 6;
     const isPastDate = dateValue.isBefore(today);
@@ -176,22 +209,25 @@ const CalendarBooking = () => {
       );
       return sameDate && allTimeSlotsFull;
     });
+    // ค้นหาสถานะของวันจากข้อมูลที่ได้จาก API
+    const selectedDay = holidays.find(
+    (day) => moment(day.date).format('YYYY-MM-DD') === dateValue.format('YYYY-MM-DD')
+  );
 
     let className = '';
-    if (isHolidays) {
-      className = 'rbc-date-cell gray'; 
-    } else if (isWeekend) {
-      className = 'rbc-date-cell black'; 
+    if (isWeekend || isPastDate) {
+      className = 'rbc-date-cell black'; // วันเสาร์-อาทิตย์เป็นสีดำ
+    } else if (selectedDay?.status === 'Public holiday') {
+      className = 'rbc-date-cell gray'; // วันหยุดราชการเป็นสีเทา
     } else if (isFull) {
-      className = 'rbc-date-cell red'; 
-    } else if (isPastDate) {
-      className = 'rbc-date-cell black'; 
+      className = 'rbc-date-cell red'; // วันทำการเป็นสีเเดง
+    } else if (selectedDay?.status === 'Opening day') {
+      className = 'rbc-date-cell green'; // วันทำการเป็นสีเขียว
     } else {
-      className = 'rbc-date-cell green'; 
+      className = 'rbc-date-cell green'; // ถ้าวันอื่น ๆ ก็เป็นสีเขียว
     }
-
     const dayNumber = moment(value).date();
-
+    
     return <div className={className}>{dayNumber}</div>;
   };
 
@@ -200,12 +236,13 @@ const CalendarBooking = () => {
 
       <h2>ปฏิทินการจองคิวหมอ</h2>
       <Calendar
+        className="calendar-date calendar-grid"
         localizer={localizer}
         events={[]}
         startAccessor="start"
         endAccessor="end"
         defaultDate={new Date()}
-        style={{ height: '80vh', maxWidth: '100%' }}
+        style={{ height: '50vh', maxWidth: '100%' }}
         selectable
         onSelectSlot={handleSelectSlot}
         views={['month']}
@@ -213,6 +250,13 @@ const CalendarBooking = () => {
           dateCellWrapper,
         }}
       />
+      <div className="legend">
+        <h3>รายละเอียดของวันในการใช้บริการ</h3> {/* เพิ่มหัวข้อด้านบน */}
+        <p><span className="red-dot"></span> สีแดง: จำนวนคิวเต็มในการใช้บริการ</p>
+        <p><span className="green-dot"></span> สีเขียว: จำนวนคิวว่างในการใช้บริการ</p>
+        <p><span className="gray-dot"></span> สีเทา: วันหยุดราชการ</p>
+        <p><span className="black-dot"></span> สีดำ: วันไม่มีบริการจองคิวในการใช้บริการ</p>
+      </div>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -267,7 +311,7 @@ const CalendarBooking = () => {
           }
         }}
       >
-        <BookingForm 
+        <BookingForm
           selectedSlot={selectedSlot}
           selectedDate={selectedDate}
           onClose={closeBookingForm}

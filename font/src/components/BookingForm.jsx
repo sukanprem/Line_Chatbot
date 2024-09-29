@@ -67,10 +67,11 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
       });
 
       await axios.put(`${BASE_URL}/update-time-slots/${formData.time_slot_id}`, {
-        booked_appointments: selectedSlot.booked_appointments + 1,
+        booked_appointments: parseInt(selectedSlot.booked_appointments) + 1,
       }, {
         headers: HEADERS
       });
+      
 
       setIsBookingConfirmed(true); // ตั้งสถานะให้แสดงหน้าจอการจองสำเร็จ
       setSuccessMessage('การจองเสร็จสมบูรณ์! คุณจะได้รับข้อความยืนยันใน LINE ของคุณ');
@@ -135,11 +136,15 @@ const BookingForm = ({ selectedSlot, selectedDate, onClose, lineUserId }) => {
         bookingDetails={{
           firstName: formData.firstName,
           lastName: formData.lastName,
+          email: formData.email,  // เพิ่มอีเมล
+          phone: formData.phone,  // เพิ่มเบอร์โทร
+          citizenId: formData.citizenId,  // เพิ่มเลขบัตรประชาชน
           hospital: formData.hospital,
+          notes: formData.notes,  // เพิ่มหมายเหตุ
           date: selectedDate,
           time: selectedSlot.time_slot
-        }} 
-      />
+      }} 
+    />
     );
   }
 
