@@ -105,7 +105,7 @@ const UpdateHealthCheck = () => {
                         name="pulseRate"
                     // rules={[{ required: true, message: 'Please input pulse rate!' }]}
                     >
-                        <Input />
+                        <Input type="number" />
                     </Form.Item>
 
                     <Form.Item
@@ -113,7 +113,7 @@ const UpdateHealthCheck = () => {
                         name="temperature"
                     // rules={[{ required: true, message: 'Please input temperature!' }]}
                     >
-                        <Input />
+                        <Input type="number" />
                     </Form.Item>
 
                     <Form.Item
@@ -129,15 +129,19 @@ const UpdateHealthCheck = () => {
                         name="respirationRate"
                     // rules={[{ required: true, message: 'Please input respiration rate!' }]}
                     >
-                        <Input />
+                        <Input type="number" />
                     </Form.Item>
 
                     <Form.Item
                         label="Meal Time"
                         name="mealTime"
-                    // rules={[{ required: true, message: 'Please input meal time!' }]}
+                    // rules={[{ required: true, message: 'Please select meal time!' }]}
                     >
-                        <Input />
+                        <Radio.Group>
+                            <Radio value="Breakfast">Breakfast</Radio>
+                            <Radio value="Lunch">Lunch</Radio>
+                            <Radio value="Dinner">Dinner</Radio>
+                        </Radio.Group>
                     </Form.Item>
 
                     <Form.Item
