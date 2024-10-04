@@ -753,6 +753,15 @@ app.post('/add-subscribe', async (req, res) => {
       return res.status(400).send('Invalid request: Missing or incorrect fields.');
     }
 
+    // ตรวจสอบว่า healthCheckResultId มีอยู่จริงในฟิลด์ id ของคอลเลคชัน healthCheckResults หรือไม่
+    const healthCheckResultQuery = db.collection('healthCheckResults').where('id', '==', healthCheckResultId);
+    const healthCheckResultSnapshot = await healthCheckResultQuery.get();
+
+    if (healthCheckResultSnapshot.empty) {
+      return res.status(404).send('Health Check Result not found');
+    }
+
+    // ถ้า healthCheckResultId มีอยู่จริง ให้เพิ่มข้อมูลในคอลเลคชัน Subscriptions
     const newDocRef = db.collection('Subscriptions').doc(); // สร้างเอกสารใหม่พร้อม ID อัตโนมัติ
     await newDocRef.set({
       lineUserId,
